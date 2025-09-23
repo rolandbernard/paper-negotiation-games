@@ -1,0 +1,243 @@
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{url}
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out.
+% However, it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+
+
+%% package imports not in default paper template below
+
+\usepackage{longtable}
+% is setspace even used? It causes problems with hyperref, apparently needs to be loaded later..
+%\usepackage{setspace}
+\usepackage{graphicx}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{colortbl}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{supertabular}
+\usepackage{placeins}
+
+% \setlength{\tabcolsep}{0pt}   % this was actually supposed to be in block only for transcripts... now all tables will look weird.. FIXME
+\usepackage{subfiles}
+\usepackage{enumitem}
+
+% maths and pseodocode
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+% references
+\usepackage{cleveref}
+
+% use this to format itemize lists
+%\setlist[itemize]{align=right,itemindent=1em,labelsep=1em,labelwidth=1em,leftmargin=1em,nosep}
+\setlist[itemize]{leftmargin=1em}  % smaller left margin = more text on one line
+%\setlist[enumerate]{leftmargin=1.5em}
+
+\usepackage{booktabs}
+
+% all this insane effort just to typset the prompt....
+% I am not going to admit how long it took me to create this...
+\usepackage{tcolorbox}
+\newcounter{promptno}[section]
+\newlength\mystoreparindent
+\newenvironment{prompt}[1][]
+{
+  \setlength{\mystoreparindent}{\the\parindent}
+  \setlength{\parindent}{0pt}
+  \refstepcounter{promptno}
+  \par\medskip
+  \noindent
+  \begin{tcolorbox}[left=1pt,right=1pt]
+%  \textsc{prompt~{\small\thesubsection.\thepromptno}}\\
+  \textsc{{template \small\thesubsection.\thepromptno}}\\
+  \small
+  \tt
+}{
+  \end{tcolorbox}
+  \setlength{\parindent}{\mystoreparindent}
+  \medskip
+}
+
+\newcounter{utterance}
+\usepackage{amssymb}
+
+\usepackage{color}
+\newcommand{\das}[1]{\textcolor{red}{//David: #1//}}
+\newcommand{\sh}[1]{\textcolor{blue}{//Sherzod: #1//}}
+
+\newcommand{\tk}[1]{\textcolor{teal}{//Tim-Kristina: #1//}}
+\newcommand{\kr}[1]{\textcolor{orange}{//Karl-Ruilin: #1//}}
+\newcommand{\roland}[1]{\textcolor{brown}{//Roland: #1//}}
+\newcommand{\rb}[1]{\textcolor{purple}{//Raffella: #1//}}
+
+% define a new column type for model names
+\newcolumntype{T}{>{\ttfamily}l}
+
+\newcommand{\model}[1]{\texttt{#1}}
+
+
+
+% Defining the dialogue bubbles
+
+% using numbering from https://tex.stackexchange.com/questions/290656/numbering-of-tcolorbox
+\tcbuselibrary{skins}
+\newcounter{nbubbles}
+
+\definecolor{a-colour}{RGB}{135,74,175}
+\definecolor{b-colour}{RGB}{243,145,9}
+\definecolor{gm-colour}{RGB}{128,128,128}
+\definecolor{wordlegreen}{rgb}{0.4,0.79,0.17}
+\definecolor{wordlered}{rgb}{0.86,0.31,0.29}
+\definecolor{wordleyellow}{rgb}{1,1,0}
+
+
+\def \dcolwidth {3cm}
+\def \skipcolwidth {0.8cm}
+\def \arccorner {3mm}
+\def \disttocorner {6pt}
+
+\newtcolorbox[use counter=nbubbles]{a-gm}[1]{
+    colback=a-colour!10!white,
+    colframe=a-colour,
+    fonttitle=\bfseries\tiny,
+    fontupper=\footnotesize,
+    title={#1},
+    sharp corners=west,
+    arc=\arccorner,
+    width=\dcolwidth,
+    left skip=0cm,
+    top=0pt,
+    bottom=0pt,
+    left=0pt,
+    right=\disttocorner,
+    before={\vspace{-0.1cm}},
+    boxrule=0.5pt,
+    enhanced,
+    attach boxed title to top left={yshift=-0.1mm},
+    boxed title style={size=small,colback=a-colour},
+    overlay unbroken and first = {
+    \node[text width=0.4cm,draw=black,line width=0.1mm,align=center,gray] at (-0.5,0.2) {\footnotesize \thetcbcounter};
+  }
+}
+
+\newtcolorbox[use counter=nbubbles]{gm-a}[1]{
+    colback=gm-colour!5!white,
+    colframe=gm-colour,
+    fonttitle=\bfseries\tiny,
+    fontupper=\footnotesize,
+    title={#1},
+    sharp corners=east,
+    arc=\arccorner,
+    width=\dcolwidth + \skipcolwidth,
+    left skip=\skipcolwidth,
+    top=0pt,
+    bottom=0pt,
+    left=\disttocorner,
+    right=0pt,
+    before={\vspace{-0.1cm}},
+    boxrule=0.5pt,
+    halign title=flush right,
+    enhanced,
+    attach boxed title to top right={yshift=-0.1mm},
+    boxed title style={size=small,colback=gm-colour},
+    overlay unbroken and first = {
+    \node[anchor=north east,text width=0.4cm,draw=black,line width=0.1mm,align=center,gray] at (-0.9,0.55) {\footnotesize\thetcbcounter};}
+}
+
+\newtcolorbox[use counter=nbubbles]{b-gm}[1]{
+    colback=b-colour!10!white,
+    colframe=b-colour,
+    fonttitle=\bfseries\tiny,
+    fontupper=\footnotesize,
+    title={#1},
+    sharp corners=east,
+    arc=\arccorner,
+    width=\dcolwidth + \skipcolwidth + \dcolwidth +  \skipcolwidth,
+    left skip=\dcolwidth + \skipcolwidth + \skipcolwidth,
+    top=0pt,
+    bottom=0pt,
+    left=\disttocorner,
+    right=0pt,
+    before={\vspace{-0.1cm}},
+    boxrule=0.5pt,
+    halign title=flush right,
+    % boxed title
+    enhanced,
+    attach boxed title to top right={yshift=-0.1mm},
+    boxed title style={size=small,colback=b-colour},
+    overlay unbroken and first = {
+    \node[anchor=north east,text width=0.4cm,draw=black,line width=0.1mm,align=center,gray] at (-4.7,0.55) {\footnotesize\thetcbcounter};}
+}
+
+\newtcolorbox[use counter=nbubbles]{gm-b}[1]{
+    colback=gm-colour!5!white,
+    colframe=gm-colour,
+    fonttitle=\bfseries\tiny,
+    fontupper=\footnotesize,
+    title={#1},
+    sharp corners=west,
+    arc=\arccorner,
+    width=\dcolwidth + \skipcolwidth + \dcolwidth,
+    left skip=\dcolwidth + \skipcolwidth,
+    top=0pt,
+    bottom=0pt,
+    left=0pt,
+    right=\disttocorner,
+    before={\vspace{-0.1cm}},
+    boxrule=0.5pt,
+    enhanced,
+    attach boxed title to top left={yshift=-0.1mm},
+    boxed title style={size=small,colback=gm-colour},
+    overlay unbroken and first = {
+    \node[anchor=north east,text width=0.4cm,draw=black,line width=0.1mm,align=center,gray] at (-3.9,0.55) {\footnotesize\thetcbcounter};}
+}
+
+\newtcolorbox[use counter=nbubbles]{gm-gm}[1]{
+    colback=gm-colour!5!white,
+    colframe=gm-colour,
+    fonttitle=\bfseries\tiny,
+    fontupper=\footnotesize,
+    title={#1},
+    sharp corners,
+    width=\dcolwidth + \dcolwidth + \skipcolwidth + \skipcolwidth,
+    leftright skip=\dcolwidth,
+    top=0pt,
+    bottom=0pt,
+    left=0pt,
+    right=0pt,
+    before={\vspace{-0.1cm}},
+    boxrule=0.5pt,
+    halign title=center,
+    enhanced,
+    attach boxed title to top center={yshift=-0.1mm},
+    boxed title style={size=small,colback=gm-colour},
+    overlay unbroken and first = {
+    \node[anchor=north east,text width=0.4cm,draw=black,line width=0.1mm,align=center,gray] at (-3.1,0.55) {\footnotesize\thetcbcounter};}
+}
+
+%%% end of bubbles definition

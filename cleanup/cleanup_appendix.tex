@@ -1,0 +1,139 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\subsection{Prompt Templates}
+
+The prompt templates for both players of CleanUp are given in Figure~\ref{fig:clean_up_prompt_templates}.
+
+Intermittent messages sent by the Game Master to the players are given in Figure~\ref{fig:clean_up_intermittent_prompts}. Following a player's response, they are either penalized and reprompted (cf. Figure~\ref{fig:clean_up_format_error}, \ref{fig:clean_up_invalid_move}), or the turn is passed to the other player (Figure~\ref{fig:clean_up_new_turn}).
+
+\begin{figure*}
+  \centering
+  \begin{prompt}
+  I am your game master, and you are playing a collaborative game with the following grid as game board:\\
+  \includegraphics[height=120pt]{cleanup/example_grid.pdf}\\
+* The upper edge displays x-coordinates increasing to the right, and the right edge y-coordinates increasing downward.\\
+* The following objects are randomly placed on your grid: 'W', 'I', 'T', 'C', 'H'.\\
+The other player sees a variation of the game board, where the objects are placed at different random locations. You cannot see the other player's board, and they cannot see yours.\\
+\\
+**Goal:**\\
+Both players need to move the objects on their respective background so that identical objects end up at the same coordinates. You have to communicate with the other player to agree upon a common goal configuration.\\
+\\
+**Rules:**\\
+* In each turn, you can send exactly one of the following two commands:\\
+ 1. \verb|`SAY: <MESSAGE>`|: to send a message (everything up until the next line break) to the other player. I will forward it to your partner.\\
+2. \verb|`MOVE: <OBJECT>, (<X>, <Y>)`|: to move an object to a new position, where \verb|`<X>`| is the column and \verb|`<Y>`| is the row. I will inform you if your move was successful or not.\\
+* If you don't stick to the format, or send several commands at once, I have to penalize you.\\
+* If both players accumulate more than 12 penalties, you both lose the game.\\
+* It is vital that you communicate with the other player regarding your goal state! The *only* way you can transmit your strategy to the other player is using the \verb|`SAY: <MESSAGE>`| command!\\
+\\
+**Moving Objects**\\
+* You can only move objects to cells within the bounds of the grid. The target cell must be empty, i.e., it must only contain the symbol '
+\includegraphics[height=8pt]{cleanup/empty_symbol.pdf}
+'.\\
+* If you try to move an object to a spot that is not empty, or try to move it outside of the grid, I have to penalize you. You get another try.\\
+* Before making a move, double check that the target spot is empty, and does not hold any letter, frame, or line!\\
+\\
+**End of Game**\\
+If you think you reached the goal of aligning all objects, you can ask the other player to finish the game by sending \verb|`SAY: finished?`|. If the other player asks you to finish the game, and you reply with \verb|`SAY: finished!`|, the game will end.\\
+\\
+Both players win if the game ends within 20 rounds, where one round is defined as two players each sending a valid command.\\
+\\
+**Scoring:**\\
+The closer the identical objects are in both game boards, the more points you get. Penalties reduce your points. Can you beat the record?
+  \end{prompt}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+    Please send a message to the other player to start the game!
+    \end{prompt}
+% \vspace*{-2ex}
+
+\caption{Prompt template for Player A in the game CleanUp.}
+  \label{fig:clean_up_player_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+The other player started the game by sending this message:\\
+"<START\_MESSAGE>"\\
+What is your first command?
+\end{prompt}
+
+\caption{Prompt template for Player B in the game CleanUp.}
+\label{fig:clean_up_player_b}
+\end{subfigure}
+\caption{CleanUp prompt templates for both players} \label{fig:clean_up_prompt_templates}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+      \begin{prompt}
+        Penalty: <REASON> \\
+        Make sure that your response only contains either \verb|SAY: <MESSAGE>| or \verb|MOVE: <OBJECT>, (<X>, <Y>)|, and nothing else! \\
+        You have collectively accumulated <N> of <M> penalties. Please try again!
+      \end{prompt}
+      \small
+      <REASON> can be one of the following:
+        \begin{itemize}
+          \item Your message must not contain anything before the command!
+          \item Your message must not contain anything after the command!
+          \item Your message must not contain anything before or after the command!
+          \item Your message contains more than one command!
+          \item Your message is not in the expected format!
+          \item You must begin the game by sending a message to the other player!
+        \end{itemize}
+    \caption{Penalty prompt template for format errors in the game CleanUp}
+    \label{fig:clean_up_format_error}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \begin{prompt}
+        <REASON> \\
+        You have collectively accumulated <N> of <M> penalties. Please try again!
+    \end{prompt}
+    \small <REASON> can be one of the following:
+      \begin{itemize}
+          \item Invalid move: (<X>,<Y>) is out of bounds.
+          \item Penalty: (<X>,<Y>) is not empty, but contains '<OBJECT>'.
+          \item Invalid move: Your image has no object with ID '<OBJECT>'.
+      \end{itemize}
+    \caption{Prompt templates for invalid moves in the game CleanUp}
+    \label{fig:clean_up_invalid_move}
+  \end{subfigure}
+  \begin{subfigure}[b]{1\textwidth}
+    \begin{prompt}
+        <LAST MOVE> \\
+        You are currently playing round <R> of maximum <MR>. You have collectively accumulated <N> of <M> penalties. 
+        <OTHER PLAYER ACTION> \\
+        What is your next command?
+    \end{prompt}
+    \small <LAST MOVE> can be:
+    \begin{itemize}
+        \item Your message has been relayed to the other player.
+        \item Moved '<OBJECT>' to (<X>,<Y>) successfully. Your updated grid looks like this:\\<GRID>
+    \end{itemize}
+    <OTHER PLAYER ACTION> can be:
+    \begin{itemize}
+        \item The other player sent this message:\\"<MESSAGE>"
+        \item The other player moved an object on their grid.
+    \end{itemize}
+  \caption{New turn prompts in the game CleanUp}
+  \label{fig:clean_up_new_turn}
+  \end{subfigure}
+\caption{Intermittent prompts in the game CleanUp}
+\label{fig:clean_up_intermittent_prompts}
+\end{figure*}
+
+
+\subsection{Experimental Setup}
+
+\subsection{Overall Results}
+
+\subsection{Detailed Analysis}
+
+\subsection{Qualitative Samples} 
+
+
+\end{document}

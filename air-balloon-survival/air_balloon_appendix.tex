@@ -1,0 +1,209 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\subsection{Prompt Templates}\label{sec:hot_air_balloon_appendix_prompt_templates}
+
+The prompt template for both players of the Hot Air Balloon Survival game is given in Figure~\ref{fig:hot_air_balloon_init_prompt}. 
+Parse error prompts handed to players when their responses did not follow the format instructions are given in Figure~\ref{fig:hot_air_balloon_parse_error_prompts}, and game error prompts for invalid actions are given in Figure~\ref{fig:hot_air_balloon_invalid_action_prompts}.
+
+\begin{figure*}
+  \centering
+  \begin{prompt}
+You are participating in a collaborative negotiation game.\\
+
+Together with another participant, you must agree on a single set of items that will be kept. Each of you has your own view of how much each item matters to you (importance). You do not know how the other participant values the items. Additionally, you are given the effort each item demands.\\
+You may only agree on a set if the total effort of the selected items does not exceed a shared limit:\\
+
+LIMIT = \$LIMIT\$\\
+
+Here are the individual item effort values:\\
+
+Item effort = \$ITEM\_WEIGHTS\$\\
+
+Here is your personal view on the importance of each item:\\
+
+Item importance values = \$UTILITY\_SCALE\_PLAYER\$\\
+
+Goal:\\
+
+Your goal is to negotiate a shared set of items that benefits you as much as possible (i.e., maximizes total importance to YOU), while staying within the LIMIT. You are not required to make a PROPOSAL in every message - you can simply negotiate as well. All tactics are allowed!\\
+
+Interaction Protocol:\\
+
+You may only use the following structured formats in a message:\\
+
+PROPOSAL: \{'A', 'B', 'C', …\}\\
+Propose keeping exactly those items.\\
+
+REFUSE: \{'A', 'B', 'C', …\}\\
+Explicitly reject opponent's proposal.\\
+
+ARGUMENT: \{'...'\}\\
+Defend your last proposal or argue against the player's proposal.\\
+
+AGREE: \{'A', 'B', 'C', …\}\\
+Accept the opponent's proposal which ends the game.\\
+
+\$STRATEGIC\_REASONING\_FORMAT\$\\
+
+Rules:\\
+
+You may only AGREE on a proposal the other party has logged via PROPOSAL.\\
+You may only REFUSE a proposal the other party has logged via PROPOSAL.\\
+Total effort of any PROPOSAL or AGREE set must be $\leq$ LIMIT.\\
+Do NOT reveal your hidden importance scores.\\
+A tag in a structured format must be followed by colon and whitespace. The argument must be a python set containing 0 or more strings.\\
+So, it must be of the form TAG: \{...\}\\
+Strictly follow the interaction protocol and DO NOT write anything beyond the given structure.\\
+The game ends when one side gives an AGREE to a PROPOSAL made by the other player.\\
+The content in your response which can be handed to the other player has to be non-empty.\\
+Only proposals which have been logged via the PROPOSAL format structure and which haven't been refused via REFUSE are active.\\
+
+\$REQUIRE\_ARGUMENT\$\\
+\$STRATEGIC\_REASONING\_RULE\$
+  \end{prompt}
+
+  \caption{Initial prompt template of Hot Air Balloon. Note that for the second player we append newline and the phrase `You will now receive the first message of the other player.' at the very end of the initial prompt.}
+  \label{fig:hot_air_balloon_init_prompt}
+\end{figure*}
+
+\smallskip
+\noindent Substrings Figure \ref{fig:hot_air_balloon_init_prompt} marked by \texttt{\$...\$} are placeholders which get replaced depending on the game instance.
+Note that the last three placeholders may also be replaced by the empty string depending on the game settings. Here we list the replacements for placeholders in the initial prompt:
+\begin{itemize}
+  \item \texttt{\$LIMIT\$} – maximum weight for a deal.
+  \item \texttt{\$ITEM\_WEIGHTS\$} – mapping from items to weights.
+  \item \texttt{\$UTILITY\_SCALE\_PLAYER\$} – mapping from items to preference values for a given player.
+  \item \texttt{\$STRATEGIC\_REASONING\_FORMAT\$} – 
+    \begin{quote}
+    \texttt{STRATEGIC REASONING: \{'...'\}}\\
+    Describe your strategic reasoning or anticipation explaining your choice of action. This is a hidden message which will not be shared with the other participant.
+    \end{quote}
+  \item \texttt{\$REQUIRE\_ARGUMENT\$} – You must include the \texttt{ARGUMENT} format at least once somewhere in all of your messages.
+  \item \texttt{\$STRATEGIC\_REASONING\_RULE\$} – 
+    \begin{quote}
+    You must include the \texttt{STRATEGIC REASONING} format only once at the very beginning of every one of your messages and not more often. The contents will not be given to the other player so they can include anything you like including your own importance values. Here you should reason step by step to come up with your next move.
+    \end{quote}
+\end{itemize}
+
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+Your response did not start with the proper strategic reasoning tag at the very beginning of your response.\\
+The very first structured format must be of the form STRATEGIC REASONING: \{...\}. Try again.
+    \end{prompt}
+    \caption{Parse error prompt in case strategic reasoning tag at the beginning of a response is missing. Only applies when strategic reasoning tag is required}
+    \label{fig:hot_air_balloon_no_sr_prompt}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+Your response did not contain an argument.\\
+You must include the structured format ARGUMENT: \{...\} somewhere in your response. Try again.
+    \end{prompt}
+    \caption{Parse error prompt in case an argument is missing. Only applies when argument tag is required}
+    \label{fig:hot_air_balloon_no_argument_prompt}
+  \end{subfigure}
+
+  \vskip\baselineskip
+
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+Your response contained an untagged sequence or you used STRATEGIC REASONING more than once.\\
+You may only use the structured formats as explained in the initial message.\\
+They must all be of the form TAG: \{...\}.
+    \end{prompt}
+    \caption{Parse error prompt in case the response contains an untagged sequence.}
+    \label{fig:hot_air_balloon_untagged_sequence_prompt}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+Your response only contained a strategic reasoning tag.\\
+You must at least include one more valid tag in your response, so that the other player receives a message. Try again.
+    \end{prompt}
+    \caption{Parse error prompt in case response only contained a strategic reasoning tag. Only applies when argument tag is not required.}
+    \label{fig:hot_air_balloon_only_sr_prompt}
+  \end{subfigure}
+
+  \vskip\baselineskip
+
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+You used a PROPOSAL tag, but did not provide a valid python set containing strings as arguments, e.g. \{'A', 'B', 'C', ...\}. Try again.
+    \end{prompt}
+    \caption{Parse error prompt in case of an invalid python set as argument.}
+    \label{fig:hot_air_balloon_invalid_python_set_error}
+  \end{subfigure}
+
+  \caption{Parse error prompts handed to player when a response did not follow the instructions on structured formats.}
+  \label{fig:hot_air_balloon_parse_error_prompts}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+You refused a proposal which is not active.\\
+Proposals are only active if they have been logged by the other player via PROPOSAL and have not been deactivated by you via REFUSE. Try again.
+    \end{prompt}
+    \caption{Game error prompt in case a non-active was refused.}
+    \label{fig:refuse_error_prompt}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+You made more than one agreement.\\
+Final deals cannot be ambiguous. Try again.
+    \end{prompt}
+    \caption{Game error prompt in case agreement to a deal was ambiguous.}
+    \label{fig:agreement_ambiguous_prompt}
+  \end{subfigure}
+
+  \vskip\baselineskip
+
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+You agreed to a proposal which is not active.\\
+Proposals are only active if they have been logged by the other player via PROPOSAL and have not been deactivated by you via REFUSE. Try again.
+    \end{prompt}
+    \caption{Game error prompt in case .}
+    \label{fig:agreement_non_active_prompt}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+Your proposal includes items which are not in the game. Try again.
+    \end{prompt}
+    \caption{Game error prompt in case a non-active proposal was agreed to.}
+    \label{fig:proposal_error_prompt}
+  \end{subfigure}
+
+  \caption{Game error prompts handed to player when a response did not follow the instructions on the rules of the game.}
+  \label{fig:hot_air_balloon_invalid_action_prompts}
+\end{figure*}
+
+
+\subsection{Experimental Setup}
+
+\subsection{Overall Results}
+
+\subsection{Detailed Analysis}
+
+\subsection{Qualitative Samples} 
+
+
+
+
+\end{document}

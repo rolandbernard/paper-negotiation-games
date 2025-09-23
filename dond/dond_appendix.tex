@@ -1,0 +1,171 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\subsection{Prompt Templates}
+
+The prompt template for both players of the Deal or No Deal is given in Figure~\ref{fig:dond_prompt_templates}.
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+You are given three images, one is called target and the other two are distractors.
+Your task is to generate a referring expression that best describes the target image while distinguishing it from the two other distractor images.
+The first image is <IMAGE\_POSITION>, the second image is <IMAGE\_POSITION>, and the third image is <IMAGE\_POSITION>. \\
+
+Instruction: Describe the target image. Generate the referring expression starting with the tag "Expression: " for the given target image. Omit any other text.\\
+
+Target image: <IMAGE\_PATH>\\
+Second image: <IMAGE\_PATH>\\
+Third image: <IMAGE\_PATH>\\
+
+\end{prompt}
+\vspace*{-2ex}
+\begin{prompt}
+Expression: \$EXPRESSION\$
+\end{prompt}
+
+\caption{Prompt template for Player A (Instruction Giver) in the Reference Game.}
+  \label{fig:reference_player_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+You are given three images. You are also given a referring expression that describes one of the given images.
+Your task is to select the image that matches the given referring expression.
+Generate only the number (in text) of the image that matches the given expression by selecting first, second, or third.\\
+
+TARGET\_EXPRESSION\\
+Question: Which image does the expression refer to?
+Start with the tag "Answer: ", followed by your selection. Omit any other text.\\
+
+
+First image: <IMAGE\_PATH>\\
+Second image: <IMAGE\_PATH>\\
+Third image: <IMAGE\_PATH>\\
+\end{prompt}
+
+\vspace*{-2ex}
+\begin{prompt}
+Answer: \$ANSWER\$
+\end{prompt}
+
+\caption{Prompt template for Player B (Instruction Follower) in the Reference Game}
+\label{fig:reference_player_b}
+  \end{subfigure}
+  \caption{Reference game prompt templates for both players}
+  \label{fig:dond_prompt_templates}
+\end{figure*}
+
+
+\subsection{Experimental Setup}
+
+\subsection{Overall Results}
+
+\subsection{Detailed Analysis}
+
+\begin{table*}[]
+\centering
+\tiny
+\begin{tabular}{llllllllllllllll}
+ &  & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ &  & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+\multirow{3}{*}{Optimal} & Explicit maximization & 0 & 1 & 0 & 3 & 11 & 3 & 11 & 0 & 1 & 0 & 0 & 0 & 5 & 0 \\
+ & Simple negotiation & 17 & 16 & 0 & 7 & 3 & 2 & 6 & 2 & 5 & 5 & 0 & 0 & 8 & 3 \\
+ & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+\multirow{5}{*}{Suboptimal} & Unclear preferences & 1 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+ & Unclaimed items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 \\
+ & Claiming valueless item & 1 & 2 & 0 & 0 & 0 & 2 & 0 & 1 & 3 & 4 & 0 & 0 & 0 & 0 \\
+ & Wrong proposal & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ & Premature proposal & 0 & 0 & 3 & 1 & 3 & 0 & 1 & 0 & 3 & 0 & 3 & 1 & 0 & 1 \\
+\multirow{2}{*}{Failed} & Wrong proposal & 0 & 0 & 3 & 7 & 1 & 11 & 0 & 13 & 1 & 5 & 0 & 0 & 4 & 7 \\
+ & Premature proposal & 1 & 0 & 12 & 1 & 1 & 0 & 1 & 2 & 4 & 0 & 14 & 19 & 0 & 8 \\
+\multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 4 & 0 & 0 & 1 & 0 \\
+ & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 \\
+ & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+\end{tabular}
+\caption{Game outcomes for the cooperative DoND game mode.}
+\end{table*}
+
+\begin{table*}[]
+\centering
+\tiny%
+\begin{tabular}{llllllllllllllll}
+ &  & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ &  & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+\multirow{3}{*}{Optimal} & Explicit maximization & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & Simple negotiation & 18 & 13 & 1 & 6 & 14 & 3 & 9 & 1 & 6 & 5 & 0 & 0 & 6 & 2 \\
+ & Luck & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 2 & 0 & 0 & 0 \\
+\multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & Unclaimed items & 0 & 0 & 0 & 0 & 1 & 1 & 2 & 5 & 0 & 1 & 0 & 0 & 3 & 3 \\
+ & Claiming valueless item & 1 & 3 & 0 & 5 & 2 & 1 & 2 & 3 & 0 & 2 & 0 & 0 & 2 & 0 \\
+ & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ & Premature proposal & 0 & 0 & 1 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 2 & 1 & 0 & 0 \\
+\multirow{2}{*}{Failed} & Wrong proposal & 0 & 3 & 5 & 6 & 1 & 12 & 6 & 8 & 7 & 2 & 0 & 0 & 2 & 9 \\
+ & Premature proposal & 1 & 0 & 7 & 0 & 0 & 1 & 1 & 1 & 4 & 1 & 14 & 18 & 6 & 6 \\
+\multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 4 & 1 & 0 & 0 & 0 & 2 & 1 & 9 & 2 & 0 & 1 & 0 \\
+ & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{tabular}
+\caption{Game outcomes for the semi-competitive DoND game mode.}
+\end{table*}
+
+\begin{table*}[]
+\centering
+\tiny%
+\begin{tabular}{lllllllllllllll}
+ & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+Tell exact values & 0 & 3 & 1 & 13 & 19 & 19 & 17 & 12 & 14 & 1 & 0 & 0 & 13 & 17 \\
+Tell only relative values & 20 & 17 & 0 & 5 & 0 & 1 & 0 & 7 & 0 & 18 & 0 & 0 & 2 & 1 \\
+Do not tell preferences & 0 & 0 & 7 & 2 & 0 & 0 & 2 & 0 & 5 & 1 & 0 & 0 & 5 & 0 \\
+Do not communicate at all & 0 & 0 & 12 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 20 & 20 & 0 & 2
+\end{tabular}
+\caption{Model willingness to share its value function for the cooperative DoND game mode.}
+\end{table*}
+
+\begin{table*}[]
+\centering
+\tiny%
+\begin{tabular}{lllllllllllllll}
+ & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+Tell exact values & 0 & 1 & 0 & 11 & 0 & 4 & 0 & 9 & 5 & 0 & 0 & 0 & 6 & 6 \\
+Tell only relative values & 19 & 19 & 1 & 9 & 15 & 14 & 8 & 11 & 7 & 20 & 0 & 0 & 1 & 10 \\
+Do not tell preferences & 1 & 0 & 8 & 0 & 5 & 0 & 11 & 0 & 7 & 0 & 0 & 0 & 12 & 0 \\
+Do not communicate at all & 0 & 0 & 11 & 0 & 0 & 0 & 1 & 0 & 1 & 0 & 20 & 20 & 1 & 4
+\end{tabular}
+\caption{Model willingness to share its value function for the semi-competitive DoND game mode.}
+\end{table*}
+
+\begin{table*}[]
+\centering
+\tiny%
+\begin{tabular}{lllllllllllllll}
+ & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+Lie about preferences & 1 & 1 & 0 & 9 & 0 & 0 & 0 & 1 & 0 & 2 & 0 & 0 & 0 & 0 \\
+Don’t lie about preferences & 19 & 19 & 20 & 11 & 19 & 20 & 19 & 18 & 20 & 18 & 20 & 20 & 20 & 20
+\end{tabular}
+\caption{Model truthfulness about its value function for the cooperative DoND game mode.}
+\end{table*}
+
+\begin{table*}[]
+\centering
+\tiny%
+\begin{tabular}{lllllllllllllll}
+ & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
+ & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
+Lie about preferences & 0 & 5 & 0 & 6 & 0 & 0 & 0 & 2 & 1 & 3 & 0 & 0 & 0 & 1 \\
+Don’t lie about preferences & 20 & 15 & 20 & 14 & 20 & 18 & 20 & 18 & 19 & 17 & 20 & 20 & 20 & 0
+\end{tabular}
+\caption{Model truthfulness about its value function for the semi-competitive DoND game mode.}
+\end{table*}
+
+\subsection{Qualitative Samples} 
+
+\end{document}

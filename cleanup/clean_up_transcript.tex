@@ -1,0 +1,43 @@
+% \newcounter{utterance}
+
+{ \footnotesize  \setcounter{utterance}{1}
+\setlength{\tabcolsep}{0pt}
+\begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
+\# & $\;$A & \multicolumn{4}{c}{Game Master} & $\;\:$B\\
+    \hline
+\theutterance \stepcounter{utterance}  
+    & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[P1$\rangle$GM]}}
+                \texttt{SAY: Hi! Let's coordinate our moves. On my board, I currently have: P at (4,1), L at (5,2), and C at (2,3). What are the positions of your objects? We need to agree on target positions where we'll move all objects so they match between our boards.} \\
+            }
+        }
+    }
+    & & \\ \\
+
+\theutterance \stepcounter{utterance}  
+    & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[GM$\rangle$P2]}}
+                \centering{<GAME DESCRIPTION>}\\
+                \texttt{The other player started the game by sending this message:} \\
+                \centering{<MESSAGE>}\\
+                \texttt{What is your first command?} \\
+            }
+        }
+    }
+    & \\ \\
+
+\theutterance \stepcounter{utterance}  
+    & & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[GM$\langle$P2]}}
+                \texttt{SAY: Hi! On my board I have: C at (4,1), P at (2,3), and L at (4,3). So we have different starting positions. Let's agree on target positions {-} I suggest we move all objects to easily accessible empty spots. How about: C to (2,1), P to (3,1), and L to (5,1)? This would put all objects on row 1 in consecutive columns. What do you think?} \\
+            }
+        }
+    } \\
+\end{supertabular}
+}

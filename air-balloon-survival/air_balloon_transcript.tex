@@ -1,0 +1,83 @@
+% \newcounter{utterance}
+{\footnotesize  \setcounter{utterance}{1}
+\setlength{\tabcolsep}{0pt}
+\begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
+\# & $\;$A & \multicolumn{4}{c}{Game Master} & $\;\:$B\\
+    \hline
+
+\theutterance \stepcounter{utterance}  
+    & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[A$\langle$GM]}}
+                <GAME DESCRIPTION>\\
+                \texttt{-Items and weights: Ball(2), Book(3), Magazine(1), Rope(4), Lamp(5)} \\
+                \texttt{-Max Weight: 7} \\
+                \texttt{-Your Preferences: Ball=1, Book=2, Magazine=2, Rope=2, Lamp=1}
+            }
+        }
+    }
+    & \\
+    
+\theutterance \stepcounter{utterance}  
+    & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{1,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[A$\rangle$GM]}}
+                \texttt{PROPOSAL: Magazine, Ball, Book} \\
+                \texttt{ARGUMENT: These items balance weight and value well for me. What do you think?}
+            }
+        }
+    }
+    & & \\
+
+\theutterance \stepcounter{utterance}  
+    & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[GM$\rangle$B]}}
+                <GAME DESCRIPTION>\\
+                \texttt{<Items, weights, weight limit>}\\
+                \texttt{-Your Preferences: Ball=1, Book=1, Magazine=2, Rope=4, Lamp=5} \\
+                \centering{<PLAYER A Message>}
+            }
+        }
+    }
+    & \\
+
+\theutterance \stepcounter{utterance}  
+    & & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,1,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[GM$\langle$B]}}
+                \texttt{PROPOSAL: Rope, Ball, Magazine}\\
+                \texttt{ARGUMENT: I value Rope highly, but not Magazine. How about we swap them?}
+            }
+        }
+    } \\
+
+\theutterance \stepcounter{utterance}  
+    & & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{0.9,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[A$\langle$GM]}}
+                \centering{<PLAYER B Message>}
+            }
+        }
+    }
+    & \\
+
+\theutterance \stepcounter{utterance}  
+    & \multicolumn{4}{p{0.6\linewidth}}{
+        \cellcolor[rgb]{1,0.9,0.9}{
+            \makecell[{{p{\linewidth}}}]{
+                \texttt{\tiny{[A$\rangle$GM]}}
+                \texttt{AGREE: Rope, Ball, Magazine} \\
+                \texttt{ARGUMENT: I am indifferent w.r.t. Rope and Magazine. Fair deal.} \\
+            }
+        }
+    }
+    & & \\
+    
+\end{supertabular}
+}

@@ -1,17 +1,17 @@
 % \newcounter{utterance}
 
-\footnotesize  \setcounter{utterance}{1}
+\scriptsize  \setcounter{utterance}{1}
 \setlength{\tabcolsep}{0pt}
 \begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
-\# & $\;$A & \multicolumn{4}{c}{Game Master} & $\;\:$B\\
+\# & $\;$\textbf{Player A} & \multicolumn{4}{c}{\textbf{Game Master}} & $\;\:$\textbf{Player B}\\
     \hline
 
 \theutterance \stepcounter{utterance}  
     & & \multicolumn{4}{p{0.6\linewidth}}{
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[P1$\langle$GM]}}
-                {<GAME DESCRIPTION>}\\
+                \texttt{\tiny{[A$\langle$GM]}}
+                {<GAME DESCRIPTION> ...}\\
                 \centering
                 \includegraphics[height=60pt]{clean_up/grid_1_min.pdf}\\
                 \raggedright
@@ -23,9 +23,9 @@
 
 \theutterance \stepcounter{utterance}  
     & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.561,0.737,0.561}{
+        \cellcolor[rgb]{0.8,1,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[P1$\rangle$GM]}}
+                \texttt{\tiny{[A$\rangle$GM]}}
                 \texttt{SAY: Hi! Let's coordinate our moves. [...]}
             }
         }
@@ -36,8 +36,8 @@
     & & \multicolumn{4}{p{0.6\linewidth}}{
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[GM$\rangle$P2]}}
-                \centering{<GAME DESCRIPTION>}\\
+                \texttt{\tiny{[GM$\rangle$B]}}
+                \centering{<GAME DESCRIPTION> ...}\\
                 \centering
                 \includegraphics[height=60pt]{clean_up/grid_2_min.pdf}\\
                 \raggedright
@@ -56,9 +56,9 @@
 
 \theutterance \stepcounter{utterance}  
     & & & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.373,0.62,0.627}{
+        \cellcolor[rgb]{1,0.85,0.72}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[GM$\langle$P2]}}
+                \texttt{\tiny{[GM$\langle$B]}}
                 \texttt{MOVE: C, (1,1)} \\
             }
         }
@@ -68,7 +68,7 @@
     & & \multicolumn{4}{p{0.6\linewidth}}{
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[P1$\langle$GM]}}
+                \texttt{\tiny{[A$\langle$GM]}}
                 Your message has been relayed to the other player.\\
                 \centering <GAME STATE> \\
                 \raggedright
@@ -80,9 +80,9 @@
     
 \theutterance \stepcounter{utterance}  
     & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.561,0.737,0.561}{
+        \cellcolor[rgb]{0.8,1,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[P1$\rangle$GM]}}
+                \texttt{\tiny{[A$\rangle$GM]}}
                 \texttt{MOVE: I, (5,6)}
             }
         }
@@ -94,18 +94,18 @@
 } \\
 \theutterance \stepcounter{utterance}  
     & & & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.373,0.62,0.627}{
+        \cellcolor[rgb]{1,0.85,0.72}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[GM$\langle$P2]}}
+                \texttt{\tiny{[GM$\langle$B]}}
                 \texttt{SAY: I think our grids are aligned now, finished?} \\
             }
         }
     } \\
 \theutterance \stepcounter{utterance}  
     & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.561,0.737,0.561}{
+        \cellcolor[rgb]{0.8,1,0.9}{
             \makecell[{{p{\linewidth}}}]{
-                \texttt{\tiny{[P1$\rangle$GM]}}
+                \texttt{\tiny{[A$\rangle$GM]}}
                 \texttt{SAY: finished!}
             }
         }

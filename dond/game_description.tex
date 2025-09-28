@@ -1,0 +1,45 @@
+The Deal or No Deal (DoND) game is a two-player, turn-based dialogue game designed to simulate a multi-issue bargaining scenario. \Cref{fig:dond_example} shows a synthetic example of a successfully played episode of the game. DoND has previously been proposed in \cite{lewis-etal-2017-deal} to training an AI system for negotiation. More recently, \cite{DBLP:journals/corr/abs-2406-18872} used the same DoND game and proposed three different variations, two of which are used in this work.
+In DoND, players must communicate to reach a mutually beneficial agreement on the division of a set of items, each holding different values for each player. The game tries to evaluate negotiation skills, ability to express and understand preferences, and the ability to compromise. Aside from negotiation, the game also challenges the ability of LLMs to adhere to rules, such as using a specific syntax for final proposals.
+
+% one figure that shows sample transcript and how the players interact etc. - take a look at Fig 1 in here: https://aclanthology.org/2025.coling-main.381.pdf
+
+\begin{figure}[ht]
+  \centering
+  \input{dond/example_transcript.tex}
+  \caption{Synthetic example of a DoND game episode. Note that the initial prompts given by the game master have been truncated for brevity. The game ends in a successful Pareto optimal agreement.}
+  \label{fig:dond_example}
+\end{figure}
+
+%%% IMplementation details: explain the game dynamics - 2 player etc., instances,
+
+\paragraph{Game Mechanics}
+
+At the start of each game, players are presented with a shared set of items, consisting of several types and quantities. In addition to the shared set of items, each player is also secretly given a different value function, mapping each item type to a non-negative integer indicating how much the player values that specific type of item. The fact that the two players value functions are different creates the central conflict in the game.
+
+After having received the initial prompt from the game master, containing the rules of the game, the shared set of items, and the players respective set of items, players are able to exchange free-form natural language messages. These messages are transmitted directly between the players and can be in any format, provided they do not contain the special proposal syntax. This enables the players to engage in negotiation about how to divide the items, with the goal of reaching an agreement.
+
+At any point during the conversation, or once prompted to by the game master after a turn limit is reached, the players can make a secret proposal using a specific syntax. Once one player has made a proposal, the game master instructs the other player to also make a proposal, crucially however, without revealing the content of the first proposal.
+
+After both proposals are submitted, the game can end in either of two outcomes. Either the proposals are compatible, i.e., there are enough items to satisfy both proposals, or the proposals are conflicting. In case of compatible proposals, each player is awarded points based on total value of items they requested, according to their private value function. Should the proposals be conflicting, however, both players receive zero points.
+
+The game master strictly enforces the rules. If a player fails to follow instructions, the game is immediately aborted. Unlike in \cite{DBLP:journals/corr/abs-2406-18872} there is no re-prompting on errors, making rule adherence a critical component of successful play.
+
+%%% Experiments: details of the experiments & number of instances etc.
+
+\paragraph{Instance Generation}
+
+The game instances for the evaluation were generated programmatically, ensuring a wide variety for possible initial conditions and controlled difficulty. Each instance was generated with a maximum turn limit of 5 and each game instance features a random set of between 3 and 5 different item types. The item types for each game have been randomly sampled from a predefined list of 100 common nouns. The total number of items was set to between 5 and 8, with every item type being present at least once and the remaining capacity being randomly distributed among the item types. Finally, a random value function of non-negative integers for all item types was generated for each player.
+
+The value functions were generated subject to the same constraints as in previous work on DoND \cite{DBLP:journals/corr/abs-2406-18872,lewis-etal-2017-deal}. The maximum value a single player can achieve by receiving all the items in the game instance is exactly 10. Every item in the game instance has a non-zero value to at least one of the two players. And lastly, there exists at least one item that has a non-zero value to both players.
+These constraints are crucial for creating meaningful negotiation scenarios. The fixed maximum score keeps the value scale consistent, while the two other constraints on the value function ensure that no items are irrelevant and that it is impossible for both players to simultaneously achieve their maximum score, thus forcing a compromise.
+
+Two of the three different game modes proposed in \cite{DBLP:journals/corr/abs-2406-18872} have been evaluated. The initial prompt given to the players is identical across modes, except for the final rule which specifies the optimization objective to the players.
+In the \textbf{semi-competitive} mode, players are asked to maximize their own score. This is the standard negotiation setting, and it requires players to balance cooperation, to avoid zero-point conflicts, with competition, to maximize their individual share.
+For the \textbf{cooperative} mode of the game, players are asked to maximize the sum of both players scores. This transforms the game into a purely cooperative task, in which two rational agents should always achieve the maximum score, assuming they are able to communicate and reason about the preferences perfectly.
+
+\paragraph{Evaluation Metrics}
+
+In addition to the percentage of non-aborted games, the performance of players in the DoND game is also evaluated based on the scores achieved by the players.
+For the cooperative game mode, assessing the quality of agreement is straightforward. Since both players try to optimize for the same total score of both players, it is sufficient to use the ratio between the achieved total score to the maximum total score for that game instance, $\mathit{Quality}_\mathit{coop} = \frac{\mathit{Score}_A + \mathit{Score}_B}{\max ( \mathit{Score}_A' + \mathit{Score}_B' )}$.
+
+Evaluating the game in the semi-competitive setting is slightly more involved, as it requires finding a single score that jointly reflects the quality of the outcome for both players. For this, a metric based on Pareto efficiency has been used. The score is defined as one minus the normalized maximum possible Pareto improvement, $\mathit{Quality}_\mathit{semi} = 1 - \frac{\mathit{Maximum Pareto Improvement}}{\max ( \mathit{Score}_i' )}$. The maximum possible Pareto improvement is the largest amount the score of one player could be increased without decreasing the score of the other. Normalization is performed by dividing by the maximum score a single player can obtain.

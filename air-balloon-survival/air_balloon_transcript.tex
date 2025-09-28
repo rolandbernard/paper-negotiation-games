@@ -1,8 +1,8 @@
 % \newcounter{utterance}
-{\footnotesize  \setcounter{utterance}{1}
+{\scriptsize  \setcounter{utterance}{1}
 \setlength{\tabcolsep}{0pt}
 \begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
-\# & $\;$A & \multicolumn{4}{c}{Game Master} & $\;\:$B\\
+\# & $\;$\textbf{Player A} & \multicolumn{4}{c}{\textbf{Game Master}} & $\;\:$\textbf{Player B}\\
     \hline
 
 \theutterance \stepcounter{utterance}  
@@ -10,7 +10,7 @@
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[A$\langle$GM]}}
-                <GAME DESCRIPTION>\\
+                <GAME DESCRIPTION> ...\\
                 \texttt{-Items and weights: Ball(2), Book(3), Magazine(1), Rope(4), Lamp(5)} \\
                 \texttt{-Max Weight: 7} \\
                 \texttt{-Your Preferences: Ball=1, Book=2, Magazine=2, Rope=2, Lamp=1}
@@ -21,9 +21,10 @@
     
 \theutterance \stepcounter{utterance}  
     & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{1,0.9,0.9}{
+        \cellcolor[rgb]{0.8,1,0.9}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[A$\rangle$GM]}}
+                \texttt{STRATEGIC REASONING: Ball, Book, Rope have the value-to-weight ratios while respecting the weight limit.}\\
                 \texttt{PROPOSAL: Magazine, Ball, Book} \\
                 \texttt{ARGUMENT: These items balance weight and value well for me. What do you think?}
             }
@@ -36,10 +37,10 @@
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[GM$\rangle$B]}}
-                <GAME DESCRIPTION>\\
+                <GAME DESCRIPTION> ...\\
                 \texttt{<Items, weights, weight limit>}\\
                 \texttt{-Your Preferences: Ball=1, Book=1, Magazine=2, Rope=4, Lamp=5} \\
-                \centering{<PLAYER A Message>}
+                \centering{<PLAYER A Message without \texttt{STRATEGIC REASONING}>}
             }
         }
     }
@@ -47,11 +48,12 @@
 
 \theutterance \stepcounter{utterance}  
     & & & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{0.9,1,0.9}{
+        \cellcolor[rgb]{1,0.85,0.72}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[GM$\langle$B]}}
+                \texttt{STRATEGIC REASONING: I can increase the value of the other player's proposal for me by swapping Rope with Book. Let me propose this.}\\
                 \texttt{PROPOSAL: Rope, Ball, Magazine}\\
-                \texttt{ARGUMENT: I value Rope highly, but not Magazine. How about we swap them?}
+                \texttt{ARGUMENT: I value Rope highly, but not Book. How about we swap them?}
             }
         }
     } \\
@@ -61,7 +63,7 @@
         \cellcolor[rgb]{0.9,0.9,0.9}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[A$\langle$GM]}}
-                \centering{<PLAYER B Message>}
+                \centering{<PLAYER B Message without \texttt{STRATEGIC REASONING}>}
             }
         }
     }
@@ -69,11 +71,12 @@
 
 \theutterance \stepcounter{utterance}  
     & \multicolumn{4}{p{0.6\linewidth}}{
-        \cellcolor[rgb]{1,0.9,0.9}{
+        \cellcolor[rgb]{0.8,1,0.9}{
             \makecell[{{p{\linewidth}}}]{
                 \texttt{\tiny{[A$\rangle$GM]}}
+                \texttt{STRATEGIC REASONING: I value Rope and Book equally. Weight of proposal is 4+2+1=7 which matches the limit. I should accept.}\\
                 \texttt{AGREE: Rope, Ball, Magazine} \\
-                \texttt{ARGUMENT: I am indifferent w.r.t. Rope and Magazine. Fair deal.} \\
+                \texttt{ARGUMENT: I am indifferent w.r.t. Rope and Book. Fair deal.} \\
             }
         }
     }

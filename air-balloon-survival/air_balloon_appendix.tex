@@ -198,8 +198,218 @@ Your proposal includes items which are not in the game. Try again.
 \subsection{Experimental Setup}
 
 \subsection{Overall Results}
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/hot_air_balloon_en.pdf}
+        \caption{Clemscores on English instances.}
+        \label{fig:air-balloon-overall-en}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/hot_air_balloon_de.pdf}
+        \caption{Clemscores on German instances.}
+        \label{fig:air-balloon-overall-de}
+    \end{subfigure}
 
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/hot_air_balloon_it.pdf}
+        \caption{Clemscores on Italian instances.}
+        \label{fig:air-balloon-overall-it}
+    \end{subfigure}
+
+    \caption{Overall model performance for easy and hard sections of experiments for all languages.}
+    \label{fig:air-balloon-overall}
+\end{figure}
+
+%----- DETAILED ANALYSIS SECTION ----
 \subsection{Detailed Analysis}
+
+\subsubsection{Negotiation Dynamics}
+
+\subsubsection{Collaboration}
+
+\subsubsection{Critical Thinking}
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{minipage}{0.48\textwidth} % match subfigure width
+    \centering
+    \begin{tabular}{l c}
+    \hline
+    \textbf{Model} & \textbf{Pareto Adherence} \\
+    \hline
+    GPT-OSS 120B (reasoning) & 0.763 \\
+    GPT-5 (reasoning) & 0.675 \\
+    GPT-5 Mini (reasoning) & 0.548 \\
+    Qwen3-Next-80B (reasoning) & 0.464 \\
+    Nemotron-Nano 9B v2 (reasoning) & 0.367 \\
+    GPT-5 Mini & 0.269 \\
+    GPT-5 & 0.217 \\
+    Claude Sonnet 4 (reasoning) & 0.164 \\
+    DeepSeek Chat v3.1 & 0.150 \\
+    Claude Sonnet 4 & 0.011 \\
+    LLaMA-3.3-70B Instruct & 0.000 \\
+    Nemotron-Nano 9B v2 & 0.000 \\
+    DeepSeek R1-Distill LLaMA-70B & - \\
+    Qwen3-Next-80B & - \\
+    \hline
+    \end{tabular}
+    \caption{Average per instance Pareto adherence rate for proposals per model. Values were computed on English instances with 15 items.}
+    \label{tab:air-balloon-pareto-adherence}
+\end{minipage}
+\end{table}
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{minipage}{0.48\textwidth} % same width as subfigures
+    \centering
+    \begin{tabular}{l c}
+    \hline
+    \textbf{Model} & \textbf{Alternation} \\
+    \hline
+    DeepSeek R1-Distill LLaMA-70B (reasoning) & 1.000 \\
+    GPT-5 Mini (reasoning) & 1.000 \\
+    GPT-5 & 1.000 \\
+    Claude Sonnet 4 & 1.000 \\
+    GPT-5 (reasoning) & 1.000 \\
+    GPT-5 Mini & 1.000 \\
+    GPT-OSS 120B & 0.991 \\
+    Claude Sonnet 4 (reasoning) & 0.947 \\
+    Qwen3-Next-80B (reasoning) & 0.823 \\
+    Nemotron-Nano 9B v2 & 0.875 \\
+    DeepSeek Chat v3.1 & 0.734 \\
+    LLaMA-3.3-70B Instruct & 0.573 \\
+    Nemotron-Nano 9B v2 (reasoning) & 0.167 \\
+    Qwen3-Next-80B & - \\
+    \hline
+    \end{tabular}
+    \caption{Average alternation rate per model on all English instances.}
+    \label{tab:air-balloon-alternation-rates}
+\end{minipage}
+\end{table}
+
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{air-balloon-survival/air_balloon_detailed/stubbornness_focus_gpt.pdf}
+        \caption{Average stubbornness per player per instance for reasoning vs.\ conventional GPT-family models.}
+        \label{fig:air-balloon-stubbornness-gpt-family}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{air-balloon-survival/air_balloon_detailed/final_scores_focus_gpt.pdf}
+        \caption{Average player scores for GPT-family models.}
+        \label{fig:air-baloon-player-scores-gpt-family}
+    \end{subfigure}
+
+    \caption{Comparison of player 1 and player 2 in GPT-family models. Values were computed on English instances with opposing-goals setting}
+    \label{fig:air-balloon-gpt-family-comparison}
+\end{figure}
+
+\begin{figure*}[t]
+    \centering
+    % First row
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5.pdf}
+        \caption{GPT-5 (no reasoning). Curve is decreasing, but less smoothly compared to the reasoning version.}
+        \label{fig:air-baloon-llama-3.3-instruct}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_reasoning.pdf}
+        \caption{GPT-5 (reasoning). Very smooth and decreasing curve, indicating coherent bargaining and stronger early disagreement.}
+        \label{fig:air-baloon-gpt5-reasoning-subs}
+    \end{subfigure}
+
+    % Second row
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_Mini.pdf}
+        \caption{GPT-5 Mini (no reasoning). Substitutions rise in longer negotiations, reflecting frustration and less coherent bargaining.}
+        \label{fig:air-baloon-gpt-mini-subs}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_Mini_reasoning.pdf}
+        \caption{GPT-5 Mini (reasoning). Substitutions decrease on average, showing more coherent bargaining than non-reasoning model.}
+        \label{fig:air-baloon-gpt-mini-reasoning-subs}
+    \end{subfigure}
+
+    \caption{Comparison of bargaining coherence across models. Reasoning in top models amplifies the smoothed negotiation, with each proposal building on the previous. Results are from English experiments, capped at 12 proposals.}
+    \label{fig:air-balloon-gpts-comparison}
+\end{figure*}
+
+
+
+\begin{table}[!ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{minipage}{0.48\textwidth} % match subfigure width
+    \centering
+    \begin{tabular}{l cc}
+    \hline
+    \textbf{Model} & \textbf{P1} & \textbf{P2} \\
+    \hline
+    GPT-OSS 120B & 96.314 & 74.077 \\
+    Nemotron-Nano 9B v2 (reasoning) & 92.475 & 64.105 \\
+    GPT-5 (reasoning) & 89.634 & 77.853 \\
+    GPT-5 Mini (no reasoning) & 86.698 & 57.792 \\
+    Qwen3-Next-80B (reasoning) & 85.928 & 75.960 \\
+    GPT-5 Mini (reasoning) & 85.891 & 79.753 \\
+    GPT-5 (no reasoning) & 85.010 & 63.461 \\
+    DeepSeek Chat v3.1 & 79.987 & 56.153 \\
+    Claude Sonnet 4 (no reasoning) & 77.342 & 64.821 \\
+    Claude Sonnet 4 (reasoning) & 70.231 & 72.229 \\
+    Nemotron-Nano 9B v2 (no reasoning) & 56.113 & 61.660 \\
+    LLaMA-3.3-70B Instruct & 52.536 & 40.910 \\
+    DeepSeek R1-Distill LLaMA-70B & - & - \\
+    Qwen3-Next-80B & - & - \\
+    \hline
+    \end{tabular}
+    \caption{Average player scores on English opposing goals instances (only considering played games).}
+    \label{tab:air-balloon-player-scores-opp-goals}
+\end{minipage}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{minipage}{0.48\textwidth} % Adjusted width for longer model names
+    \centering
+    \begin{tabular}{p{0.5\linewidth} ccc}
+    \hline
+    \textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total Games} \\
+    \hline
+    Claude Sonnet 4 (no reasoning) & 0  & 13 & 13 \\
+    Claude Sonnet 4 (reasoning)                & 1  & 13 & 14 \\
+    DeepSeek Chat v3.1                      & 11 & 12 & 23 \\
+    DeepSeek R1-Distill LLaMA-70B          & 1  & 0  & 1  \\
+    GPT-5 (no reasoning)           & 15 & 5  & 21 \\
+    GPT-5 (reasoning)                       & 17 & 3  & 24 \\
+    GPT-5 Mini (no reasoning)      & 19 & 1  & 21 \\
+    GPT-5 Mini (reasoning)                   & 19 & 5  & 26 \\
+    GPT-OSS 120B                           & 5  & 6  & 21 \\
+    LLaMA-3.3-70B Instruct                 & 3  & 10 & 19 \\
+    Nemotron-Nano 9B v2 (no reasoning)       & 21 & 1  & 22 \\
+    Nemotron-Nano 9B v2 (reasoning)                    & 0  & 2  & 2  \\
+    Qwen3-Next-80B           & 4  & 5  & 15 \\
+    \hline
+    \end{tabular}
+    \caption{Initial reasoning style - classified by counting collaborative (proactive) versus egocentric (reactive) keywords in the first turn of each game within Strategic Reasoning tag. Calculated on all English instances.}
+    \label{tab:reasoning_style_analysis}
+\end{minipage}
+\end{table}
 
 \subsection{Qualitative Samples} 
 

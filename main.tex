@@ -120,46 +120,101 @@
 This document is a supplements to the general instructions for *ACL authors. It contains instructions for using the \LaTeX{} style files for ACL conferences.
 The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
 These instructions should be used both for papers submitted for review and for final versions of accepted papers.
+This document is a supplements to the general instructions for *ACL authors. It contains instructions for using the \LaTeX{} style files for ACL conferences.
+The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
+These instructions should be used both for papers submitted for review and for final versions of accepted papers.The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
+These instructions should be used both for papers submitted for review and for final versions of accepted papers.
 \end{abstract}
 
 \section{Introduction}
 
-Negotiation is a key aspect of human social and economic behaviour that poses significant challenges for AI systems. The problem is complex - agents must produce coherent language while performing strategic reasoning, modelling opponent preferences and goals, and managing the tension between cooperation and competition to maximize outcomes. With LLMs increasingly being being deployed as autonomous agents in domains ranging from e-commerce to resource distribution, negotiation capability has become essential. Negotiation tasks therefore provide a strong test-bed for measuring agent competence, offering interactive, multi-turn scenarios with objective success measures that go beyond static evaluation and test integrated capabilities from language understanding to theory of mind.
+Negotiation is a key aspect of human social and economic behaviour that poses significant challenges for AI systems. The problem is complex where agents must produce coherent language while performing strategic reasoning, modelling the opponents' preferences and goals, and managing the tension between cooperation and competition to maximize own outcomes. With LLMs increasingly being being tested as autonomous agents in domains ranging from e-commerce to resource distribution with new protocols for agents being developed, e.g. Agents to Payments (AP2) protocol~\cite{google_ap2_protocol_2025}. It has become essential to asses the limitations and capabilities of language agents, or vanilla LLMs for negotiation. Negotiation tasks provide a strong test-bed for measuring agent competence, offering interactive, multi-turn scenarios with objective measures that go beyond static evaluation.
+
+Studies show that LLMs often deviate from optimal play with unreliable performance, where even top-performing systems can lose to weaker opponents and fail in cooperative scenarios \cite{DBLP:conf/iclr/DavidsonVK024,DBLP:journals/corr/abs-2411-05990,DBLP:conf/icml/0001CYTJ024,DBLP:conf/emnlp/KwonWKCLG24}. These models can acquire deceptive tactics, e.g., expressing false interest in low-value items for later concessions~\cite{lewis-etal-2017-deal}, express desperation to improve outcomes~\cite{DBLP:conf/icml/0001CYTJ024},  perform much worse as buyers than sellers \cite{DBLP:conf/acl/Xia0RMZ0024}, or even take economic risks that lead to budget violations and overpayment~\cite{DBLP:journals/corr/abs-2506-00073}. 
 
 
-Recent work has systematically assessed LLM negotiation performance, uncovering varied emergent behaviors and notable weaknesses. Studies consistently show that LLMs often deviate from optimal game-theoretic play, with unreliable performance across tasks (Hua et al. 2024; Bianchi et al. 2024). While larger proprietary models typically outperform smaller ones, even top-performing systems can lose to weaker opponents and fail in cooperative scenarios (Davidson et al. 2024; Kwon et al. 2024). These models can acquire complex deceptive tactics like expressing false interest in low-value items for later concessions (Lewis et al. 2017). Yet they also exhibit cognitive biases such as anchoring effects and respond to social signals - counterintuitively, expressing desperation can improve outcomes (Bianchi et al. 2024). Despite these capabilities, serious limitations remain. LLMs show clear asymmetries, performing much worse as buyers than sellers (Xia et al. 2024). Their behavioral failures create real economic risks: budget violations, overpayment, and negotiation breakdowns (Zhu et al. 2025). Current approaches attempt to address these issues through structured, game-theoretic frameworks that constrain agent behavior and improve decision quality (Hua et al. 2024).
+Despite this growing body of research, two critical gaps remain unexplored. First, no previous work has systematically investigated how Chain-of-Thought prompting and reasoning capabilities influence negotiation abilities in terms both performance and computational cost, a fundamental oversight given that reasoning is central to strategic decision-making. Second, the field has been constrained by monolingual English-only analyses, leaving multilingual negotiation capabilities completely unexplored. To address these significant limitations, we conduct the first comprehensive study examining reasoning effects on negotiation tasks across three languages: English, German, and Italian. We implement three distinct dialogue games requiring bargaining skills, collaboration, and strategic preference management~\cite{VonNeumann+Morgenstern:1944,nash1953two,fisher_getting_2011}, testing both commercial and open-weight LLMs in a self-play mode where both sides of the games are played by themselves. We analyse the impact of systematically enabling and disabling reasoning mode of evaluated models.
+
+Our investigation targets three fundamental research questions: 
+
+\textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
+% cost - performance graphic
+
+\textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+% When a model reasons in a language different from the interaction language, does it affect the quality of its strategic decisions, its coherence, or its ability to understand its counterpart's intentions? - simple check with the scores of those where the lang matches the reasoning lang vs. where it doesn't!
+
+\textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of learning?}
+% \textit{Can the analysis of the reasoning chain provide definitive evidence as to whether LLMs engage in genuine opponent modeling versus sophisticated pattern matching over dialogue turns?}
+
 
 \section{Related Work}
 
-\cite{DBLP:journals/corr/abs-2402-01704} 
+Game theory and negotiation research has deep foundations in the analysis of strategic interactions between rational agents, with seminal contributions from \cite{1565177e-15e2-3801-8b78-11b7ee877be8} on bargaining solutions, \cite{Rubinstein1982PerfectEI} on sequential bargaining, and  \cite{raiffa1985art}on negotiation analysis. The convergence of Large Language Models (LLMs) and game-theoretic frameworks represents a significant development in the evaluation and understanding of strategic capabilities in AI systems \cite{sun2025gametheorymeetslarge}. Negotiation games serve as demanding test environments for LLMs, requiring integration of linguistic competence, strategic planning, and social reasoning capabilities.
 
-\cite{DBLP:journals/corr/abs-2503-06416}
 
-\cite{DBLP:journals/corr/abs-2505-07775}
+\textbf{Benchmarking strategic capabilities in LLMs}: systematic evaluation of LLM negotiation performance reveals substantial variance in strategic behaviour, with models frequently departing from optimal play and exhibiting asymmetric performance patterns~\cite{DBLP:conf/iclr/DavidsonVK024, DBLP:journals/corr/abs-2411-05990,DBLP:journals/corr/abs-2305-16867} or when some powerful models underperform against weaker opponents and encounter difficulties in cooperative bargaining scenarios. This has motivated the creation of comprehensive evaluation frameworks and experimental platforms designed to assess agent (initialised as LLMs) behaviour across various negotiation contexts, including resource allocation and pricing tasks \cite{DBLP:conf/icml/0001CYTJ024, DBLP:conf/acl/Xia0RMZ0024}.
+Empirical studies reveal that LLMs can display irrational tactics, e.g. deceptive strategies such as expressing false interest in low-value items to create bargaining leverage in subsequent exchanges \cite{lewis-etal-2017-deal}. LLMs also exhibit susceptibility to cognitive biases including anchoring effects and responsiveness to social manipulation tactics, where expressions of desperation or aggressive language can substantially affect negotiation outcomes \cite{DBLP:conf/icml/0001CYTJ024}. However, these behaviours present practical risks, including budget constraint violations and acceptance of economically disadvantageous agreements \cite{DBLP:journals/corr/abs-2506-00073}. A consistent finding across studies is the asymmetric difficulty in buyer versus seller roles, with agents systematically underperforming as buyers~\cite{DBLP:conf/acl/Xia0RMZ0024}.
 
-\cite{DBLP:conf/emnlp/Shea024}
+\textbf{Improving strategic reasoning and decision-making}: Given the inconsistent strategic reasoning observed in current LLMs \cite{wong2025reasoningcapabilitieslargelanguage}, research efforts focus on enhancing decision-making through structured approaches such as integration of game-theoretic solvers with LLM dialogue~\cite{DBLP:journals/corr/abs-2402-01704}, structured reasoning workflows based on Dominant Strategy Search and Backward Induction~\cite{DBLP:journals/corr/abs-2411-05990}, or even learn by interacting based with reinforcement learning~\cite{DBLP:conf/iclr/CaoLLLTC18}. From prompting perspective, Chain-of-Thought reasoning emerges as a critical factor in agent performance~\cite{DBLP:journals/corr/abs-2305-19165}, contributing to more consistent outcomes in integrative negotiation settings \cite{DBLP:journals/corr/abs-2503-06416}. Hybrid architectural approaches have been developed to constrain agent behaviour, such as employing deterministic offer generation modules to control pricing decisions while utilising LLMs for natural language dialogue production, resulting in substantial improvements in deal completion rates and profit margins \cite{DBLP:conf/acl/Xia0RMZ0024}.
 
-\cite{sun2025gametheorymeetslarge}
+% \textbf{Human-AI interaction and extended applications}: research explores reinforcement learning techniques that incorporate fairness in reward structures and action selection~\cite{DBLP:conf/emnlp/Shea024}, and novel dialogue games where participants negotiate the objective itself~\cite{DBLP:conf/sigdial/JeknicSK24}. Advancing LLM strategic dialogue capabilities raises broader questions about AI's role in persuasion, vulnerability to manipulation, and potential as arbitrators, highlighting the need for frameworks combining established negotiation principles with AI-specific strategic behaviours~\cite{DBLP:journals/corr/abs-2505-07775, DBLP:journals/corr/abs-2503-06416}.
 
-\cite{DBLP:conf/sigdial/JeknicSK24} (clean up)
+% \cite{DBLP:journals/corr/abs-2402-01704} (We focus on three domains that require different negotiation strategies: scheduling meetings, trading fruit
+% and debate, and evaluate an LLM’s generated language when guided by solvers. We see that LLMs that follow game-theory solvers result in dialogue generations that are less exploitable than the control (no guidance from solvers), and the language generated results in higher rewards, in all negotiation domains.) (In this work we ask whether there exists a generic way to combine outputs from game-theoretic models (e.g., ones that can solve for optimal equilibrium solutions) to guide language model generations in strategic games.) (This is motivated by the fact that cur-
+% rent LLMs do not exhibit coherent and intelligent reasoning strategies)
 
-\cite{DBLP:journals/corr/abs-2011-01975} (clean up)
+% \cite{DBLP:journals/corr/abs-2503-06416} (We conducted an International AI Negotiation Competition in which participants designed and refined prompts for AI negotiation agents.) (we found warm agents achieved significantly better objective outcomes than cold agents across multiple dimensions. ) (These findings strongly support Axelrod’s seminal work on cooperation, which observed that “there is a single property which distinguishes the relatively high-scoring entries from the relatively low-scoring entries. This is the property of being nice) (prompt injection and chain-of-thought reasoning were important determinants of agents’ negotiation performance,) (The chain-of-thought approach demonstrated exceptional performance across all evaluation metrics. This strategy demonstrated remarkable consistency in achieving positive outcomes and earned the most points across integrative negotiations. highlights the importance of integrating classic negotiation theory with new AI-specific strategies in the development of a robust theory of AI negotiation.)
 
-\cite{DBLP:conf/icml/0001CYTJ024} (negotiation arena)
+% \cite{DBLP:journals/corr/abs-2505-07775} ((1) AI as a Persuader, which explores
+% AI-generated persuasive content and its applications; (2) AI as a Persuadee, which examines AI’s susceptibility to influence and manipulation; and (3) AI as a Persuasion Judge, which analyzes AI’s role in evaluating persuasive strategies, detecting manipulation, and ensuring ethical persuasion.)
 
-\cite{DBLP:journals/corr/LewisYDPB17} ( deal or no deal)
+% \cite{DBLP:conf/emnlp/Shea024} (we propose a negotiation framework called FDHC which incorporates fairness into both the reward design and search to learn human-compatible negotiation strategies - for building human-compatible negotiation agents. Our method includes a novel, RL+search technique called LGM-Zero which leverages a pre-trained language model to retrieve human-compatible offers from large action spaces.) (Our value model is trained using a method similar to fictitious self-play)
 
-\cite{DBLP:conf/iclr/DavidsonVK024}
+% \cite{sun2025gametheorymeetslarge} (first comprehensive survey of the bidirectional relationship between Game Theory and LLMs. We propose a novel taxonomy that categorizes the research in this intersection into four distinct perspectives: (1) evaluating LLMs in game-based scenarios; (2) improving LLMs using game-theoretic concepts for better interpretability and alignment; (3) modeling the competitive landscape of LLM development and its societal impact; and (4) leveraging LLMs to advance game models and to solve corresponding game theory problems.)
 
-\cite{DBLP:journals/corr/abs-2411-05990}
+% \cite{DBLP:conf/sigdial/JeknicSK24} (clean up) (a two-player
+% 2D object placement game in which the players must negotiate the goal state themselves. We show empirically that human players exhibit a variety of role distributions, and that balanced collaboration improves task performance. We also present an LLM-based baseline agent which demonstrates that automatic playing of our game is an interesting challenge for artificial systems. A baseline computational agent achieves a task performance that is within reach of, but still considerably below human performance,)
 
-\cite{DBLP:conf/emnlp/KwonWKCLG24}
+% \cite{DBLP:journals/corr/abs-2011-01975} (clean up) (Our proposal is based on a canonical task: Rearrangement. A standard task can focus the development
+% of new techniques and serve as a source of trained models that can be transferred to other settings. In the rearrange- ment task, the goal is to bring a given physical environ- ment into a specified state. The goal state can be specified
+% by object poses, by images, by a description in language, or by letting the agent experience the environment in the goal state.) (but this is done in actual physical or virtual environment - our focus is purely text)
 
-\cite{DBLP:conf/acl/Xia0RMZ0024}
+% \cite{DBLP:conf/icml/0001CYTJ024} (negotiation arena) (We develop NEGOTIATIONARENA: a flexible framework for evaluating and probing the negotiation abilities of LLM agents. We implemented three types of scenarios in NEGOTIATIONARENA to assess LLM’s behaviors in allocating shared resources (ultimatum games), aggregate resources (trading games) and buy/sell goods (price negotiations). Each scenario allows for multiple turns of flexible dialogues between LLM agents to allow for more complex negotiations. Interestingly, LLM agents can significantly boost their negotiation outcomes by employing certain behavioral tactics. For example, by pretending to be desolate and desperate, LLMs can improve their payoffs by 20\% when negotiating against the standard GPT-4.) (Cunning and Desperate behaviors increase Win Rate
+% and Payoff. In all the games tested, the social behaviors led to an increase in average payoff and win rate (for which we ignore ties)) (Cunning Behavior is High Reward, High Risk. Even though being “Cunning” in the Ultimatum game increases
+% the win rate of Player 2 (Figure 7b, left), it does not come without repercussions) (In particular, social behaviors such as pretending to be desperate or using insults can significantly improve the agent’s payout. The LLM agents are also prone to anchoring and numerosity biases. Understanding these irrational behaviors and vulnerabilities is important to making LLM agents more reliable.)
 
-\cite{DBLP:journals/corr/abs-2506-00073}
+% \cite{lewis-etal-2017-deal}  ( deal or no deal) (We gather
+% a large dataset of human-human negotiations on a multi-issue bargaining task) ( train end-to-end (RNN) models for negotiation, which must learn both linguistic and reasoning skills)  (Models learn to be deceptive. Deception can be
+% an effective negotiation tactic. We found numerous cases of our models initially feigning interest in a valueless item, only to later ‘compromise’ by conceding it)
 
-\cite{esfandiari-baiat-edlund-2024-meet} (air balloon)
+% \cite{DBLP:conf/iclr/DavidsonVK024} (cooperative
+% bargaining games proved to be most challenging to the models; and (iii) even the
+% most powerful models sometimes “lose” to weaker opponents)
+
+% \cite{DBLP:journals/corr/abs-2411-05990} (paper investigates the capacity of LLMs to behave rationally in game-theoretic scenarios and explores methodologies to enhance their rational decision-making capabilities. Games: Prisoner’s Dilemma, Battle of the Sexes, the Escalation Game, and Deal-or-No-Deal) (analysis reveals LLMs often deviate from rational strategies, particularly as the complexity of the game increases with larger payoff matrices or deeper sequential trees) (a novel approach by proposing game-theory-inspired workflows specifically designed to guide the reasoning and decision-making processes of LLMs. incorporate principles such as Dominant Strategy Search, which involves identifying strategies that yield the highest payoff regardless of the opponent’s actions; Backward Induction, a method of solving extensive-form games by analyzing them from the end states backward to the initial decision nodes to determine optimal strategies; and Bayesian belief
+% updating, which allows agents to refine their beliefs about other players’ valuations based on observed actions and signals during the game. Cringed on these well-defined and well-studied game-theoretic methods, we design algorithms to guide the behavior and thinking process of LLM-based agents.) (In the simultaneous game workflow, each agent (player) seeks to determine their optimal strategy
+% by considering both their own possible actions and the potential responses of the other player. This involves conditional reasoning, generating thinking chains, and summarizing these into an overall strategy under the guidance of the workflow. )
+
+% \cite{DBLP:conf/emnlp/KwonWKCLG24} (we conclude that LLMs can indeed be helpful across a number of use cases in negotiation research.) (We also find that information in dialogue can confuse models about their own context, even when provided in the prompts)
+
+% \cite{DBLP:conf/acl/Xia0RMZ0024} (We collected a real product price dataset, AmazonHistoryPrice, and conducted evaluations of various LLM agents’ bargaining abilities) (We find that playing a Buyer is much harder than a Seller, and in-
+% creasing model size can not effectively improve the Buyer’s performance) (we propose a novel approach called OG-Narrator that integrates a deterministic Offer
+% Generator to control the price range of Buyer’s offers, and an LLM Narrator to create natural language sentences for generated offers.) (For Seller, model size matters) (For Buyer, different-sized models from the same family have close performance)
+
+% \cite{DBLP:journals/corr/abs-2506-00073} (In this paper, we
+% investigate a future setting where both consumers and merchants authorize AI
+% agents to automate the negotiations and transactions in consumer settings. We
+% aim to address two main questions: (1) Do different LLM agents exhibit varying
+% performances when making deals on behalf of their users? (2) What are the
+% potential risks when we use AI agents to fully automate negotiations and deal-
+% making in consumer settings? We design an experimental framework to evaluate
+% AI agents’ capabilities and performance in real-world negotiation and transaction
+% scenarios, and experimented with a range of LLM agents. Our analysis reveals that
+% deal-making with LLM agents in consumer settings is an inherently imbalanced
+% game: different AI agents have large disparities in obtaining the best deals for
+% their users. Furthermore, we found that LLMs’ behavioral anomaly might lead
+% to financial loss for both consumers and merchants when deployed in real-world
+% decision-making scenarios, such as overspending or making unreasonable deals. Our paper highlights the potential risks of using LLM agents to automate negotiation and transactions in real consumer settings.)
 
 % previous attempts at negotiation abilities - before LLM era
 % current papers with LLMs
@@ -175,106 +230,116 @@ Recent work has systematically assessed LLM negotiation performance, uncovering 
 
 %%%% Air Balloon Survival - personal preferences
 
-\section{Dialogue Games for Evaluating Negotiation Abilities}
+\section{Evaluating Negotiation Abilities with Dialogue Games}
 
-clembench description bla bla bla~\cite{chalamalasetti-etal-2023-clembench}
+In this section, we provide details on how we implement three dialogue games to test negotiation abilities in LLMs. Each game has its unique properties on what specifically it measures: bargaining, collaboration, grounding, or personal preference maximization. We define a dialogue game as a structured communication between two agents (LLMs) according to a given communication protocol towards the defined goal. The goals in games are defined as the expected outcome, e.g. to make a deal, that agents attempt to maximize. The communication protocols dictates how messages are expected to be formatted. A negotiation task unfolds by agents starting to communicate with one another for the given goal and the conversation continues until it reaches one of the defined stopping criteria: 1) goal state is reached, 2) maximum turn limit is reached, 3) agents violate the communication protocol and the game-play is aborted. The orchestration of this message passing between agents, validation of communication protocols, checking whether goal states are reached or not are done by Game Master, which is a scripted entity in the dialogue. 
 
-% why dialogue games are good for this
+We use the \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench} to implement the dialogue games. The framework already includes all necessary components regarding integration of commercial and open-weight LLMs, goal state definitions and scoring, the definitions of agents and the Game Master. The dialogue games are run in a self-play mode where both participants of the game are LLMs playing against or with one another.
 
-%%% The general idea of the game - what is it measuring
+Next, we provide details about each specific game.
 
 \subsection{Deal or No Deal}
 
-% \roland{Game descriptions etc.}
-
-% \cite{DBLP:journals/corr/LewisYDPB17}
-
-%%% The general idea of the game - what is it measuring, why is it a viable game for measuring negotiation.... - motivation for the game
-
-The Deal or No Deal (DoND) game is a two-player, turn-based dialogue game designed to simulate a multi-issue bargaining scenario. \Cref{fig:dond_example} shows a synthetic example of a successfully played episode of the game. DoND has previously been proposed in \cite{DBLP:journals/corr/LewisYDPB17} to training an AI system for negotiation. More recently, \cite{DBLP:journals/corr/abs-2406-18872} used the same DoND game and proposed three different variations, two of which are used in this work.
-In DoND, players must communicate to reach a mutually beneficial agreement on the division of a set of items, each holding different values for each player. The game tries to evaluate negotiation skills, ability to express and understand preferences, and the ability to compromise. Aside from negotiation, the game also challenges the ability of LLMs to adhere to rules, such as using a specific syntax for final proposals.
-
-% one figure that shows sample transcript and how the players interact etc. - take a look at Fig 1 in here: https://aclanthology.org/2025.coling-main.381.pdf
+The Deal or No Deal (DoND) game is a two-player game designed to simulate a multi-issue bargaining scenario. DoND has previously been proposed in \cite{lewis-etal-2017-deal} to training an AI system for negotiation. More recently, \citet{DBLP:journals/corr/abs-2406-18872} used the same DoND game and proposed three different variations, two of which are used in this work. \Cref{fig:dond_example} shows an example of a successfully played episode of the game. Two players must communicate to reach a mutually beneficial agreement on the division of a set of items, each holding different values for each player. The game focuses on evaluating negotiation skills with a focus on the ability to express and understand preferences, and to compromise. We provide all prompts and other details in Appendix~\ref{sec:appendix_dond}.
 
 \begin{figure}[ht]
   \centering
   \input{dond/example_transcript.tex}
-  \caption{Synthetic example of a DoND game episode. Note that the initial prompts given by the game master have been truncated for brevity. The game ends in a successful Pareto optimal agreement.}
+  \caption{An example of a \textit{Deal or No Deal} game episode. Note that the initial prompts given by the game master have been truncated for brevity. The game ends in a successful Pareto optimal agreement.}
   \label{fig:dond_example}
 \end{figure}
 
-%%% IMplementation details: explain the game dynamics - 2 player etc., instances,
-
 \paragraph{Game Mechanics}
+Two agents negotiate over a shared set of items, each having different private value functions for item types. Players exchange free-form messages and then simultaneously make secret proposals using specific syntax. If proposals are compatible (enough items for both), each player receives points based on their requested items' value according to their private function. If proposals conflict, both receive zero points. The game master strictly enforces rules without re-prompting, making rule adherence critical for successful play.
 
-At the start of each game, players are presented with a shared set of items, consisting of several types and quantities. In addition to the shared set of items, each player is also secretly given a different value function, mapping each item type to a non-negative integer indicating how much the player values that specific type of item. The fact that the two players value functions are different creates the central conflict in the game.
-
-After having received the initial prompt from the game master, containing the rules of the game, the shared set of items, and the players respective set of items, players are able to exchange free-form natural language messages. These messages are transmitted directly between the players and can be in any format, provided they do not contain the special proposal syntax. This enables the players to engage in negotiation about how to divide the items, with the goal of reaching an agreement.
-
-At any point during the conversation, or once prompted to by the game master after a turn limit is reached, the players can make a secret proposal using a specific syntax. Once one player has made a proposal, the game master instructs the other player to also make a proposal, crucially however, without revealing the content of the first proposal.
-
-After both proposals are submitted, the game can end in either of two outcomes. Either the proposals are compatible, i.e., there are enough items to satisfy both proposals, or the proposals are conflicting. In case of compatible proposals, each player is awarded points based on total value of items they requested, according to their private value function. Should the proposals be conflicting, however, both players receive zero points.
-
-The game master strictly enforces the rules. If a player fails to follow instructions, the game is immediately aborted. Unlike in \cite{DBLP:journals/corr/abs-2406-18872} there is no re-prompting on errors, making rule adherence a critical component of successful play.
-
-%%% Experiments: details of the experiments & number of instances etc.
-
-\paragraph{Instance Generation}
-
-The game instances for the evaluation were generated programmatically, ensuring a wide variety for possible initial conditions and controlled difficulty. Each instance was generated with a maximum turn limit of 5 and each game instance features a random set of between 3 and 5 different item types. The item types for each game have been randomly sampled from a predefined list of 100 common nouns. The total number of items was set to between 5 and 8, with every item type being present at least once and the remaining capacity being randomly distributed among the item types. Finally, a random value function of non-negative integers for all item types was generated for each player.
-
-The value functions were generated subject to the same constraints as in previous work on DoND \cite{DBLP:journals/corr/abs-2406-18872,DBLP:journals/corr/LewisYDPB17}. The maximum value a single player can achieve by receiving all the items in the game instance is exactly 10. Every item in the game instance has a non-zero value to at least one of the two players. And lastly, there exists at least one item that has a non-zero value to both players.
-These constraints are crucial for creating meaningful negotiation scenarios. The fixed maximum score keeps the value scale consistent, while the two other constraints on the value function ensure that no items are irrelevant and that it is impossible for both players to simultaneously achieve their maximum score, thus forcing a compromise.
-
-Two of the three different game modes proposed in \cite{DBLP:journals/corr/abs-2406-18872} have been evaluated. The initial prompt given to the players is identical across modes, except for the final rule which specifies the optimization objective to the players.
-In the \textbf{semi-competitive} mode, players are asked to maximize their own score. This is the standard negotiation setting, and it requires players to balance cooperation, to avoid zero-point conflicts, with competition, to maximize their individual share.
-For the \textbf{cooperative} mode of the game, players are asked to maximize the sum of both players scores. This transforms the game into a purely cooperative task, in which two rational agents should always achieve the maximum score, assuming they are able to communicate and reason about the preferences perfectly.
-
-\paragraph{Evaluation Metrics}
-
-In addition to the percentage of non-aborted games, the performance of players in the DoND game is also evaluated based on the scores achieved by the players.
-For the cooperative game mode, assessing the quality of agreement is straightforward. Since both players try to optimize for the same total score of both players, it is sufficient to use the ratio between the achieved total score to the maximum total score for that game instance, $\mathit{Quality}_\mathit{coop} = \frac{\mathit{Score}_A + \mathit{Score}_B}{\max ( \mathit{Score}_A' + \mathit{Score}_B' )}$.
-
-Evaluating the game in the semi-competitive setting is slightly more involved, as it requires finding a single score that jointly reflects the quality of the outcome for both players. For this, a metric based on Pareto efficiency has been used. The score is defined as one minus the normalized maximum possible Pareto improvement, $\mathit{Quality}_\mathit{semi} = 1 - \frac{\mathit{Maximum Pareto Improvement}}{\max ( \mathit{Score}_i' )}$. The maximum possible Pareto improvement is the largest amount the score of one player could be increased without decreasing the score of the other. Normalization is performed by dividing by the maximum score a single player can obtain.
+\paragraph{Game Instances}
+We generate instances for the game programmatically by randomly sampling 100 common nouns. Each instance was generated with a maximum turn limit of 5 and each game instance features a random set of between 3 and 5 different item types. We have two different sets of experiments. In the \textbf{semi-competitive} experiment, players are asked to maximize their own score. This is the standard negotiation setting, and it requires players to balance cooperation, to avoid zero-point conflicts, with competition, to maximize their individual share. For the \textbf{cooperative} experiment, players are asked to maximize the sum of the scores of both players. This transforms the game into a purely cooperative task, in which two rational agents should always achieve the maximum score, assuming they are able to communicate and reason about the preferences perfectly. Each experiment includes 20 instances, with \textbf{total 40 instances}.
 
 \subsection{Clean Up}
 
-Clean Up is a turn-based dialogue game for two players focussed on cooperative strategy development and object rearrangement. Both players are presented with identical $7\times7$ ASCII-like grids, with a number of randomly distributed objects in the form of capital letters placed on them. Placement is different for each player and each player can only see their own grid, cf.~\cref{fig:clean_up_example}. The goal is to rearrange the objects in such away that their respective positions match across both grids. Scoring is based on the Euclidean distance of the identical objects on both grids.
+Clean Up is a two-player game focused on cooperative strategy development and object rearrangement. Object rearrangement has been a long-standing problem that requires modelling the given situation, the action space, and spatial reasoning \cite{DBLP:journals/corr/abs-2011-01975,DBLP:journals/ral/ZengWYZDCD24,DBLP:journals/access/KhanQCASR25}. In this game, the players need to both negotiate their common goal state and a strategy of reaching it \cite{DBLP:conf/sigdial/JeknicSK24}. A sample episode is shown in Figure~\ref{fig:clean_up_example}. Each player can only access its own grid and need to negotiate which items to rearrange so that the grids become identical at the end. We provide all prompts and other details in Appendix~\ref{sec:appendix_clean_up}.
 
-Object rearrangement has been a long standing challenge in the field of artificial intelligence requiring understanding of the given situation, the action space, and spatial reasoning, cf.~\citet{DBLP:journals/corr/abs-2011-01975}, \citet{DBLP:journals/ral/ZengWYZDCD24}, \citet{DBLP:journals/access/KhanQCASR25}.
-
-Collaborative reconstruction games, where one player knows the desired target state and has to instruct their counterpart to recreate it, have been extensively studied (see \citet{DBLP:journals/jair/SugliaKL24} for an overview). In this game, however, the players are on par and need to both negotiate their common goal state and a strategy of reaching it (cf.~\citet{DBLP:conf/sigdial/JeknicSK24}, which examines human-human and human-computer interaction in a similar game).
+\paragraph{Game Mechanics} Both players are presented with $7\times7$ ASCII grids, with a number of randomly distributed objects in the form of capital letters placed on them. In each turn, a player can either send a message to their counterpart or move an object on their grid. The message and move text require certain formatting rules to follow. If a player does not follow the format, tries to move an object to a non-empty space or outside the grid bounds, or tries to move an object that doesn't exist, they receive a penalty and are re-prompted with information on the nature of their mistake. The game ends if (1) both players agree to end it, (2) round limit is exceeded, or (3) penalty limit is exceeded.
 
 \begin{figure}[ht!]
     \centering
     \input{clean_up/clean_up_transcript}
-    \caption{Condensed example dialogue from Clean Up. The task is to negotiate a common goal configuration for a number of objects randomly placed on each player`s grid, and move them accordingly. Finally, both players have to agree the goal is reached to end the game. \kr{expand first P1 message}}
+    \caption{Example episode from Clean Up game. The task is to negotiate a common goal configuration for a number of objects randomly placed on each player`s grid, and move them accordingly. Finally, both players have to agree the goal is reached to end the game.}
     % \vspace*{-.8cm}
     \label{fig:clean_up_example}
 \end{figure}
 
-\paragraph{Difficulty Levels and Instances}\label{sec:clean_up_difficulty_levels}  All grids have the same size ($7\times7$), and contain obstacles in form of horizontal and vertical lines, branches, crossings, and corners cf.~\cref{fig:clean_up_example}. They are generated using an ASP encoding to ensure all lines are continuous. We control difficulty along two dimensions: number of empty cells and number of objects.
 
-More empty cells means it's less likely that players try to place objects in occupied cells. Of the 49 total cells, $34$ or $69.4\%$ of cells are empty on the \textit{easy} level, $29$ or $59.2\%$ on \textit{medium}, and $24$ or $49.0\%$ on \textit{hard} (cf.~\cref{clean_up:grid_examples} in \cref{clean_up_exp_setup} for example grids). For each level, we sample three grids, and then place $3$, $5$, or $7$ objects on them, making for $27$ experiments in total.
+\paragraph{Game Instances}
 
-\paragraph{Game Mechanics} The game is turn based, and the maximum number of rounds is fixed to $4 \times n_{obj}$ (where $n_{obj}$ is the object count). Players can collectively accumulate $2 \times n_{obj} + 2$ penalties.
+All instances are created programmatically by creating different grids. All grids have the same size ($7\times7$), and contain obstacles in form of horizontal and vertical lines, branches, crossings, and corners. They are generated using an Answer Set Programming (ASP) encoding to ensure all lines are continuous. The maximum number of rounds is fixed to $4 \times n_{obj}$ (where $n_{obj}$ is the object count). Players can collectively accumulate $2 \times n_{obj} + 2$ penalties. We create different sets of experiments by controlling the difficulty along two dimensions: number of empty cells and number of objects. We have three difficult levels. Of the 49 total cells, $34$ or $69.4\%$ of cells are empty on the \textit{easy} level, $29$ or $59.2\%$ on \textit{medium}, and $24$ or $49.0\%$ on \textit{hard}. For each level, we sample three grids, and then place $3$, $5$, or $7$ objects on them, making for \textbf{27 instances in total}.
 
-Initially, P1 (Player~1) is provided with a game description including round and penalty limit and their respective grid, following which they have to send a message to P2 (Player~2). P2 receives the same prompt and P1's message (see~\cref{fig:clean_up_prompt_templates} in \cref{clean_up:prompts} for the full prompt). In each turn, a player can either send a message to their counterpart or move an object on their grid.
+\begin{figure}[ht]
+    \centering
+    \input{air-balloon-survival/air_balloon_transcript}
+    \caption{An example episode of the \textit{Air Balloon Survival} game. Two players must negotiate and argue for their preferred set of items. To reach the goal state, one player must explicitly agree to a proposal made by the other. \tk{Can you add a Strategic Reasoning text (short) to the episode here? - anything just to show this.} }
+    \label{fig:air_balloon_example}
+\end{figure}
 
-Each following turn starts with a message from the Game Master consisting of three parts: (1) feedback on the last turn, i.~e., either a notification that the message has been passed on or the updated grid if they moved an object; (2) information on the game state, i.~e., current and maximum penalties and rounds, and (3) either the other player's message or a notification that they moved an object. 
+\subsection{Air Balloon Survival}
+This negotiation game evaluates advanced reasoning and interactive collaboration between players, which was previously introduced by \citet{howes2021justifiable} in a different form to study how patients with schizophrenia verbalise their reasoning during social encounters. We have adjusted the task as a two-player game where these players are on a sinking hot air balloon and they have to agree on which items to keep (or throw out) so that the weight of the balloon is reduced in order to keep floating. Each player has hidden preference values for items and must negotiate to maximize their combined utility score while respecting weight constraints and following structured communication rules. An example episode is given in Figure~\ref{fig:air_balloon_example}. The game tests individual reasoning through constraint-based optimization (similar to the 0/1 Knapsack Problem) requiring arithmetic and combinatorial search. It also examines collective reasoning through practical rationality and theory of mind, as players must infer their counterpart's hidden preferences from their responses to reach an optimal agreement. The game concludes when one player explicitly accepts a proposal from the other, making it a concrete test of both computational problem-solving and social negotiation skills. We provide all prompts and other details in Appendix~\ref{sec:appendix_airballoon}.
 
-If a player does not follow the format, tries to move an object to a non-empty space or outside the grid bounds, or tries to move an object that doesn't exist, they receive a penalty and are re-prompted with information on the nature of their mistake. See \cref{fig:clean_up_intermittent_prompts} in \cref{clean_up:prompts} for the full new turn and penalty messages.
 
-The game ends if (1) both players agree to end it, (2) round limit is exceeded, or (3) penalty limit is exceeded.
+\paragraph{Game Mechanics}
+Both players receive their preference values assigned to items. They are instructed to use specified formats when making proposals and negotiating, and to follow rules such as only being allowed to accept proposals made by the other player. There is no limit on the number of turns, but a game is aborted if no progress is made for eight consecutive turns. Each player may commit up to two mistakes, either by violating game rules or by violating the required syntax. Different from other two games, the players are instructed to also output their \texttt{STRATEGIC REASONING} along with the expected message. Only the expected message is passed to the other player, the strategic reasoning output is used for analysis only. It allows players to ``think out loud'' about their choices, which can be compared with the reasoning model traces, but we made it an explicit part of the game. 
 
-\paragraph{Evaluation Metrics} A game counts as failure and is not scored if the penalty limit is exceeded. The Quality Score $\mathbf{QS}$ is calculated as follows:
-$$\mathbf{QS} = \mathbf{DS} \cdot \mathbf{PS} \cdot 100; \ \mathbf{QS} \in [0, 100]$$
+\paragraph{Instance Generation}
 
-\textbf{Distance Score} $\mathbf{DS} \in [0,1]$ is calculated from three components, each representing the sum of Euclidean distances for all identical objects on both grids: the Initial Distance Sum $\mathbf{I}$ at the start of the game, the Final Distance Sum $\mathbf{F}$ at the end of the game, and the Expected Distance Sum $\mathbb{E}$ that approximates the distances for randomly placed objects (see \cref{clean_up:scoring} for details). The Expected Distance Score $ES$ and Distance Reduction Score $RS$, quantifying how close the players came to the goal of perfect alignment of all objects, are calculated as follows:
+We draw either 15 or 35 items (depending on the experiment) from a randomly generated list constructed by concatenating a capital letter with a two-digit number (e.g., \texttt{A42}, \texttt{C07}). This keeps the naming of items language agnostic and abstract as much as possible from conventional examples of the 0/1 Knapsack Problem models may have seen during training\tk{add the idea behind this design choice - why not go with the names as in Fig 3, why letters?, not to have it depend on any language maybe?...} We assign a weight value to each item drawn from some discrete uniform distribution. The air balloon's capacity is defined as a fraction of the combined weight of all items. We experiment with two negotiation levels where we specifically set valuations over items to be the same for players giving them common goals or we invert their preference orderings giving them opposing goals. \tk{what is controlled by negotiation Easy/Hard experiments, write about it, briefly}. Easy level includes the common goal instances \tk{finish the sentence} and the hard level includes opposing goals instances\tk{finish the sentence}. We also experiment with turning the \texttt{STRATEGIC REASONING} off. Lastly, we run complexity experiments by increasing the number of items, using uncorrelated weights and values for the easy case, and correlated ones for the hard case where greedy value-to-weight heuristics for the 0/1 Knapsack fail.\tk{easy means with and hard means that...}. In total, we have six experiments with each having six instances, which leads to the \textbf{total number of 36 instances} for this game.
+
+
+
+\section{Experimental Setup}\label{sec:experimental_setup}
+
+\subsection{Game Instances}
+
+\textit{Deal or No Deal}, \textit{Clean Up} and \textit{Air Balloon Survival} games include 40, 27, and 36 experimental instances, respectively. Each instance is then initialized with defined prompt templates. The same game instances are used for English, German, and Italian experiments because the instances are language-agnostic, only prompt templates have to be aligned for a specific language. All prompt templates are provided in Appendix \ref{sec:dond_prompt_templates}, \ref{clean_up:prompts}, \ref{sec:hot_air_balloon_appendix_prompt_templates}.
+
+
+\subsection{Evaluation Metrics}
+
+The \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench} requires each implemented game to provide two main metrics: \% Played and Quality Score. The \textit{\% Played} stands for the percentage of episodes where the evaluated language models followed instructions and the game was terminated by the defined end states. In cases where the game play does not fit the defined states of the game, Game Master either tolerates such behaviour for one or two turns ask the players to try again or simply aborts the game. Game violations can be syntactic (where the game formatting rules are breached, e.g. not including the prefix ``SAY'' or ``MOVE'' in the Clean Up game) or semantic (e.g. by attempting to move an object that does not exist in the Clean Up game, or even trying to move another object into an already occupied cell).
+The next metric that is required by each game is the \textit{Quality Score}. It is calculated by an objective function to measure how close the played episode came to the target goal. In each game, this metric is calculated for all episodes that have been played, which reached the end state. Once two metrics are calculated, they are aggregated to a single number, the \textit{clemscore} as the normalized product of \textit{\% Played} and \textit{Quality Score} (scaled to the interval [0, 100]).
+
+Next, we describe the Quality Score details for each game below.
+
+\paragraph{Deal or No Deal}
+
+For the cooperative game mode, it is the ratio between the achieved total score to the maximum total score for that game instance, 
+
+\begin{align*}
+\text{Quality}_{\text{coop}} = \frac{\text{Score}_A + \text{Score}_B}{\max(\text{Score}_A' + \text{Score}_B')}
+\end{align*}
+
+where $\text{Score}_A$ and $\text{Score}_B$ represent the actual scores achieved by players A and B respectively, and $\max(\text{Score}_A' + \text{Score}_B')$ denotes the maximum possible combined score achievable for the given game instance.
+
+
+For the semi-competitive setting, a metric based on Pareto efficiency has been used.
+
+\begin{align*}
+\text{Quality}_{\text{semi}} = 1 - \frac{\text{Maximum Pareto Improvement}}{\max(\text{Score}_i')}
+\end{align*}
+
+where $\text{Maximum Pareto Improvement}$ represents the largest possible improvement in one player's score without decreasing the other player's score from the current agreement, and $\max(\text{Score}_i')$ denotes the maximum possible score achievable by any single player $i$ in the given game instance.
+
+\paragraph{Clean Up}
+
+The Quality Score is calculated by multiplying \textit{Distance Score} with Penalty \textit{Score}.
+\begin{align*}
+\text{Quality} = \text{Distance Score} \cdot \text{Penalty Score} \cdot 100
+\end{align*}
+
+\textbf{Distance Score} ($\mathbf{DS} \in [0,1]$) is calculated from three components, each representing the sum of Euclidean distances for all identical objects on both grids: the Initial Distance Sum $\mathbf{I}$ at the start of the game, the Final Distance Sum $\mathbf{F}$ at the end of the game, and the Expected Distance Sum $\mathbb{E}$ that approximates the distances for randomly placed objects (see Appendix~\ref{clean_up:scoring} for details). The Expected Distance Score $ES$ and Distance Reduction Score $RS$, quantifying how close the players came to the goal of perfect alignment of all objects, are calculated as follows:
 \begin{align*}
 ES = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}; \
 RS = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
 \end{align*}
+
 $\mathbf{DS}$ is then either $0$ if final placement is worse than random, or calculated as the mean of both scores:
 \begin{align*}
 \mathbf{DS} &= \begin{cases}
@@ -283,39 +348,15 @@ $\mathbf{DS}$ is then either $0$ if final placement is worse than random, or cal
 \end{cases}
 \end{align*}
 
-\textbf{Penalty Score} $\mathbf{PS} \in [0.5,1]$ is calculated from the penalty count $P$ normalized against max. penalties $P_m$ as follows:
+\textbf{Penalty Score} ($\mathbf{PS} \in [0.5,1]$) is calculated from the penalty count $P$ normalized against max. penalties $P_m$ as follows:
 $$\mathbf{PS} = \frac{P_m}{P-2P_m}+1.5$$
 We chose the hyperbolic function because it is lenient for low $P$ and harsher for $P$ close to $P_m$.
 
-%%% The general idea of the game - what is it measuring, why is it a viable game for measuring negotiation.... - motivation for the game
+\input{main-table}
 
-% one figure that shows sample transcript and how the players interact etc. - take a look at Fig 1 in here: https://aclanthology.org/2025.coling-main.381.pdf
- 
-%%% IMplementation details: explain the game dynamics - 2 player etc., instances,
-%%% Experiments: details of the experiments & number of instances etc.
-
-\subsection{Air Balloon Survival}
-\textit{Air Balloon Survival} is a conversational negotiation game. Two players are travelling in a sinking hot air balloon and must agree to keep a set of items such that they do not exceed the balloon's maximum weight capacity. Each player is presented with the list of available items and their respective weight. Additionally, both players receive unique preference values for each item which remain hidden from the other player. Players must then negotiate and make a deal which maximizes the utility score, i.e. the sum of preference values of items while respecting the weight constraint. During negotiation, players must respect the rules of the game which include a clear framework governing the syntactic structure of their messages and rules governing which actions they are allowed to take to advance in the game. The game ends once a deal has been made. A deal is defined as an explicit agreement by one player with a proposal their interlocutor has made. A proposal can be any subset of the set of items in the game. A simplified example of an episode can be seen in Figure \ref{fig:air_balloon_example}. \textit{Air Balloon Survival} probes the players abilities to reason and negotiate on two levels. On (1) the level of each individual player and (2) on a collective level. (1) On an individual level, each player is effectively given an instance of a version of the 0/1 Knapsack Problem. Hence, on this individual level our game probes a players ability to perform constraint-based optimization which includes carrying out arithmetic operations and performing combinatorial search over all possible deals. (2) On the collective level, we probe the players’ practical rationality, i.e. their ability to maximize personal utility by successfully negotiating an agreement with their counterpart who may have conflicting goals. Given that players must align by inferring their counterparts’ implicit preferences and intentions from observed responses, the game also connects to the broader topic of Theory of Mind (ToM) and LLMs.
-\begin{figure}[ht!]
-    \centering
-    \input{air-balloon-survival/air_balloon_transcript}
-    \caption{A simplified dialogue example from the \textit{Air Balloon Survival} game. In this game, two players must negotiate and argue for their preferred set of items. To reach the goal state, one player must explicitly agree to a proposal made by the other. Messages from player A and player B are shown in red and green, respectively. Grey messages come from the game master, who provides the initial prompts and relays messages between the two players. \tk{I'd say add some made-up list of items and their weights from each player's view so that we see what is there. and they are trying to negotiate for/about etc. Maybe Player 2 could accept some items but negotiate over others based on personal preferences (weights) etc. so that we see how personal preferences play a role here.}}
-    \label{fig:air_balloon_example}
-\end{figure}
-\paragraph{Game Mechanics}
-Both players receive initial prompts that may differ in the preference values assigned to items. They are instructed to use specified formats when making proposals and negotiating, and to follow rules such as only being allowed to accept proposals made by the other player (cf. Fig.~\ref{fig:hot_air_balloon_init_prompt} in Appendix~\ref{sec:hot_air_balloon_appendix_prompt_templates}). 
-There is no limit on the number of turns, but a game is aborted if no progress is made for eight consecutive turns. Each player may commit up to two mistakes, either by violating game rules or by violating the required syntax. In such cases, they are reprompted with a tailored message (cf. Figs.~\ref{fig:hot_air_balloon_parse_error_prompts}, \ref{fig:hot_air_balloon_invalid_action_prompts}). 
-Messages are relayed through the game master. In some of our game instances we allow players to use a \texttt{STRATEGIC REASONING} tag the contents of which will not be forwarded to the other player by the game master which allows a player to `think out loud' about, for example, the counterpart's preferences or their own explicit preference values. When used with a reasoning model, the tag can be compared to the model’s internal reasoning traces. 
-A game ends successfully once a player accepts a proposal made by the counterpart.
-\paragraph{Instance Generation}
-For instance generation, we draw either 15 or 35 items (depending on the experiment) from a randomly generated list constructed by concatenating a capital letter with a two-digit number (e.g., \texttt{A42}, \texttt{C07}). For each item $i$ we draw a weight $w_i$ from some discrete uniform distribution. We used $U\{1,1000\}$ in all instances. The air balloon's capacity is defined as a fraction of the combined weight of all items, i.e., $W = \alpha \sum_{i=1}^{n} w_i$, where $\alpha \in (0,1)$ is a scaling parameter controlling the tightness of the weight constraint. In all of our instances we set $\alpha = 0.5$, so the capacity of the air balloon equals half of the sum of the weights. For each player $p \in P$ we generate an individual valuation function assigning a preference value $v_p(i)$ to each item $i$. We control two dimensions of correlation when generating these valuations: (i) the correlation between weights and preferences, and (ii) the correlation between players’ preferences. 
-For (i) we distinguish two cases. Firstly, there is the uncorrelated case, where preference values are drawn independently of the weights, $v_p(i) \sim U\{1,R\}, \ \forall i \in \{1,\dots,n\}$, where $R$ denotes the maximum weight among all items. Secondly, there is the strongly correlated case, where the preference values are defined directly from the weights, $v_p(i) = w_i + q, \ \forall i \in \{1,\dots,n\}$, with $q = R/10$ controlling the correlation offset. For (ii) we distinguish three cases. In the equal case, both players share identical valuation functions, $v_1(i) = v_2(i)$ for all $i$, thus giving them the same goals. In the independent case, the valuations $v_1$ and $v_2$ are generated separately. In the inverse case, the rankings of the items are reversed across players, so that the highest-valued item of player 1 receives the lowest value for player 2, and so forth, giving them opposing goals. 
-Increasing the number of items and controlling the correlation between weights and preferences relates to (1), the hardness of the knapsack problem and the reasoning required on an individual player’s level. The correlation between players’ preferences relates to (2), their ability to negotiate, take appropriate actions and reach an agreement when they have common or opposing goals.
-\paragraph{Evaluation Metrics}
-Each player $p \in P$ receives an individual score based on the utility of the final deal $D$, i.e. the sum of the preference values of items in $D$. This sum gets normalized by the value of the optimal solution to their instance of the 0/1 Knapsack Problem. The overall game score is defined as the harmonic mean of the two players’ normalized scores, further normalized by the maximum harmonic mean achievable for an instance. All scores are scaled to the range $[0,100]$. If the total weight of the deal exceeds the capacity $W$, the score is set to $0$. We chose the harmonic mean as our main metric 
-as it rewards collectively balanced outcomes by favouring deals where both players achieve high scores and penalizing those where one player benefits disproportionately. 
-The choice for individual scores is straightforward, as they simply measure each player’s outcome relative to the optimal solution of their own knapsack problem.
-For a final deal $D \subseteq \{1,\dots,n\}$, the normalized score of player $p \in P$ is  
+\paragraph{Air Balloon Survival}
+Each player $p \in P$ receives an individual score based on the utility of the final deal $D$, i.e. the sum of the preference values of items in $D$. This sum gets normalized by the value of the optimal solution to their instance of the 0/1 Knapsack Problem. The overall game score is defined as the harmonic mean of the two players’ normalized scores, further normalized by the maximum harmonic mean achievable for an instance. If the total weight of the deal exceeds the capacity $W$, the score is set to $0$. We chose the harmonic mean as our main metric as it rewards collectively balanced outcomes by favouring deals where both players achieve high scores and penalizing those where one player benefits disproportionately. 
+The individual scores of players is each player’s outcome relative to the optimal solution of their own knapsack problem. For a final deal $D \subseteq \{1,\dots,n\}$, the normalized score of player $p \in P$ is  
 $$
 f_p(D) = 100 \cdot \frac{\sum_{i \in D} v_p(i)}{\text{OPT}_p},
 $$  
@@ -330,66 +371,79 @@ f_{\text{harm}}(D) =
 $$  
 The final game score is the normalized harmonic mean, 
 $$
-\text{score}(D) = 100 \cdot \frac{f_{\text{harm}}(D)}{\text{OPT}^*},
+\text{Quality}(D) = 100 \cdot \frac{f_{\text{harm}}(D)}{\text{OPT}^*},
 $$  
 where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given instance.
-\tk{Game desc etc.}
 
-\cite{esfandiari-baiat-edlund-2024-meet}
 
-\cite{DBLP:conf/iclr/DavidsonVK024}
 
-%%% The general idea of the game - what is it measuring, why is it a viable game for measuring negotiation.... - motivation for the game
 
-% one figure that shows sample transcript and how the players interact etc. - take a look at Fig 1 in here: https://aclanthology.org/2025.coling-main.381.pdf
-
-%%% IMplementation details: explain the game dynamics - 2 player etc., instances,
-%%% Experiments: details of the experiments & number of instances etc.
-
-\section{Experimental Setup}
-
-\subsection{Instances}
-\subsection{Evaluation Metrics}
-
-Each game provides a 
 
 \subsection{Evaluated Models}
 
-We have evaluated both commercial and open-weight models that have reasoning functionality. We selected \textit{GPT-5}, \textit{GPT-5-mini}~\footnote{Reasoning mode for OpenAI models is controlled by setting the $reasoning\_effort$ parameter to \textit{medium} and it was turned off by setting it to \textit{minimal}}, \textit{Claude-4} from commercial models\footnote{Reasoning mode is controlled by setting the \textit{thinking} parameter to true/false and providing an upper limit budget (we set it as 1024 tokens)}. From open-weight models, we selected \textit{Llama3.3-70B} and its reasoning counterpart Deepseek-R1-distilled-llama-70B\footnote{Llama3.3-70B model was finetuned to make it a reasoning model by distilling from Deepseek-R1 } and Nemotron-Nano-9B-v2\footnote{It is a reasoning model and reasoning can be turned off by including $no\_think$ in the \textit{system message} and by default it is turned on}. We have excluded certain reasoning models (e.g., gpt-oss) since it was not possible to turn off their reasoning mode. For commercial models, we ran them via their respective API backends and we used \textit{OpenRouter.ai} for open-weight models.
+We have evaluated both commercial and open-weight models that have reasoning functionality. We selected \textit{GPT-5}, \textit{GPT-5-mini}~\footnote{Reasoning mode for OpenAI models is controlled by setting the $reasoning\_effort$ parameter to \textit{medium} and it was turned off by setting it to \textit{minimal}}, \textit{Claude-4} from commercial models\footnote{Reasoning mode is controlled by setting the \textit{thinking} parameter to true/false and providing an upper limit budget (we set it as 1024 tokens)}. From open-weight models, we selected \textit{Llama3.3-70B} and its reasoning counterpart Deepseek-R1-distilled-llama-70B\footnote{Llama3.3-70B model was finetuned to make it a reasoning model by distilling from Deepseek-R1 }, Nemotron-Nano-9B-v2\footnote{It is a reasoning model and reasoning can be turned off by including $no\_think$ in the \textit{system message} and by default it is turned on}, \textit{Qwen-3-80B} (\textit{instruction} and \textit{thinking} versions for reasoning off and on modes, respectively), \textit{GPT-OSS-120B} with reasoning on mode only, and finally \textit{Deepseek-v3.1} with reasoning off mode only. For commercial models, we ran them via their respective API backends and we used \textit{OpenRouter.ai} for open-weight models.
 
 \section{Results}
 
 \subsection{Overall Performance}
 
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/token_plot_average.pdf}
+        \caption{Performance and the number of output tokens for all evaluated models with their reasoning on/off modes averaged for three languages.}
+        \label{fig:token_average}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/cost_plot_average.pdf}
+        \caption{Performance and the cost of for all evaluated models with their reasoning on/off modes averaged for three languages.}
+        \label{fig:cost_average}
+    \end{subfigure}
+    \caption{Trade-off between performance and cost comparison across different models. Results for all languages are averaged.}
+    \label{fig:combined-token-cost}
+\end{figure*}
 
-\begin{table*}[ht]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4.5pt}
-\definecolor{lightgreen}{RGB}{220,255,220}
-\definecolor{lightblue}{RGB}{220,235,255}
-\begin{tabular}{c|l|cc|cc|cc|cc|cc|cc|cc|}
-\hline
-\multirow{8}{*}{\rotatebox{90}{\textbf{EN}}} & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{\begin{tabular}{c}\textbf{Qwen-3}\\\textbf{80B}\end{tabular}}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ \cline{2-16}
- & \textbf{Games} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ \hline
- & DoND & \cellcolor{lightgreen}87.9 & \cellcolor{lightblue}32.3 & \cellcolor{lightgreen}75.7 & \cellcolor{lightblue}23.7 & \cellcolor{lightgreen}\textbf{94.4} & \cellcolor{lightblue}90.1 & \cellcolor{lightgreen}24.3 & \cellcolor{lightblue}43.5 & \cellcolor{lightgreen}18.5 & \cellcolor{lightblue}4.0 & \cellcolor{lightgreen}57.9 & \cellcolor{lightblue}22.5 & \cellcolor{lightgreen}50.0 & \cellcolor{lightblue}59.0 \\ 
- & Cleanup & \cellcolor{lightgreen}59.9 & \cellcolor{lightblue}42.8 & \cellcolor{lightgreen}63.4 & \cellcolor{lightblue}38.1 & \cellcolor{lightgreen}\textbf{69.7} & \cellcolor{lightblue}60.0 & \cellcolor{lightgreen}1.5 & \cellcolor{lightblue}19.8 & \cellcolor{lightgreen}21.8 & \cellcolor{lightblue}27.9 & \cellcolor{lightgreen}55.3 & \cellcolor{lightblue}18.6 & \cellcolor{lightgreen}67.7 & \cellcolor{lightblue}57.5 \\ 
- & Air Balloon & \cellcolor{lightgreen}\textbf{98.0} & \cellcolor{lightblue}80.1 & \cellcolor{lightgreen}97.5 & \cellcolor{lightblue}82.2 & \cellcolor{lightgreen}83.8 & \cellcolor{lightblue}26.2 & \cellcolor{lightgreen}2.3 & \cellcolor{lightblue}40.9 & \cellcolor{lightgreen}14.3 & \cellcolor{lightblue}13.2 & \cellcolor{lightgreen}88.7 & \cellcolor{lightblue} 0 & \cellcolor{lightgreen}78.2 & \cellcolor{lightblue}81.7 \\ 
- & \textbf{Average} & \cellcolor{lightgreen}81.9 & \cellcolor{lightblue}51.7 & \cellcolor{lightgreen}78.9 & \cellcolor{lightblue}48.0 & \cellcolor{lightgreen}\textbf{82.6} & \cellcolor{lightblue}58.8 & \cellcolor{lightgreen}9.4 & \cellcolor{lightblue}34.7 & \cellcolor{lightgreen}18.2 & \cellcolor{lightblue}15.0 & \cellcolor{lightgreen}67.3 & \cellcolor{lightblue} 13.7 & \cellcolor{lightgreen}65.3 & \cellcolor{lightblue}66.1 \\ \hline \hline
-\multirow{4}{*}{\rotatebox{90}{\textbf{DE}}}
- & DoND & \cellcolor{lightgreen}\textbf{86.0} & \cellcolor{lightblue}19.6 & \cellcolor{lightgreen}82.9 & \cellcolor{lightblue}24.4 & \cellcolor{lightgreen}80.3 & \cellcolor{lightblue}77.1 & \cellcolor{lightgreen}21.8 & \cellcolor{lightblue}53.4 & \cellcolor{lightgreen} 0 & \cellcolor{lightblue}4.5 & \cellcolor{lightgreen}62.1 & \cellcolor{lightblue}12.8 & \cellcolor{lightgreen}34.9 & \cellcolor{lightblue}42.4 \\ 
- & Cleanup & \cellcolor{lightgreen}78.7 & \cellcolor{lightblue}41.2 & \cellcolor{lightgreen}76.8 & \cellcolor{lightblue}41.2 & \cellcolor{lightgreen}\textbf{82.7} & \cellcolor{lightblue}55.8 & \cellcolor{lightgreen}3.9 & \cellcolor{lightblue}15.4 & \cellcolor{lightgreen}21.5 & \cellcolor{lightblue} 0 & \cellcolor{lightgreen}58.2 & \cellcolor{lightblue}14.5 & \cellcolor{lightgreen}50.1 & \cellcolor{lightblue}29.4 \\ 
- & Air Balloon & \cellcolor{lightgreen}\textbf{98.0} & \cellcolor{lightblue}81.4 & \cellcolor{lightgreen}94.9 & \cellcolor{lightblue}86.2 & \cellcolor{lightgreen}85.4 & \cellcolor{lightblue}27.8 & \cellcolor{lightgreen}51.5 & \cellcolor{lightblue}43.7 & \cellcolor{lightgreen}17.4 & \cellcolor{lightblue}16.3 & \cellcolor{lightgreen}76.0 & \cellcolor{lightblue}8.8 & \cellcolor{lightgreen}90.7 & \cellcolor{lightblue}75.3 \\ 
- & \textbf{Average} & \cellcolor{lightgreen}\textbf{87.6} & \cellcolor{lightblue}47.4 & \cellcolor{lightgreen}84.9 & \cellcolor{lightblue}50.6 & \cellcolor{lightgreen}82.8 & \cellcolor{lightblue}53.6 & \cellcolor{lightgreen}25.7 & \cellcolor{lightblue}37.5 & \cellcolor{lightgreen}13.0 & \cellcolor{lightblue} 6.9 & \cellcolor{lightgreen}65.4 & \cellcolor{lightblue}12.0 & \cellcolor{lightgreen}58.6 & \cellcolor{lightblue}49.0 \\ \hline \hline
-\multirow{4}{*}{\rotatebox{90}{\textbf{IT}}}
- & DoND & \cellcolor{lightgreen}78.0 & \cellcolor{lightblue}33.8 & \cellcolor{lightgreen}77.1 & \cellcolor{lightblue}26.8 & \cellcolor{lightgreen}\textbf{84.4} & \cellcolor{lightblue}67.8 & \cellcolor{lightgreen}17.3 & \cellcolor{lightblue}14.3 & \cellcolor{lightgreen}13.9 & \cellcolor{lightblue}11.2 & \cellcolor{lightgreen}55.6 & \cellcolor{lightblue}19.4 & \cellcolor{lightgreen}29.0 & \cellcolor{lightblue}28.9 \\ 
- & Cleanup & \cellcolor{lightgreen}66.9 & \cellcolor{lightblue}39.7 & \cellcolor{lightgreen}67.5 & \cellcolor{lightblue}39.5 & \cellcolor{lightgreen}\textbf{72.9} & \cellcolor{lightblue}58.5 & \cellcolor{lightgreen}3.4 & \cellcolor{lightblue}17.9 & \cellcolor{lightgreen}13.2 & \cellcolor{lightblue}9.8 & \cellcolor{lightgreen}52.5 & \cellcolor{lightblue}13.0 & \cellcolor{lightgreen}44.8 & \cellcolor{lightblue}41.3 \\ 
- & Air Balloon & \cellcolor{lightgreen}97.2 & \cellcolor{lightblue}88.0 & \cellcolor{lightgreen}\textbf{97.3} & \cellcolor{lightblue}87.8 & \cellcolor{lightgreen}79.4 & \cellcolor{lightblue}27.0 & \cellcolor{lightgreen}2.7 & \cellcolor{lightblue}40.8 & \cellcolor{lightgreen} 0 & \cellcolor{lightblue} 0 & \cellcolor{lightgreen}77.8 & \cellcolor{lightblue}12.9 & \cellcolor{lightgreen}83.7 & \cellcolor{lightblue}76.4 \\ 
- & \textbf{Average} & \cellcolor{lightgreen}\textbf{80.7} & \cellcolor{lightblue}53.8 & \cellcolor{lightgreen}80.6 & \cellcolor{lightblue}51.4 & \cellcolor{lightgreen}78.9 & \cellcolor{lightblue}51.1 & \cellcolor{lightgreen}7.8 & \cellcolor{lightblue}24.3 & \cellcolor{lightgreen}9.0 & \cellcolor{lightblue} 7 & \cellcolor{lightgreen}62.0 & \cellcolor{lightblue}15.1 & \cellcolor{lightgreen}52.5 & \cellcolor{lightblue}48.9 \\ \hline
-\end{tabular}
-\caption{\textit{clemscore} values for three negotiation games on selected LLMs for English, German, and Italian versions. \textit{On}: reasoning mode is turned on, \textit{Off}: reasoning mode is turned off. The best result for each language in each row is highlighted in bold. \textit{CL}: Claude, \textit{LM}: Llama-3.3, \textit{DS}: Deepseek, \textit{Nem}: Nemotron-v2, \textit{DoND}: Deal or No Deal }
-\label{tab:main-results}
-\end{table*}
+We present the results obtained by the models evaluated for English, German, and Italian versions of the negotiation game in Table~\ref{tab:main-results}. The models were run with both \textit{reasoning on} and \textit{off} modes. 
+
+\paragraph{The Effect of Reasoning} The most striking observation here is that reasoning mode dramatically improves performance across many models and languages. This is a strong indication that deliberate reasoning significantly enhances strategic game-playing abilities. Only with \textit{Llama-70B} we see different results, which may be the effect of distillation from another model (Deepseek-R1).
+
+\paragraph{Multilingual Capabilities} Italian shows the strongest overall performance across most models, with several models achieving scores above $85$ points with reasoning enabled. German and English performances are strong too, which suggests these models have particularly good multilingual reasoning capabilities for strategic tasks.
+
+\paragraph{Model Comparison} GPT-5 is the clear winner with GPT-5-mini and Claude-4 getting very close performance across all languages. Interestingly, GPT-5 mini sometimes matches or exceeds full GPT-5 performance (particularly in Italian). It terms of performance gap between reasoning on/off modes, Qwen-3 gets the biggest performance jump.
+
+
+
+\subsection{Detailed Analysis}
+
+\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
+
+Now, we look into at what cost does the performance gap comes in. In Figure~\ref{fig:combined-token-cost}~$a$, we present the plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. As expected, the models with reasoning output more tokens than models without it, but Qwen-3 generates almost \textit{7x} more tokens than its non-reasoning counterpart. In Figure~\ref{fig:combined-token-cost}~$b$, we present the overall cost of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5} being the most expensive. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight model} with fraction of the cost compared to Qwen-3.
+
+
+
+\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+
+
+We ran a language detection script to analyse the reasoning message of the models. The results are presented in Figure~\ref{fig:lang_distribution_reasoning} \footnote{Note: \textit{GPT-5} models do not return reasoning tokens, thus they are excluded from this analysis}. We clearly see that all open-weight models mostly generate the reasoning tokens in English whereas Claude-4 ``thinks'' in the respective language of the task, consistent across all three of them. In Figure~\ref{fig:language_consistency_heatmap}, we provide the heat map of language consistency (whether the language of the message matches the target language) across \textit{completion} and \textit{reasoning} tokens. We can clearly see that \textit{Claude-4} (only commercial model in the analysis) has consistency in both completion and reasoning tokens. Open-weight models retain consistency in completion tokens (thus, abiding the formatting rules as each game requires prefixes in the respective language), but fail to do so with reasoning tokens for German and Italian versions of the games. Thus, we can conclude that \textbf{models do not main language consistency in their reasoning processes across multilingual tasks}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/language_distribution_reasoning_messages.pdf}
+    \caption{Language distribution in reasoning messages of evaluated models.}
+    \label{fig:lang_distribution_reasoning}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{figures/mean_consistency_rates_heatmap.pdf}
+    \caption{Language consistency across models types (open-weight and commercial) for both completion and reasoning tokens}
+    \label{fig:language_consistency_heatmap}
+\end{figure}
+
+\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of learning?}
 
 \subsection{Findings}
 
@@ -411,52 +465,24 @@ We have evaluated both commercial and open-weight models that have reasoning fun
 
 %% look at reasoning traces in requests.json
 
-\subsection{Cost-Performance Trade-off}
-
-\begin{figure*}[ht]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/token_plot_average.pdf}
-        \caption{Average performance (clemscore) and the number of output tokens for all evaluated models with their reasoning on/off modes for English, German and Italian.}
-        \label{fig:token_average}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/cost_plot_average.pdf}
-        \caption{Average performance (clemscore) and the cost of for all evaluated models with their reasoning on/off modes for English, German and Italian.}
-        \label{fig:cost_average}
-    \end{subfigure}
-    \caption{Trade-off between performance and cost comparison across different models. Results for all languages are averaged.}
-    \label{fig:combined}
-\end{figure*}
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=1.0\linewidth]{figures/token_plot_average.pdf}
-%     \caption{Average performance (clemscore) and the number of output tokens for all evaluated models with their reasoning on/off modes for English, German and Italian.}
-%     \label{fig:token_average}
-% \end{figure}
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=1.0\linewidth]{figures/cost_plot_average.pdf}
-%     \caption{Average performance (clemscore) and the cost of for all evaluated models with their reasoning on/off modes for English, German and Italian.}
-%     \label{fig:cost_average}
-% \end{figure}
-
-
 
 \subsection{Qualitative Analysis}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent imperdiet hendrerit augue eget egestas. Etiam congue faucibus arcu, eget hendrerit augue molestie ut. Donec sodales tempor ex eu dignissim. Suspendisse potenti. Donec vel ultrices nunc, a venenatis tellus. Ut elementum sed velit non rhoncus. Duis et felis non sapien finibus fermentum. Aliquam sollicitudin, massa et tempor imperdiet, ipsum neque aliquet ligula, et condimentum sem metus vitae turpis. Praesent quis vehicula est. Phasellus faucibus libero at leo commodo, vel iaculis ante venenatis. Pellentesque mattis sodales eros, a ullamcorper mauris bibendum vel. Fusce iaculis risus quis enim dignissim ornare. Curabitur posuere urna enim, at rutrum libero sollicitudin quis. Nam feugiat, tellus ut vestibulum convallis, ante purus ultrices diam, a accumsan magna magna vel ante. 
 
 
 
 \section{Conclusion}
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent imperdiet hendrerit augue eget egestas. Etiam congue faucibus arcu, eget hendrerit augue molestie ut. Donec sodales tempor ex eu dignissim. Suspendisse potenti. Donec vel ultrices nunc, a venenatis tellus. Ut elementum sed velit non rhoncus. Duis et felis non sapien finibus fermentum. Aliquam sollicitudin, massa et tempor imperdiet, ipsum neque aliquet ligula, et condimentum sem metus vitae turpis. Praesent quis vehicula est. Phasellus faucibus libero at leo commodo, vel iaculis ante venenatis. Pellentesque mattis sodales eros, a ullamcorper mauris bibendum vel. Fusce iaculis risus quis enim dignissim ornare. Curabitur posuere urna enim, at rutrum libero sollicitudin quis. Nam feugiat, tellus ut vestibulum convallis, ante purus ultrices diam, a accumsan magna magna vel ante. 
+
 \section*{Limitations}
 
-LIMITATIONS
+The first limitation is about the scope of negotiation tasks. A large body of work and various other dialogue games exist that we did not include in this study. Another limitation is regarding the analysis of three European languages, which are also high-resource languages. The primary reason for considering only the defined dialogue games is that including more games would result in a higher number of model results, thereby increasing the overall cost of the study. Another limitation is the exclusion of more models from both commercial and open-source ones. As explained above, such decisions would exceed the budget for such a study.
+
+\section*{Ethical Considerations}
+
+Using paid proprietary APIs with underlying models about which little is known (training data, model architecture) in academic research is less than ideal. Currently, the models tested here support reasoning modes, either on or off (except for GPT-OSS-120B). We hope that open models will include more controls over reasoning aspects and catch up soon in terms of general performance. Deploying such language agents in society has considerable risks. As mentioned in the Related Work, such agents exhibit asymmetric behaviours in negotiations and may expose users to unfaithful actions.
 
 \newpage
 

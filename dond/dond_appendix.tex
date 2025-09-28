@@ -1,7 +1,9 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
-\subsection{Prompt Templates}
+
+
+\subsection{Prompt Templates}\label{sec:dond_prompt_templates}
 
 The prompt template for both players of the Deal or No Deal is given in Figure~\ref{fig:dond_prompt_templates}.
 
@@ -77,13 +79,16 @@ Answer: \$ANSWER\$
 \multirow{3}{*}{Optimal} & Explicit maximization & 0 & 1 & 0 & 3 & 11 & 3 & 11 & 0 & 1 & 0 & 0 & 0 & 5 & 0 \\
  & Simple negotiation & 17 & 16 & 0 & 7 & 3 & 2 & 6 & 2 & 5 & 5 & 0 & 0 & 8 & 3 \\
  & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+\hline
 \multirow{5}{*}{Suboptimal} & Unclear preferences & 1 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
  & Unclaimed items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 \\
  & Claiming valueless item & 1 & 2 & 0 & 0 & 0 & 2 & 0 & 1 & 3 & 4 & 0 & 0 & 0 & 0 \\
  & Wrong proposal & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
  & Premature proposal & 0 & 0 & 3 & 1 & 3 & 0 & 1 & 0 & 3 & 0 & 3 & 1 & 0 & 1 \\
+\hline
 \multirow{2}{*}{Failed} & Wrong proposal & 0 & 0 & 3 & 7 & 1 & 11 & 0 & 13 & 1 & 5 & 0 & 0 & 4 & 7 \\
  & Premature proposal & 1 & 0 & 12 & 1 & 1 & 0 & 1 & 2 & 4 & 0 & 14 & 19 & 0 & 8 \\
+\hline
 \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 4 & 0 & 0 & 1 & 0 \\
  & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 \\
  & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0

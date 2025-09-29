@@ -1,6 +1,6 @@
 \documentclass[../main.tex]{subfiles}
-\begin{document}
 
+\begin{document}
 
 
 \subsection{Prompt Templates}\label{sec:dond_prompt_templates}
@@ -90,107 +90,195 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
     \label{fig:dond_it_exp}
 \end{figure}
 
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{c|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-16}
+    & \textbf{Metric} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{semi en}}} & \textbf{Clemscore} & 88 & 26 & 61 & 32 & \textbf{94} & 82 & 19 & 38 & 18 & 3 & 46 & 22 & 40 & 58 \\ 
+     & \% Played & \textbf{100} & \textbf{100} & \textbf{100} & 90 & \textbf{100} & \textbf{100} & 80 & 55 & 85 & 95 & \textbf{100} & \textbf{100} & 95 & 95 \\ 
+     & \% Agreement & \textbf{95} & 28 & 65 & 50 & \textbf{95} & 85 & 25 & 73 & 24 & 5 & 55 & 25 & 42 & 68 \\ 
+     & \% Optimal & 70 & 17 & 45 & 6 & \textbf{90} & 70 & 19 & 45 & 12 & 0 & 30 & 10 & 42 & 37 \\ 
+     & Quality Score & 88 & 26 & 61 & 35 & \textbf{94} & 82 & 24 & 69 & 22 & 4 & 46 & 22 & 42 & 61 \\ 
+     & Avg. \# Messages & 3.5 & 4.3 & 4.7 & 6 & 5.8 & 6.1 & 2.8 & 9.3 & 2 & 2 & 3.3 & 4 & 4.7 & 5.8 \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{semi de}}} & \textbf{Clemscore} & \textbf{80} & 24 & 70 & 24 & \textbf{80} & 74 & 22 & 42 & 0 & 9 & 68 & 14 & 38 & 40 \\ 
+     & \% Played & \textbf{100} & 85 & \textbf{100} & 90 & \textbf{100} & \textbf{100} & 75 & 95 & 0 & \textbf{100} & \textbf{100} & 85 & 95 & \textbf{100} \\ 
+     & \% Agreement & \textbf{90} & 29 & 80 & 28 & 80 & \textbf{90} & 33 & 53 & 0 & 10 & 75 & 18 & 47 & 50 \\ 
+     & \% Optimal & 50 & 24 & 60 & 22 & \textbf{75} & 55 & 20 & 21 & 0 & 5 & 55 & 12 & 26 & 30 \\ 
+     & Quality Score & \textbf{80} & 29 & 70 & 27 & \textbf{80} & 74 & 29 & 44 & 0 & 9 & 68 & 16 & 41 & 40 \\ 
+     & Avg. \# Messages & 3.8 & 4.8 & 3.8 & 4.9 & 7 & 6.2 & 2.8 & 8.4 & 1 & 2 & 3.8 & 3.8 & 3.6 & 6.2 \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{semi it}}} & \textbf{Clemscore} & \textbf{82} & 28 & 78 & 24 & 80 & 60 & 17 & 16 & 20 & 15 & 59 & 20 & 31 & 24 \\ 
+     & \% Played & \textbf{100} & 95 & \textbf{100} & 85 & \textbf{100} & \textbf{100} & 70 & 90 & 75 & 95 & \textbf{100} & 90 & \textbf{100} & \textbf{100} \\ 
+     & \% Agreement & \textbf{90} & 32 & 85 & 29 & 85 & 65 & 29 & 28 & 33 & 21 & 65 & 22 & 35 & 25 \\ 
+     & \% Optimal & 55 & 21 & 55 & 24 & \textbf{65} & 50 & 7 & 0 & 7 & 5 & 40 & 22 & 30 & 20 \\ 
+     & Quality Score & \textbf{82} & 29 & 78 & 29 & 80 & 60 & 24 & 18 & 27 & 16 & 59 & 22 & 31 & 24 \\ 
+     & Avg. \# Messages & 4 & 4.5 & 3.5 & 4.3 & 6 & 5.6 & 4.2 & 6.7 & 1.9 & 3.2 & 3.7 & 4.8 & 3.9 & 5.4 \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{coop en}}} & \textbf{Clemscore} & 87 & 38 & 91 & 15 & 94 & \textbf{99} & 30 & 49 & 18 & 4 & 70 & 24 & 60 & 60 \\ 
+     & \% Played & \textbf{100} & 95 & \textbf{100} & 95 & \textbf{100} & \textbf{100} & \textbf{100} & 80 & 90 & \textbf{100} & 90 & \textbf{100} & 95 & \textbf{100} \\ 
+     & \% Agreement & 89 & 42 & 95 & 17 & 95 & \textbf{100} & 35 & 69 & 22 & 5 & 78 & 25 & 79 & 65 \\ 
+     & \% Optimal & 74 & 26 & \textbf{89} & 11 & 85 & 85 & 0 & 31 & 6 & 0 & 72 & 15 & 32 & 50 \\ 
+     & Quality Score & 87 & 40 & 91 & 16 & 94 & \textbf{99} & 30 & 61 & 21 & 4 & 77 & 24 & 63 & 60 \\ 
+     & Avg. \# Messages & 3.8 & 4.2 & 5.2 & 4.9 & 5.4 & 5.6 & 2.5 & 9.2 & 2 & 2 & 3.8 & 3.3 & 5 & 5.4 \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{coop de}}} & \textbf{Clemscore} & 92 & 15 & \textbf{95} & 24 & 81 & 80 & 22 & 65 & 0 & 0 & 56 & 12 & 31 & 44 \\ 
+     & \% Played & \textbf{100} & 85 & \textbf{100} & 80 & \textbf{100} & \textbf{100} & 70 & \textbf{100} & 0 & \textbf{100} & 95 & 90 & 95 & \textbf{100} \\ 
+     & \% Agreement & \textbf{100} & 18 & \textbf{100} & 31 & 85 & 85 & 36 & 75 & 0 & 0 & 63 & 17 & 37 & 45 \\ 
+     & \% Optimal & 75 & 12 & \textbf{80} & 25 & 55 & 60 & 7 & 30 & 0 & 0 & 32 & 0 & 16 & 40 \\ 
+     & Quality Score & 92 & 17 & \textbf{95} & 30 & 81 & 80 & 31 & 65 & 0 & 0 & 59 & 13 & 33 & 44 \\ 
+     & Avg. \# Messages & 3.9 & 4.5 & 3.8 & 5.2 & 5.7 & 5.8 & 2 & 9 & 1 & 2 & 3.8 & 3.7 & 4.2 & 5.8 \\ 
+    \hline
+    \multirow{6}{*}{\rotatebox{90}{\textbf{coop it}}} & \textbf{Clemscore} & 74 & 40 & 77 & 29 & \textbf{89} & 76 & 18 & 12 & 8 & 7 & 52 & 19 & 27 & 34 \\ 
+     & \% Played & \textbf{100} & 95 & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100} & 80 & 90 & 70 & 95 & \textbf{100} & 95 & 95 & \textbf{100} \\ 
+     & \% Agreement & 85 & 47 & 85 & 30 & \textbf{90} & 85 & 25 & 17 & 14 & 11 & 55 & 26 & 47 & 35 \\ 
+     & \% Optimal & 50 & 26 & 55 & 20 & \textbf{70} & 45 & 6 & 6 & 0 & 0 & 35 & 5 & 5 & 25 \\ 
+     & Quality Score & 74 & 42 & 77 & 29 & \textbf{89} & 76 & 22 & 13 & 11 & 7 & 52 & 20 & 28 & 34 \\ 
+     & Avg. \# Messages & 3.6 & 3.9 & 3.5 & 4 & 5.3 & 5.3 & 3.4 & 7.6 & 1.9 & 3.5 & 3.9 & 4.4 & 3.2 & 5.2 \\ 
+    \hline
+  \end{tabular}
+  \caption{Detailed breakdown of the results for each game mode, language, and model combination across multiple metrics for the DoND game. Note that the quality score as well as the percentages of agreements and optimal outcomes are computed only with respect to the non-aborted games.}
+  \label{tab:dond-detailed-results}
+\end{table*}
+
 \subsection{Detailed Analysis}
 
-\begin{table*}[]
-\centering
-\tiny
-\begin{tabular}{llllllllllllllll}
- &  & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- &  & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-\multirow{3}{*}{Optimal} & Explicit maximization & 0 & 1 & 0 & 3 & 11 & 3 & 11 & 0 & 1 & 0 & 0 & 0 & 5 & 0 \\
- & Simple negotiation & 17 & 16 & 0 & 7 & 3 & 2 & 6 & 2 & 5 & 5 & 0 & 0 & 8 & 3 \\
- & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
-\hline
-\multirow{5}{*}{Suboptimal} & Unclear preferences & 1 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
- & Unclaimed items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 \\
- & Claiming valueless item & 1 & 2 & 0 & 0 & 0 & 2 & 0 & 1 & 3 & 4 & 0 & 0 & 0 & 0 \\
- & Wrong proposal & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
- & Premature proposal & 0 & 0 & 3 & 1 & 3 & 0 & 1 & 0 & 3 & 0 & 3 & 1 & 0 & 1 \\
-\hline
-\multirow{2}{*}{Failed} & Wrong proposal & 0 & 0 & 3 & 7 & 1 & 11 & 0 & 13 & 1 & 5 & 0 & 0 & 4 & 7 \\
- & Premature proposal & 1 & 0 & 12 & 1 & 1 & 0 & 1 & 2 & 4 & 0 & 14 & 19 & 0 & 8 \\
-\hline
-\multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 4 & 0 & 0 & 1 & 0 \\
- & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 \\
- & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
-\end{tabular}
-\caption{Game outcomes for the cooperative DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-16}
+    \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \cline{2-16}
+    \multirow{3}{*}{Optimal} & Explicit maximization & 11 & 3 & 11 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 5 & 0 & 1 & 3 \\
+     & Simple negotiation & 3 & 2 & 6 & 2 & 17 & 16 & 0 & 5 & 0 & 0 & 8 & 3 & 5 & 7 \\
+     & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+    \cline{2-16}
+    \multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+     & Unclaimed items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+     & Claiming valueless item & 0 & 2 & 0 & 1 & 1 & 2 & 0 & 4 & 0 & 0 & 0 & 0 & 3 & 0 \\
+     & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+     & Premature proposal & 3 & 0 & 1 & 0 & 0 & 0 & 3 & 0 & 3 & 1 & 0 & 1 & 3 & 1 \\
+    \cline{2-16}
+    \multirow{2}{*}{Failed} & Wrong proposal & 1 & 11 & 0 & 13 & 0 & 0 & 3 & 5 & 0 & 0 & 4 & 7 & 1 & 7 \\
+     & Premature proposal & 1 & 0 & 1 & 2 & 1 & 0 & 12 & 0 & 14 & 19 & 0 & 8 & 4 & 1 \\
+    \cline{2-16}
+    \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 4 & 0 & 0 & 1 & 0 & 1 & 0 \\
+     & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 \\
+     & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+    \cline{2-16}
+  \end{tabular}
+  \caption{Game outcomes for the \textbf{cooperative} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}
+  \label{tab:dond-game-outcomes-coop}
 \end{table*}
 
-\begin{table*}[]
-\centering
-\tiny%
-\begin{tabular}{llllllllllllllll}
- &  & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- &  & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-\multirow{3}{*}{Optimal} & Explicit maximization & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
- & Simple negotiation & 18 & 13 & 1 & 6 & 14 & 3 & 9 & 1 & 6 & 5 & 0 & 0 & 6 & 2 \\
- & Luck & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 2 & 0 & 0 & 0 \\
-\multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
- & Unclaimed items & 0 & 0 & 0 & 0 & 1 & 1 & 2 & 5 & 0 & 1 & 0 & 0 & 3 & 3 \\
- & Claiming valueless item & 1 & 3 & 0 & 5 & 2 & 1 & 2 & 3 & 0 & 2 & 0 & 0 & 2 & 0 \\
- & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
- & Premature proposal & 0 & 0 & 1 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 2 & 1 & 0 & 0 \\
-\multirow{2}{*}{Failed} & Wrong proposal & 0 & 3 & 5 & 6 & 1 & 12 & 6 & 8 & 7 & 2 & 0 & 0 & 2 & 9 \\
- & Premature proposal & 1 & 0 & 7 & 0 & 0 & 1 & 1 & 1 & 4 & 1 & 14 & 18 & 6 & 6 \\
-\multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 4 & 1 & 0 & 0 & 0 & 2 & 1 & 9 & 2 & 0 & 1 & 0 \\
- & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 \\
- & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{tabular}
-\caption{Game outcomes for the semi-competitive DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-16}
+    \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \cline{2-16}
+    \multirow{3}{*}{Optimal} & Explicit maximization & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+     & Simple negotiation & 14 & 3 & 9 & 1 & 18 & 13 & 1 & 5 & 0 & 0 & 6 & 2 & 6 & 6 \\
+     & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 2 & 0 & 0 & 0 & 2 & 0 \\
+    \cline{2-16}
+    \multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+     & Unclaimed items & 1 & 1 & 2 & 5 & 0 & 0 & 0 & 1 & 0 & 0 & 3 & 3 & 0 & 0 \\
+     & Claiming valueless item & 2 & 1 & 2 & 3 & 1 & 3 & 0 & 2 & 0 & 0 & 2 & 0 & 0 & 5 \\
+     & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+     & Premature proposal & 2 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 2 & 1 & 0 & 0 & 0 & 0 \\
+    \cline{2-16}
+    \multirow{2}{*}{Failed} & Wrong proposal & 1 & 12 & 6 & 8 & 0 & 3 & 5 & 2 & 0 & 0 & 2 & 9 & 7 & 6 \\
+     & Premature proposal & 0 & 1 & 1 & 1 & 1 & 0 & 7 & 1 & 14 & 18 & 6 & 6 & 4 & 0 \\
+    \cline{2-16}
+    \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 2 & 0 & 0 & 4 & 9 & 2 & 0 & 1 & 0 & 1 & 1 \\
+     & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+     & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    \cline{2-16}
+  \end{tabular}
+  \caption{Game outcomes for the \textbf{semi-competitive} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}
+  \label{tab:dond-game-outcomes-semi}
 \end{table*}
 
-\begin{table*}[]
-\centering
-\tiny%
-\begin{tabular}{lllllllllllllll}
- & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-Tell exact values & 0 & 3 & 1 & 13 & 19 & 19 & 17 & 12 & 14 & 1 & 0 & 0 & 13 & 17 \\
-Tell only relative values & 20 & 17 & 0 & 5 & 0 & 1 & 0 & 7 & 0 & 18 & 0 & 0 & 2 & 1 \\
-Do not tell preferences & 0 & 0 & 7 & 2 & 0 & 0 & 2 & 0 & 5 & 1 & 0 & 0 & 5 & 0 \\
-Do not communicate at all & 0 & 0 & 12 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 20 & 20 & 0 & 2
-\end{tabular}
-\caption{Model willingness to share its value function for the cooperative DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-15}
+     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \hline
+    Tell exact values & 19 & 19 & 17 & 12 & 0 & 3 & 1 & 1 & 0 & 0 & 13 & 17 & 14 & 13 \\
+    Tell only relative values & 0 & 1 & 0 & 7 & 20 & 17 & 0 & 18 & 0 & 0 & 2 & 1 & 0 & 5 \\
+    Do not tell preferences & 0 & 0 & 2 & 0 & 0 & 0 & 7 & 1 & 0 & 0 & 5 & 0 & 5 & 2 \\
+    Do not communicate at all & 0 & 0 & 0 & 0 & 0 & 0 & 12 & 0 & 20 & 20 & 0 & 2 & 1 & 0 \\
+    \hline
+  \end{tabular}
+  \caption{GModel willingness to share its value function for the \textbf{cooperative} DoND game mode.}
+  \label{tab:dond-cooperation-coop}
 \end{table*}
 
-\begin{table*}[]
-\centering
-\tiny%
-\begin{tabular}{lllllllllllllll}
- & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-Tell exact values & 0 & 1 & 0 & 11 & 0 & 4 & 0 & 9 & 5 & 0 & 0 & 0 & 6 & 6 \\
-Tell only relative values & 19 & 19 & 1 & 9 & 15 & 14 & 8 & 11 & 7 & 20 & 0 & 0 & 1 & 10 \\
-Do not tell preferences & 1 & 0 & 8 & 0 & 5 & 0 & 11 & 0 & 7 & 0 & 0 & 0 & 12 & 0 \\
-Do not communicate at all & 0 & 0 & 11 & 0 & 0 & 0 & 1 & 0 & 1 & 0 & 20 & 20 & 1 & 4
-\end{tabular}
-\caption{Model willingness to share its value function for the semi-competitive DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-15}
+     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \hline
+    Tell exact values & 0 & 4 & 0 & 9 & 0 & 1 & 0 & 0 & 0 & 0 & 6 & 6 & 5 & 11 \\
+    Tell only relative values & 15 & 14 & 8 & 11 & 19 & 19 & 1 & 20 & 0 & 0 & 1 & 10 & 7 & 9 \\
+    Do not tell preferences & 5 & 0 & 11 & 0 & 1 & 0 & 8 & 0 & 0 & 0 & 12 & 0 & 7 & 0 \\
+    Do not communicate at all & 0 & 0 & 1 & 0 & 0 & 0 & 11 & 0 & 20 & 20 & 1 & 4 & 1 & 0 \\
+    \hline
+  \end{tabular}
+  \caption{GModel willingness to share its value function for the \textbf{semi-competitive} DoND game mode.}
+  \label{tab:dond-cooperation-semi}
 \end{table*}
 
-\begin{table*}[]
-\centering
-\tiny%
-\begin{tabular}{lllllllllllllll}
- & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-Lie about preferences & 1 & 1 & 0 & 9 & 0 & 0 & 0 & 1 & 0 & 2 & 0 & 0 & 0 & 0 \\
-Don’t lie about preferences & 19 & 19 & 20 & 11 & 19 & 20 & 19 & 18 & 20 & 18 & 20 & 20 & 20 & 20
-\end{tabular}
-\caption{Model truthfulness about its value function for the cooperative DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-15}
+     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \hline
+    Misrepresent preferences & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 9 \\
+    Truthful about preferences & 19 & 20 & 19 & 18 & 19 & 19 & 20 & 18 & 20 & 20 & 20 & 20 & 20 & 11 \\
+    \hline
+  \end{tabular}
+  \caption{Model truthfulness about its value function for the \textbf{cooperative} DoND game mode.}
+  \label{tab:dond-truthfulness-coop}
 \end{table*}
 
-\begin{table*}[]
-\centering
-\tiny%
-\begin{tabular}{lllllllllllllll}
- & \multicolumn{2}{l}{Claude} & \multicolumn{2}{l}{Deepseek} & \multicolumn{2}{l}{GPT5} & \multicolumn{2}{l}{GPT5-mini} &  &  & \multicolumn{2}{l}{Nemotron} & \multicolumn{2}{l}{Qwen3} \\
- & Reason & No reason & r1-distilled & v3 & Reason & No reason & Reason & No reason & GPT-OSS & LLAMA & Reason & No reason & Thinking & Instruct \\
-Lie about preferences & 0 & 5 & 0 & 6 & 0 & 0 & 0 & 2 & 1 & 3 & 0 & 0 & 0 & 1 \\
-Don’t lie about preferences & 20 & 15 & 20 & 14 & 20 & 18 & 20 & 18 & 19 & 17 & 20 & 20 & 20 & 0
-\end{tabular}
-\caption{Model truthfulness about its value function for the semi-competitive DoND game mode.}
+\begin{table*}[!ht]
+  \footnotesize
+  \centering
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
+    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+    \cline{2-15}
+     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    Misrepresent preferences & 0 & 0 & 0 & 2 & 0 & 5 & 0 & 3 & 0 & 0 & 0 & 1 & 1 & 6 \\
+    Truthful about preferences & 20 & 18 & 20 & 18 & 20 & 15 & 20 & 17 & 20 & 20 & 20 & 0 & 19 & 14 \\
+    \hline
+  \end{tabular}
+  \caption{Model truthfulness about its value function for the \textbf{semi-competitive} DoND game mode.}
+  \label{tab:dond-truthfulness-semi}
 \end{table*}
 
 \subsection{Qualitative Samples} 

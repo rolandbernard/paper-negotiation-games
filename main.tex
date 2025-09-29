@@ -137,13 +137,13 @@ Despite this growing body of research, two critical gaps remain unexplored. Firs
 
 Our investigation targets three fundamental research questions: 
 
-\textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
+\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
 % cost - performance graphic
 
-\textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
 % When a model reasons in a language different from the interaction language, does it affect the quality of its strategic decisions, its coherence, or its ability to understand its counterpart's intentions? - simple check with the scores of those where the lang matches the reasoning lang vs. where it doesn't!
 
-\textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of learning?}
+\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of thinking?}
 % \textit{Can the analysis of the reasoning chain provide definitive evidence as to whether LLMs engage in genuine opponent modeling versus sophisticated pattern matching over dialogue turns?}
 
 
@@ -290,7 +290,7 @@ Both players receive their preference values assigned to items. They are instruc
 
 \paragraph{Instance Generation}
 
-We draw either 15 or 35 items (depending on the experiment) from a randomly generated list constructed by concatenating a capital letter with a two-digit number (e.g., \texttt{A42}, \texttt{C07}). This keeps the naming of items language agnostic and abstract as much as possible from conventional examples of the 0/1 Knapsack Problem models may have seen during training\tk{add the idea behind this design choice - why not go with the names as in Fig 3, why letters?, not to have it depend on any language maybe?...} We assign a weight value to each item drawn from some discrete uniform distribution. The air balloon's capacity is defined as a fraction of the combined weight of all items. We experiment with two negotiation levels where we specifically set valuations over items to be the same for players giving them common goals or we invert their preference orderings giving them opposing goals. \tk{what is controlled by negotiation Easy/Hard experiments, write about it, briefly}. Easy level includes the common goal instances \tk{finish the sentence} and the hard level includes opposing goals instances\tk{finish the sentence}. We also experiment with turning the \texttt{STRATEGIC REASONING} off. Lastly, we run complexity experiments by increasing the number of items, using uncorrelated weights and values for the easy case, and correlated ones for the hard case where greedy value-to-weight heuristics for the 0/1 Knapsack fail.\tk{easy means with and hard means that...}. In total, we have six experiments with each having six instances, which leads to the \textbf{total number of 36 instances} for this game.
+We draw either 15 or 35 items (depending on the experiment) from a randomly generated list constructed by concatenating a capital letter with a two-digit number (e.g., \texttt{A42}, \texttt{C07}). This keeps the naming of items language agnostic and abstract as much as possible from conventional examples of the 0/1 Knapsack Problem models may have seen during training. We assign a weight value to each item drawn from some discrete uniform distribution. The air balloon's capacity is defined as a fraction of the combined weight of all items. We experiment with two negotiation levels where we specifically set valuations over items to be the same for players giving them common goals or we invert their preference orderings giving them opposing goals. Easy level includes the common goal instances and the hard level includes opposing goals instances. We also experiment with turning the \texttt{STRATEGIC REASONING} off. Lastly, we run complexity experiments by increasing the number of items, using uncorrelated weights and values for the easy case, and correlated ones for the hard case where greedy value-to-weight heuristics for the 0/1 Knapsack fail. In total, we have six experiments with each having six instances, which leads to the \textbf{total number of 36 instances} for this game.
 
 
 
@@ -420,7 +420,7 @@ We present the results obtained by the models evaluated for English, German, and
 
 \textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
 
-Now, we look into at what cost does the performance gap comes in. In Figure~\ref{fig:combined-token-cost}~$a$, we present the plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. As expected, the models with reasoning output more tokens than models without it, but Qwen-3 generates almost \textit{7x} more tokens than its non-reasoning counterpart. In Figure~\ref{fig:combined-token-cost}~$b$, we present the overall cost of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5} being the most expensive. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight model} with fraction of the cost compared to Qwen-3.
+Now, we look into at what cost does the performance gap comes in. In Figure~\ref{fig:combined-token-cost}~$a$, we present the plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. As expected, the models with reasoning output more tokens than models without it, but Qwen-3 generates almost \textit{7x} more tokens than its non-reasoning counterpart. In Figure~\ref{fig:combined-token-cost}~$b$, we present the overall cost of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5} being the most expensive. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight one} with a fraction of the cost compared to Qwen-3.
 
 
 
@@ -443,7 +443,7 @@ We ran a language detection script to analyse the reasoning message of the model
     \label{fig:language_consistency_heatmap}
 \end{figure}
 
-\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of learning?}
+\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of thinking?}
 
 \subsection{Findings}
 

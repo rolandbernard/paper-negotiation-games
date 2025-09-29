@@ -5,62 +5,59 @@
 
 \subsection{Prompt Templates}\label{sec:dond_prompt_templates}
 
-The prompt template for both players of the Deal or No Deal is given in Figure~\ref{fig:dond_prompt_templates}.
+The prompt templates for both players of the Deal or No Deal are given in \cref{fig:dond_prompt_template}.
 
 \begin{figure*}
   \centering
-  \begin{subfigure}[b]{0.48\textwidth}
+  \begin{prompt}
+
+You are playing a negotiation game in which you have to agree on how to divide a set of items among you and another player.\\
+\\
+Rules:\\
+(a) You and the other player are given a set of items. Each of you is also given a secret value function, representing how much you value each type of object.\\
+(b) You exchange messages with the other player to agree on who gets which items. You can send a maximum of \$N\$ messages each, or terminate early by making a secret proposal at any time.\\
+(c) You are each asked to submit a secret proposal indicating the items you want formatted in square brackets as follows: "[Proposal: <number> <object name>, <number> <object name>, <...>]"\\
+(d) If your proposals are complementary, i.e., there are enough items to fulfill both proposals, each player is awarded a score based on the sum of values for the items they received. Otherwise, both of you get zero points.\\
+(e) \$GOAL\$\\
+\\
+Let us start.\\
+\\
+The set of available items is:\\
+\\
+\$ITEMS\$\\
+Your secret value function is:\\
+\\
+\$VALUE\_FUNCTION\$\\
+\\
+IMPORTANT: Your messages, unless it is the secret proposal, are directly transmitted to the other player, so do not include any response to the rules or text announcing your message. To make a secret proposal, use the indicated format. Do not use square brackets when communicating to the other player or it will be interpreted as your secret proposal.
+  \end{prompt}
+  \caption{English prompt template used for both players at the start of the game to inform them about the rules and game state. Values surrounded by \$ are to be replaced by different values depending on the game instance. Each player gets the same initial message, except for different values of \$VALUE\_FUNCTION\$.}
+  \label{fig:dond_prompt_template}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
     \begin{prompt}
 
-You are given three images, one is called target and the other two are distractors.
-Your task is to generate a referring expression that best describes the target image while distinguishing it from the two other distractor images.
-The first image is <IMAGE\_POSITION>, the second image is <IMAGE\_POSITION>, and the third image is <IMAGE\_POSITION>. \\
-
-Instruction: Describe the target image. Generate the referring expression starting with the tag "Expression: " for the given target image. Omit any other text.\\
-
-Target image: <IMAGE\_PATH>\\
-Second image: <IMAGE\_PATH>\\
-Third image: <IMAGE\_PATH>\\
-
-\end{prompt}
-\vspace*{-2ex}
-\begin{prompt}
-Expression: \$EXPRESSION\$
-\end{prompt}
-
-\caption{Prompt template for Player A (Instruction Giver) in the Reference Game.}
-  \label{fig:reference_player_a}
+The time is up. It is now your turn to submit a secret proposal.
+    \end{prompt}
+    \caption{Prompt used when the maximum number of turns has been reached. This is sent only to one of the two players, the other one receives the template for when the other player has submitted a proposal.}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
     \begin{prompt}
 
-You are given three images. You are also given a referring expression that describes one of the given images.
-Your task is to select the image that matches the given referring expression.
-Generate only the number (in text) of the image that matches the given expression by selecting first, second, or third.\\
-
-TARGET\_EXPRESSION\\
-Question: Which image does the expression refer to?
-Start with the tag "Answer: ", followed by your selection. Omit any other text.\\
-
-
-First image: <IMAGE\_PATH>\\
-Second image: <IMAGE\_PATH>\\
-Third image: <IMAGE\_PATH>\\
-\end{prompt}
-
-\vspace*{-2ex}
-\begin{prompt}
-Answer: \$ANSWER\$
-\end{prompt}
-
-\caption{Prompt template for Player B (Instruction Follower) in the Reference Game}
-\label{fig:reference_player_b}
+The other player s submitted a secret proposal. It is now your turn to submit a proposal of your own.
+    \end{prompt}
+    \caption{Prompt used when the other player submits their proposal. This is sent to a player whenever the opposing player submits a secret proposal.}
   \end{subfigure}
-  \caption{Reference game prompt templates for both players}
-  \label{fig:dond_prompt_templates}
+  \hfill
+  \caption{English prompt template used to tell the players that they are now required to submit a secret proposal.}
+  \label{fig:dond_prompt_template_early}
 \end{figure*}
 
 

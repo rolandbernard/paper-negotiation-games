@@ -75,8 +75,24 @@ The other player s submitted a secret proposal. It is now your turn to submit a 
 \end{figure*}
 
 
-\subsection{Experimental Setup}
+\subsection{Evaluation Metrics}\label{subsec:appendix_dond_metric}
 
+For the cooperative game mode, it is the ratio between the achieved total score to the maximum total score for that game instance, 
+
+\begin{align*}
+\text{Quality}_{\text{coop}} = \frac{\text{Score}_A + \text{Score}_B}{\max(\text{Score}_A' + \text{Score}_B')}
+\end{align*}
+
+where $\text{Score}_A$ and $\text{Score}_B$ represent the actual scores achieved by players A and B respectively, and $\max(\text{Score}_A' + \text{Score}_B')$ denotes the maximum possible combined score achievable for the given game instance.
+
+
+For the semi-competitive setting, a metric based on Pareto efficiency has been used.
+
+\begin{align*}
+\text{Quality}_{\text{semi}} = 1 - \frac{\text{Maximum Pareto Improvement}}{\max(\text{Score}_i')}
+\end{align*}
+
+where $\text{Maximum Pareto Improvement}$ represents the largest possible improvement in one player's score without decreasing the other player's score from the current agreement, and $\max(\text{Score}_i')$ denotes the maximum possible score achievable by any single player $i$ in the given game instance.
 
 
 \subsection{Overall Results}

@@ -1,0 +1,19 @@
+\documentclass{article}
+
+% Required packages for pdfLaTeX
+\usepackage[utf8]{inputenc}
+\usepackage[T2A, T1]{fontenc}
+\usepackage[main=english, russian]{babel}
+
+\begin{document}
+
+Here is the corrected example:
+
+\bigskip
+
+% We explicitly switch to Russian for the Cyrillic parts.
+% The main language is English, so we don't need to wrap "I" or "primitive cell".
+
+\foreignlanguage{russian}{Вижу, что} "I" \foreignlanguage{russian}{находится в клетке (1,3) ... Я пытаюсь переместить его в (3,3). Посмотрю,} primitive cell (3,3) \foreignlanguage{russian}{... В этой клетке сейчас $\circ$, значит, пустая.}
+
+\end{document}

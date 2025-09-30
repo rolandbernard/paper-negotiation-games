@@ -126,6 +126,30 @@ What is your first command?
 \label{fig:clean_up_intermittent_prompts}
 \end{figure*}
 
+\subsection{Evaluation Metrics}\label{subsec:appendix_cleanup_evaluation_metric}
+
+The Quality Score is calculated by multiplying \textit{Distance Score} with Penalty \textit{Score}.
+\begin{align*}
+\text{Quality} = \text{Distance Score} \cdot \text{Penalty Score} \cdot 100
+\end{align*}
+
+\textbf{Distance Score} ($\mathbf{DS} \in [0,1]$) is calculated from three components, each representing the sum of Euclidean distances for all identical objects on both grids: the Initial Distance Sum $\mathbf{I}$ at the start of the game, the Final Distance Sum $\mathbf{F}$ at the end of the game, and the Expected Distance Sum $\mathbb{E}$ that approximates the distances for randomly placed objects (see Appendix~\ref{clean_up:scoring} for details). The Expected Distance Score $ES$ and Distance Reduction Score $RS$, quantifying how close the players came to the goal of perfect alignment of all objects, are calculated as follows:
+\begin{align*}
+ES = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}; \
+RS = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
+\end{align*}
+
+$\mathbf{DS}$ is then either $0$ if final placement is worse than random, or calculated as the mean of both scores:
+\begin{align*}
+\mathbf{DS} &= \begin{cases}
+\frac{ES+RS}{2} & if \quad ES > 0 \\
+0 & otherwise
+\end{cases}
+\end{align*}
+
+\textbf{Penalty Score} ($\mathbf{PS} \in [0.5,1]$) is calculated from the penalty count $P$ normalized against max. penalties $P_m$ as follows:
+$$\mathbf{PS} = \frac{P_m}{P-2P_m}+1.5$$
+We chose the hyperbolic function because it is lenient for low $P$ and harsher for $P$ close to $P_m$.
 
 \subsection{Experimental Setup}\label{clean_up_exp_setup}
 Example grids for the three difficulty levels are given in Figure~\ref{clean_up:grid_examples}.
@@ -155,6 +179,44 @@ For a $7 \times 7$ grid, we thus get an expected distance of $\approx 4.19$ for 
 This is only an approximation, since we neither take into account the actual grid configuration, nor that two objects cannot have the same location on the same grid.
 
 \subsection{Overall Results}
+
+\begin{figure}[ht!]
+    \centering
+    
+    % --- English Figure ---
+    \begin{subfigure}{0.9\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{clean_up/clean_up_en.pdf}
+        \caption{Results for each experiment for English.}
+        \label{fig:cleanup_en}
+    \end{subfigure}
+    
+    \vspace{1.5em} % Adjust this to control the space between figures
+
+    % --- German Figure ---
+    \begin{subfigure}{0.9\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{clean_up/clean_up_de.pdf}
+        \caption{Results for each experiment for German.}
+        \label{fig:cleanup_de}
+    \end{subfigure}
+
+    \vspace{1.5em} % Adjust this to control the space between figures
+
+    % --- Italian Figure ---
+    \begin{subfigure}{0.9\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{clean_up/clean_up_it.pdf}
+        \caption{Results for each experiment for Italian.}
+        \label{fig:cleanup_it}
+    \end{subfigure}
+
+    % --- Main caption for the entire figure ---
+    \caption{Comparison of experimental results for English (top), German (middle), and Italian (bottom).}
+    \label{fig:cleanup_all}
+\end{figure}
+
+
 
 \subsubsection{Overall Results across levels}
 As explained in section \ref{sec:clean_up_difficulty_levels}, we designed three broad game difficulty levels based on the ratio of empty cells in a grid. We hypothesize that the denser the background grid is, the more likely the target locations clash with occupied cells, and therefore the more likely models get penalized in scoring. In addition, at each difficulty level, there are three sub-levels: either 3, 5, or 7 objects are placed on the grid, on the assumption that the more objects there are, the longer the gameplay traces are, and the less likely that models achieve a high score with mere luck.

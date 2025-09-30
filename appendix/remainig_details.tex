@@ -1,68 +1,108 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 
+\subsection{\%Played and Quality Scores}
+
+Figure~\ref{fig:scatter_all_languages} shows the Played and Quality Scores for each language separately, averaged for all games.
+
+\begin{figure}[ht!]
+    \centering
+    
+    % --- English Figure ---
+    \begin{subfigure}{0.8\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/overall_scatter_across_games_en.pdf}
+        \caption{Played-Quality Scores for English averaged for all games.}
+        \label{fig:scatter_en}
+    \end{subfigure}
+    
+    \vspace{1.5em} % Adjust this value to increase/decrease the space between plots
+
+    % --- German Figure ---
+    \begin{subfigure}{0.8\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/overall_scatter_across_games_de.pdf}
+        \caption{Played-Quality Scores for German averaged for all games.}
+        \label{fig:scatter_de}
+    \end{subfigure}
+
+    \vspace{1.5em} % Adjust this value to increase/decrease the space between plots
+
+    % --- Italian Figure ---
+    \begin{subfigure}{0.8\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/overall_scatter_across_games_it.pdf}
+        \caption{Played-Quality Scores for Italian averaged for all games.}
+        \label{fig:scatter_it}
+    \end{subfigure}
+
+    % --- Optional: Add an overall caption for the entire figure ---
+    \caption{Comparison of Played-Quality Scores averaged across all games for English, German, and Italian.}
+    \label{fig:scatter_all_languages}
+\end{figure}
+
+
 \subsection{Token Usage \& Cost}
 
-The average token usage and cost for English, German and Italian experiments are given in Figure~\ref{fig:en-token-cost}, \ref{fig:de-token-cost}, \ref{fig:it-token-cost}, respectively.
+The average token usage and cost for English, German and Italian experiments are given in Figure~\ref{fig:all-results}.
 
-\begin{figure*}[ht]
+\begin{figure*}[t!]
     \centering
+    % --- English Figures (Top Row) ---
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-    \includegraphics[width=1.0\linewidth]{figures/token_plot_en.pdf}
-    \caption{Performance and output tokens for all evaluated models with their reasoning on/off modes for English.}
-    \label{fig:token_en}
+        \includegraphics[width=1.0\linewidth]{figures/token_plot_en.pdf}
+        \caption{Performance and output tokens for all evaluated models for English.}
+        \label{fig:token_en}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-    \includegraphics[width=1.0\linewidth]{figures/cost_plot_en.pdf}
-    \caption{Performance (clemscore) and cost for all evaluated models with their reasoning on/off modes for German.}
-    \label{fig:cost_en}
+        \includegraphics[width=1.0\linewidth]{figures/cost_plot_en.pdf}
+        \caption{Performance (clemscore) and cost for all evaluated models for English.}
+        \label{fig:cost_en}
     \end{subfigure}
-    \caption{Trade-off between performance and cost comparison across different models. Results for English.}
-    \label{fig:en-token-cost}
-\end{figure*}
+    
+    \vspace{1em} % Adds vertical space between the rows
 
-
-\begin{figure*}[ht]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-    \includegraphics[width=1.0\linewidth]{figures/token_plot_de.pdf}
-    \caption{Performance (clemscore) and average number of output tokens for all evaluated models with their reasoning on/off modes for German.}
-    \label{fig:token_de}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-    \includegraphics[width=1.0\linewidth]{figures/cost_plot_de.pdf}
-    \caption{Performance (clemscore) and average number of output tokens for all evaluated models with their reasoning on/off modes for German.}
-    \label{fig:cost_de}
-    \end{subfigure}
-    \caption{Trade-off between performance and cost comparison across different models. Results for German.}
-    \label{fig:de-token-cost}
-\end{figure*}
-
-\begin{figure*}[ht]
-    \centering
+    % --- German Figures (Middle Row) ---
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-    \includegraphics[width=1.0\linewidth]{figures/token_plot_it.pdf}
-    \caption{Performance (clemscore) and cost for all evaluated models with their reasoning on/off modes for English.}
-    \label{fig:token_it}
+        \includegraphics[width=1.0\linewidth]{figures/token_plot_de.pdf}
+        \caption{Performance (clemscore) and output tokens for all evaluated models for German.}
+        \label{fig:token_de}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
-    \includegraphics[width=1.0\linewidth]{figures/cost_plot_it.pdf}
-    \caption{Performance (clemscore) and cost for all evaluated models with their reasoning on/off modes for Italian.}
-    \label{fig:cost_it}
-    \label{fig:cost_en}
+        \includegraphics[width=1.0\linewidth]{figures/cost_plot_de.pdf}
+        \caption{Performance (clemscore) and cost for all evaluated models for German.}
+        \label{fig:cost_de}
     \end{subfigure}
-    \caption{Trade-off between performance and cost comparison across different models. Results for Italian.}
-    \label{fig:it-token-cost}
+
+    \vspace{1em} % Adds vertical space between the rows
+
+    % --- Italian Figures (Bottom Row) ---
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{figures/token_plot_it.pdf}
+        \caption{Performance (clemscore) and output tokens for all evaluated models for Italian.}
+        \label{fig:token_it}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{figures/cost_plot_it.pdf}
+        \caption{Performance (clemscore) and cost for all evaluated models for Italian.}
+        \label{fig:cost_it}
+    \end{subfigure}
+    
+    % --- Unified Main Caption ---
+    \caption{Trade-off between performance and cost comparison across different models. Results for English (top), German (middle), and Italian (bottom).}
+    \label{fig:all-results}
 \end{figure*}
+
+
 
 
 \end{document}

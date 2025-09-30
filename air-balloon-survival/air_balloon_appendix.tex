@@ -195,7 +195,27 @@ Your proposal includes items which are not in the game. Try again.
 \end{figure*}
 
 
-\subsection{Experimental Setup}
+\subsection{Evaluation Metrics}\label{subsec:appendix_balloon_metrics}
+
+Each player $p \in P$ receives an individual score based on the utility of the final deal $D$, i.e. the sum of the preference values of items in $D$. This sum gets normalized by the value of the optimal solution to their instance of the 0/1 Knapsack Problem. The overall game score is defined as the harmonic mean of the two players’ normalized scores, further normalized by the maximum harmonic mean achievable for an instance. If the total weight of the deal exceeds the capacity $W$, the score is set to $0$. We chose the harmonic mean as our main metric as it rewards collectively balanced outcomes by favouring deals where both players achieve high scores and penalizing those where one player benefits disproportionately. 
+The individual scores of players is each player’s outcome relative to the optimal solution of their own knapsack problem. For a final deal $D \subseteq \{1,\dots,n\}$, the normalized score of player $p \in P$ is  
+$$
+f_p(D) = 100 \cdot \frac{\sum_{i \in D} v_p(i)}{\text{OPT}_p},
+$$  
+where $\text{OPT}_p$ is the value of the optimal solution to player $p$'s 0/1 Knapsack Problem.  
+The harmonic mean of the players' normalized scores is defined as  
+$$
+f_{\text{harm}}(D) =
+\begin{cases}
+\frac{2 f_{1}(D) f_{2}(D)}{f_{1}(D) + f_{2}(D)} & \text{if } \sum_{i \in D} w_i \leq W, \\
+0 & \text{otherwise}.
+\end{cases}
+$$  
+The final game score is the normalized harmonic mean, 
+$$
+\text{Quality}(D) = 100 \cdot \frac{f_{\text{harm}}(D)}{\text{OPT}^*},
+$$  
+where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given instance.
 
 \subsection{Overall Results}
 \begin{figure}[t]
@@ -221,6 +241,33 @@ Your proposal includes items which are not in the game. Try again.
     \end{subfigure}
 
     \caption{Overall model performance for easy and hard sections of experiments for all languages.}
+    \label{fig:air-balloon-overall}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_en_hot_air_balloon.pdf}
+        \caption{English}
+        \label{fig:air-balloon-quality-played-en}
+    \end{subfigure}\hspace{0.04\textwidth}
+    
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_de_hot_air_balloon.pdf}
+        \caption{German}
+        \label{fig:air-balloon-quality-played-de}
+    \end{subfigure}\hspace{0.04\textwidth}
+
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_it_hot_air_balloon.pdf}
+        \caption{Italian}
+        \label{fig:air-balloon-quality-played-it}
+    \end{subfigure}
+
+    \caption{Quality and Played scores on \textit{Air Balloon Survival} instances for each each language. Scatters are annotated with acronyms of model names. `R' denotes reasoning model.}
     \label{fig:air-balloon-overall}
 \end{figure}
 
@@ -391,18 +438,18 @@ Your proposal includes items which are not in the game. Try again.
     \hline
     \textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total Games} \\
     \hline
-    Claude Sonnet 4 (no reasoning) & 0  & 13 & 13 \\
-    Claude Sonnet 4 (reasoning)                & 1  & 13 & 14 \\
+    Claude 4 (no reasoning) & 0  & 13 & 13 \\
+    Claude 4 (reasoning)                & 1  & 13 & 14 \\
     DeepSeek Chat v3.1                      & 11 & 12 & 23 \\
-    DeepSeek R1-Distill LLaMA-70B          & 1  & 0  & 1  \\
+    DS-R1-Distill LLaMA-70B          & 1  & 0  & 1  \\
     GPT-5 (no reasoning)           & 15 & 5  & 21 \\
     GPT-5 (reasoning)                       & 17 & 3  & 24 \\
     GPT-5 Mini (no reasoning)      & 19 & 1  & 21 \\
     GPT-5 Mini (reasoning)                   & 19 & 5  & 26 \\
     GPT-OSS 120B                           & 5  & 6  & 21 \\
     LLaMA-3.3-70B Instruct                 & 3  & 10 & 19 \\
-    Nemotron-Nano 9B v2 (no reasoning)       & 21 & 1  & 22 \\
-    Nemotron-Nano 9B v2 (reasoning)                    & 0  & 2  & 2  \\
+    Nemotron 9B (no reasoning)       & 21 & 1  & 22 \\
+    Nemotron 9B (reasoning)                    & 0  & 2  & 2  \\
     Qwen3-Next-80B           & 4  & 5  & 15 \\
     \hline
     \end{tabular}

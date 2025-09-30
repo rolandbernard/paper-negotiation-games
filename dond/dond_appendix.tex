@@ -2,10 +2,21 @@
 
 \begin{document}
 
-
 \subsection{Prompt Templates}\label{sec:dond_prompt_templates}
 
-The prompt templates for both players of the Deal or No Deal game are given in \cref{fig:dond_prompt_template} and \cref{fig:dond_prompt_template_early}.
+The english prompt templates for both players of the Deal or No Deal game are given in \cref{fig:dond_prompt_template} and \cref{fig:dond_prompt_template_proposal}.
+
+The game is started by the game master by sending to both players a message following the prompt template shown in \cref{fig:dond_prompt_template}. For this, the variables enclosed in \$ characters are replaced as follows.
+\begin{enumerate}
+  \item \$N\$ is replaced with the maximum number of turns before the game master will instruct the players to submit a proposal. For all instances evaluated in this work this has been set to $5$.
+  \item \$GOAL\$ is replaced with the goal that the players are trying to optimize. This depends only on the game mode. In the semi-competitive mode it is given as "\emph{Your goal is to maximize the score you receive.}". On the other hand, in the cooperative mode the goal is given as "\emph{Your goal is to maximize the sum of your score and the score of the other player.}".
+  \item \$ITEMS\$ is replaced with the set of available items, e.g., "\emph{1 book, 2 hats, 2 balls.}". This value is always the same for both players.
+  \item \$VALUE\_FUNCTION\$ is replaced with the value function for one of the players, e.g., "\emph{book: 0, hat: 1, ball: 4.}". Each player gets a different value function, and so the prompts for the two player differ.
+\end{enumerate}
+
+When the maximum number of turns has been reached, i.e., each player has sent 5 messages, the game master will instruct the player that is up next that he must now submit a proposal by using the prompt shown in \cref{fig:dond_prompt_template_timeout}. If the next message does not contain a correctly formatted proposal the game is aborted.
+
+If one of the two players makes a proposal, either proactively or because they were instructed to by the game master, the game master will instruct the remaining player to also make a proposal. For this the template shown in \cref{fig:dond_prompt_template_early} is used. Again, the next message must be a proposal or the game is aborted. 
 
 \begin{figure*}
   \centering
@@ -25,6 +36,7 @@ Let us start.\\
 The set of available items is:\\
 \\
 \$ITEMS\$\\
+\\
 Your secret value function is:\\
 \\
 \$VALUE\_FUNCTION\$\\
@@ -45,6 +57,7 @@ IMPORTANT: Your messages, unless it is the secret proposal, are directly transmi
 The time is up. It is now your turn to submit a secret proposal.
     \end{prompt}
     \caption{Prompt used when the maximum number of turns has been reached. This is sent only to one of the two players, the other one receives the template for when the other player has submitted a proposal.}
+    \label{fig:dond_prompt_template_timeout}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.48\textwidth}
@@ -54,38 +67,47 @@ The time is up. It is now your turn to submit a secret proposal.
 The other player s submitted a secret proposal. It is now your turn to submit a proposal of your own.
     \end{prompt}
     \caption{Prompt used when the other player submits their proposal. This is sent to a player whenever the opposing player submits a secret proposal.}
+    \label{fig:dond_prompt_template_early}
   \end{subfigure}
   \hfill
   \caption{English prompt template used to tell the players that they are now required to submit a secret proposal.}
-  \label{fig:dond_prompt_template_early}
+  \label{fig:dond_prompt_template_proposal}
 \end{figure*}
 
 
 \subsection{Experimental Setup}
 
+
+
 \subsection{Overall Results}
 
-Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show the performance differences between experiments for English, German and Italian tasks.
+\Cref{fig:dond_playedquality} shows the average quality scores and percentage of played game for each model for the DoND game, averaged over the different game modes and languages.
 
-\begin{figure}
+We can observe that most models achieve a high percentage of played games, meaning that they are able to accurately follow the instructions. The only exception to this are the Llama model and the Nematron model with reasoning enabled. The models GPT-5, GPT-5 mini, and Claude 4 with reasoning enabled show the strongest performance. 
+
+Generally we can see that the models perform better with reasoning enabled than with it disabled. While the difference between reasoning and non-reasoning is small for the Claude 4 model, reasoning gives a large performance improvement for the GPT-5 and GPT-5 mini, as well s the Qwen-3 model.
+
+\begin{figure}[!ht]
     \centering
-    \includegraphics[width=1\linewidth]{dond//figures/dond_en.pdf}
-    \caption{Results for English task across experiments}
-    \label{fig:dond_en_exp}
-\end{figure}
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{dond//figures/dond_de.pdf}
-    \caption{Results for German task across experiments}
-    \label{fig:dond_de_exp}
+    \includegraphics[width=\linewidth]{dond/figures/playedquality.pdf}
+    \caption{Summarized evaluation results for each model. The y-axis indicates the percentage of played, i.e., not aborted, games. The x-axis represents the average quality score obtained when considering only played games.}
+    \label{fig:dond_playedquality}
 \end{figure}
 
-\begin{figure}
+To better understand the performance of the models, we show more detailed breakdown by language and game mode in \cref{tab:dond-detailed-results}. These results are further depicted in \cref{fig:dond_perlanguage}, which show the performance differences between experiments for English, German and Italian tasks.
+
+We can see here again that most models are good at following the instructions. We can also see that the reason that the Nematron model with reasoning enabled has such a low percentage of played games overall is that it has not played a single game in German correctly, while its percentage of played game is otherwise comparable to Llama. By inspecting the transcripts of some games played by Nematron in German it becomes clear that the reason for the aborted games is that Nematron always made the proposal in English, whereas it should have made it in German. This is likely because by Nematron also seems to exclusively reason in English.
+
+\begin{figure}[!ht]
     \centering
-    \includegraphics[width=1\linewidth]{dond//figures/dond_it.pdf}
-    \caption{Results for Italian task across experiments}
-    \label{fig:dond_it_exp}
+    \includegraphics[width=\linewidth]{dond/figures/perlanguage.pdf}
+    \caption{Clemscores for different models seperated by language and game mode.}
+    \label{fig:dond_perlanguage}
 \end{figure}
+
+Except for some outlier we also generally see that performance in the cooperative and semi-competitive game modes are comparable, but overall achieving slightly higher quality scores for the cooperative mode (49\%) as compared to the semi-competitive mode (46\%). The number of aborted games is consistent at 8\% between both game modes on average.
+
+Performance was generally highest in English. On average across all models the clemscore for English was 49 while it was 43 and 40, respectively for German and Italian. Because of the issues of the Nematron model in German, the number of aborted games is higher in German, with 13\% as compared to 6\% for both English and Italian. However, in German the average quality score for the played games is higher at 49\% compared to the average of 43\% for Italian.
 
 \begin{table*}[!ht]
   \footnotesize
@@ -139,11 +161,24 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
      & Avg. \# Messages & 3.6 & 3.9 & 3.5 & 4 & 5.3 & 5.3 & 3.4 & 7.6 & 1.9 & 3.5 & 3.9 & 4.4 & 3.2 & 5.2 \\ 
     \hline
   \end{tabular}
-  \caption{Detailed breakdown of the results for each game mode, language, and model combination across multiple metrics for the DoND game. Note that the quality score as well as the percentages of agreements and optimal outcomes are computed only with respect to the non-aborted games.}
+  \caption{Detailed breakdown of the results for each game mode, language, and model combination across multiple metrics for the DoND game.  The best result in each row is indicated in bold. Note that the quality score as well as thAe percentages of agreements and optimal outcomes are computed only with respect to the non-aborted games.}
   \label{tab:dond-detailed-results}
 \end{table*}
 
+We can analyse the results also based on the outcome that was achieved. This is depicted in \cref{fig:dond_outcome}. We separate between four possible game outcomes. The game can either end with complementary proposals or not. If there is a valid agreement, it could either be with the optimal score, i.e., a quality score of 100, with an agreement that reached a suboptimal score less than 100. Finally, if there is no valid agreement it can either be because of conflicting proposals, or because the game was aborted due to rule violations.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\linewidth]{dond/figures/outcome.pdf}
+    \caption{Percentage of games that ended with a specific game outcome during the evaluation of different models. All results for the two game modes and three languages have been averaged together for this plot.}
+    \label{fig:dond_outcome}
+\end{figure}
+
+Overall we can observe more of the same results. It becomes clear that much of the low scores can be attributed to failed agreements, where players have submitted conflicting proposals. Particularly for GTP-5 and GPT-5 mini this problem is largely solved by using the reasoning models, as opposed to the non-reasoning versions.
+
 \subsection{Detailed Analysis}
+
+To better understand what caused the differences in performance, and to analyse the strategies employed by the different models we have performed a further breakdown of the outcomes for the English instances. \Cref{tab:dond-game-outcomes-coop} and \Cref{tab:dond-game-outcomes-semi} show the outcome for each game, categorized by the reason for which the given outcome has been reached.
 
 \begin{table*}[!ht]
   \footnotesize
@@ -169,12 +204,17 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
     \cline{2-16}
     \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 4 & 0 & 0 & 1 & 0 & 1 & 0 \\
      & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 \\
-     & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
     \cline{2-16}
   \end{tabular}
   \caption{Game outcomes for the \textbf{cooperative} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}
   \label{tab:dond-game-outcomes-coop}
 \end{table*}
+
+In the analysis of the cooperative game mode shown in \cref{tab:dond-game-outcomes-coop} we can see some significant differences in strategies between the different models. We see that both GPT-5 models, with reasoning disabled, will explicitly often explicitly discuss how to achieve a maximum score, i.e., they will talk about having to give each item to the player that values it most. This is in contrast to for example Claude 4 or the GPT-5 models without reasoning enabled, as those models will often just follow a generic negotiation routine, trying to obtain a "fair" agreement.
+
+We can further observe that a main reason for the low scores of the non-reasoning versions of the GPT-5 models is that they submit the wrong proposal. This means that the proposal they submit to the game master is often not the one they discussed with the other player in the natural language messages. This manifests sometimes as submitting the proposal for the other player, sometimes as proposals that include the complete set of items, and other times even completely unrelated proposals. Deepseek v3.1 also suffers for a less ever version of this problem.
+
+Lastly, some other models like Deepseek distilled Llama and the Nematron models, as well as the Qwen-3 model without reasoning often submit proposals before discussing and agreeing to a division with the other player. This is particularly severe for the Nematron models as these nearly always submit a proposal as the first message, without exchanging any messages with the other player. Looking at the reasoning traces we can observe that the Nematron model does not seem to understand that it can communicate with the other player, expressing correctly that it does not know the other players values, but not realizing that it could ask for them.
 
 \begin{table*}[!ht]
   \footnotesize
@@ -200,12 +240,17 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
     \cline{2-16}
     \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 2 & 0 & 0 & 4 & 9 & 2 & 0 & 1 & 0 & 1 & 1 \\
      & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
-     & No proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
     \cline{2-16}
   \end{tabular}
   \caption{Game outcomes for the \textbf{semi-competitive} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}
   \label{tab:dond-game-outcomes-semi}
 \end{table*}
+
+For the semi-competitive game mode we see largely the same results, with the main difference being that the GPT-5 models now no longer try to explicitly discuss maximizing their score. This makes sense as the setting is no longer cooperative, so it is no longer purely advantageous to share such reasoning with the other player. Another difference to the cooperative mode is that the GPT-5 mini model with reasoning and the GPT-OSS model not make the wrong proposals more often. It is unclear why this happens.
+
+We can also generally see an increase in the amount of suboptimal outcomes. Interestingly this is not necessarily because of unclear preferences, but because models are often requesting items that have no value to them, or leave some items unclaimed by either player, sometimes even expressing the intention of doing so deliberately. Keeping an item that does not have any value does not make much sense for any of the players, as giving up that item could have instead be used as leverage for getting some other items.
+
+\Cref{tab:dond-cooperation-coop} and \cref{tab:dond-cooperation-semi} show how likely different models were to reveal there value function to the other player. This is roughly and estimation of how cooperative they were.
 
 \begin{table*}[!ht]
   \footnotesize
@@ -226,6 +271,8 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
   \label{tab:dond-cooperation-coop}
 \end{table*}
 
+Clearly, in the cooperative game mode it makes little sense to hide one's value function, as it is essential for knowing which allocation is optimal. Still, we can see in the table that some models were not willing to give exact values. Some models, namely the Nematron and Deepseek distilled Llama models were unwilling to communicate preferences are all, and sometimes did not communicate at all, instead immediately making a proposal. This explains there poor performance. On the other hand, the Claude 4 models were unwilling to give out there exact value function, preferring instead to only give relative or subjective characterizations of it. In some instances the Claude 4 models even explicitly mention not wanting to reveal there exact values, either in messages or reasoning traces, even though it can only be beneficial in the cooperative setting. Finally, all the other models were largely willing to give the exact value function to the other player.
+
 \begin{table*}[!ht]
   \footnotesize
   \centering
@@ -245,6 +292,10 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
   \label{tab:dond-cooperation-semi}
 \end{table*}
 
+For the semi-competitive game mode it is less clear whether giving all information about one's value function to the opposing player. Indeed, we see that many models now no longer do so. Still, some models, namely the GPT-5 models without reasoning, Qwen-3, GPT-OSS, and Deepseek-v3.1 were sometimes till giving exact value functions. Interestingly the GPT-5 models with reasoning enabled are now less willing to give their preferences, instead simply proposing possible splits without explaining their reasoning.
+
+Finally, in addition to whether or not the models were wiling to give up their value function or not, \cref{tab:dond-truthfulness-coop} and \cref{tab:dond-truthfulness-semi} additionally show whether the models were generally truthful about there characterization of the value functions. Note that in case there was no communication between the models we counted it as truthful.
+
 \begin{table*}[!ht]
   \footnotesize
   \centering
@@ -262,6 +313,8 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
   \label{tab:dond-truthfulness-coop}
 \end{table*}
 
+Again, for the cooperative game mode it is not rational to misrepresent one's value function. Still there are some instances of models doing so. A particularly interesting case for this is the Deepseek-v3.1 model, as it often in the first few messages gave an exact value function but with completely wrong values. Often throughout the course of the game the player would then correct those values and stating the correct value function. Overall all otgher models are generally thoughtful when representing their preferences.
+
 \begin{table*}[!ht]
   \footnotesize
   \centering
@@ -277,6 +330,8 @@ Figure~\ref{fig:dond_en_exp}, \ref{fig:dond_de_exp}, \ref{fig:dond_it_exp} show 
   \caption{Model truthfulness about its value function for the \textbf{semi-competitive} DoND game mode.}
   \label{tab:dond-truthfulness-semi}
 \end{table*}
+
+For the semi-competitive game mode it may sometimes be advantageous to lie about one's preferences to get an advantage in the negotiations. However, other than the Claude 4 model without reasoning, which is misrepresenting its value function slightly more often, the other models remain truthful.
 
 \subsection{Qualitative Samples} 
 

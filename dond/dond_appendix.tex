@@ -129,8 +129,8 @@ Performance was generally highest in English. On average across all models the c
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{c|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{c|l|cc|cc|cc|cc|cc|cc|c|c|}
+    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \textbf{DS-v3.1} \\ 
     \cline{2-16}
     & \textbf{Metric} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \hline
@@ -200,8 +200,8 @@ To better understand what caused the differences in performance, and to analyse 
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{2}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-16}
     \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \cline{2-16}
@@ -236,8 +236,8 @@ Lastly, some other models like Deepseek distilled Llama and the Nematron models,
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{2}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-16}
     \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \cline{2-16}
@@ -272,10 +272,10 @@ We can also generally see an increase in the amount of suboptimal outcomes. Inte
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-15}
-     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \multicolumn{1}{c|}{} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \hline
     Tell exact values & 19 & 19 & 17 & 12 & 0 & 3 & 1 & 1 & 0 & 0 & 13 & 17 & 14 & 13 \\
     Tell only relative values & 0 & 1 & 0 & 7 & 20 & 17 & 0 & 18 & 0 & 0 & 2 & 1 & 0 & 5 \\
@@ -293,10 +293,10 @@ Clearly, in the cooperative game mode it makes little sense to hide one's value 
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-15}
-     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \multicolumn{1}{c|}{} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \hline
     Tell exact values & 0 & 4 & 0 & 9 & 0 & 1 & 0 & 0 & 0 & 0 & 6 & 6 & 5 & 11 \\
     Tell only relative values & 15 & 14 & 8 & 11 & 19 & 19 & 1 & 20 & 0 & 0 & 1 & 10 & 7 & 9 \\
@@ -316,10 +316,10 @@ Finally, in addition to whether or not the models were wiling to give up their v
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-15}
-     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \multicolumn{1}{c|}{} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \hline
     Misrepresent preferences & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 9 \\
     Truthful about preferences & 19 & 20 & 19 & 18 & 19 & 19 & 20 & 18 & 20 & 20 & 20 & 20 & 20 & 11 \\
@@ -335,10 +335,11 @@ Again, for the cooperative game mode it is not rational to misrepresent one's va
   \footnotesize
   \centering
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|cc|c|c}
-    & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
+  \begin{tabular}{|l|cc|cc|cc|cc|cc|cc|c|c|}
+    \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \multicolumn{1}{c}{\begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular}} & \multicolumn{1}{c}{\textbf{DS-v3.1}} \\ 
     \cline{2-15}
-     & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
+    \multicolumn{1}{c|}{} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\
+    \hline
     Misrepresent preferences & 0 & 0 & 0 & 2 & 0 & 5 & 0 & 3 & 0 & 0 & 0 & 1 & 1 & 6 \\
     Truthful about preferences & 20 & 18 & 20 & 18 & 20 & 15 & 20 & 17 & 20 & 20 & 20 & 0 & 19 & 14 \\
     \hline

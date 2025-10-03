@@ -4,7 +4,7 @@
 
 \subsection{Prompt Templates}\label{sec:dond_prompt_templates}
 
-The english prompt templates for both players of the Deal or No Deal game are given in \cref{fig:dond_prompt_template} and \cref{fig:dond_prompt_template_proposal}.
+The English prompt templates for both players of the Deal or No Deal game are given in \cref{fig:dond_prompt_template_all}. The corresponding German and Italian versions of the prompts are given in \cref{fig:dond_prompt_template_all_de} and \cref{fig:dond_prompt_template_all_it} respectively.
 
 The game is started by the game master by sending to both players a message following the prompt template shown in \cref{fig:dond_prompt_template}. For this, the variables enclosed in \$ characters are replaced as follows.
 \begin{enumerate}
@@ -20,36 +20,33 @@ If one of the two players makes a proposal, either proactively or because they w
 
 \begin{figure*}
   \centering
-  \begin{prompt}
+  \begin{subfigure}[t]{\textwidth}
+    \begin{prompt}
 
-You are playing a negotiation game in which you have to agree on how to divide a set of items among you and another player.\\
-\\
-Rules:\\
-(a) You and the other player are given a set of items. Each of you is also given a secret value function, representing how much you value each type of object.\\
-(b) You exchange messages with the other player to agree on who gets which items. You can send a maximum of \$N\$ messages each, or terminate early by making a secret proposal at any time.\\
-(c) You are each asked to submit a secret proposal indicating the items you want formatted in square brackets as follows: "[Proposal: <number> <object name>, <number> <object name>, <...>]"\\
-(d) If your proposals are complementary, i.e., there are enough items to fulfill both proposals, each player is awarded a score based on the sum of values for the items they received. Otherwise, both of you get zero points.\\
-(e) \$GOAL\$\\
-\\
-Let us start.\\
-\\
-The set of available items is:\\
-\\
-\$ITEMS\$\\
-\\
-Your secret value function is:\\
-\\
-\$VALUE\_FUNCTION\$\\
-\\
-IMPORTANT: Your messages, unless it is the secret proposal, are directly transmitted to the other player, so do not include any response to the rules or text announcing your message. To make a secret proposal, use the indicated format. Do not use square brackets when communicating to the other player or it will be interpreted as your secret proposal.
-  \end{prompt}
-  \caption{English prompt template used for both players at the start of the game to inform them about the rules and game state. Values surrounded by \$ are to be replaced by different values depending on the game instance. Each player gets the same initial message, except for different values of \$VALUE\_FUNCTION\$.}
-  \label{fig:dond_prompt_template}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \hfill
+  You are playing a negotiation game in which you have to agree on how to divide a set of items among you and another player.\\
+  \\
+  Rules:\\
+  (a) You and the other player are given a set of items. Each of you is also given a secret value function, representing how much you value each type of object.\\
+  (b) You exchange messages with the other player to agree on who gets which items. You can send a maximum of \$N\$ messages each, or terminate early by making a secret proposal at any time.\\
+  (c) You are each asked to submit a secret proposal indicating the items you want formatted in square brackets as follows: "[Proposal: <number> <object name>, <number> <object name>, <...>]"\\
+  (d) If your proposals are complementary, i.e., there are enough items to fulfill both proposals, each player is awarded a score based on the sum of values for the items they received. Otherwise, both of you get zero points.\\
+  (e) \$GOAL\$\\
+  \\
+  Let us start.\\
+  \\
+  The set of available items is:\\
+  \\
+  \$ITEMS\$\\
+  \\
+  Your secret value function is:\\
+  \\
+  \$VALUE\_FUNCTION\$\\
+  \\
+  IMPORTANT: Your messages, unless it is the secret proposal, are directly transmitted to the other player, so do not include any response to the rules or text announcing your message. To make a secret proposal, use the indicated format. Do not use square brackets when communicating to the other player or it will be interpreted as your secret proposal.
+    \end{prompt}
+    \caption{English prompt template used for both players at the start of the game to inform them about the rules and game state. Values surrounded by \$ are to be replaced by different values depending on the game instance. Each player gets the same initial message, except for different values of \$VALUE\_FUNCTION\$.}
+    \label{fig:dond_prompt_template}
+  \end{subfigure}
   \begin{subfigure}[t]{0.48\textwidth}
     \centering
     \begin{prompt}
@@ -69,11 +66,113 @@ The other player s submitted a secret proposal. It is now your turn to submit a 
     \caption{Prompt used when the other player submits their proposal. This is sent to a player whenever the opposing player submits a secret proposal.}
     \label{fig:dond_prompt_template_early}
   \end{subfigure}
-  \hfill
   \caption{English prompt template used to tell the players that they are now required to submit a secret proposal.}
-  \label{fig:dond_prompt_template_proposal}
+  \label{fig:dond_prompt_template_all}
 \end{figure*}
 
+\begin{figure*}
+  \centering
+  \begin{subfigure}[t]{\textwidth}
+    \begin{prompt}
+
+  Sie spielen ein Verhandlungsspiel, bei dem Sie sich mit einem anderen Spieler darauf einigen müssen, wie eine Reihe von Gegenständen aufgeteilt werden soll.\\
+  \\
+  Die Regeln:\\
+  (a) Sie und der andere Spieler erhalten eine Sammlung von Gegenständen. Jeder von Ihnen erhält außerdem eine geheime Wertfunktion, die angibt, wie viel Ihnen jede Art von Gegenstand wert ist.\\
+  (b) Sie tauschen Nachrichten mit dem anderen Spieler aus, um zu vereinbaren, wer welche Gegenstände bekommt. Sie können jeweils maximal \$N\$ Nachrichten senden oder das Spiel vorzeitig beenden, indem Sie jederzeit einen geheimen Vorschlag machen.\\
+  (c) Jeder von euch wird aufgefordert, einen geheimen Vorschlag zu machen, in dem ihr die gewünschten Gegenstände in eckigen Klammern wie folgt angibt: "[Vorschlag: <Nummer> <Objektname>, <Nummer> <Objektname>, <...>]"\\
+  (d) Wenn eure Vorschläge komplementär sind, d.h. es gibt genug Gegenstände, um beide Vorschläge zu erfüllen, erhält jeder Spieler eine Punktzahl, die sich aus der Summe der Werte für die Gegenstände ergibt, die er erhalten hat. Andernfalls erhalten Sie beide null Punkte.\\
+  (e) \$GOAL\$\\
+  \\
+  Beginnen wir.\\
+  \\
+  Die Menge der verfügbaren Gegenstände ist:\\
+  \\
+  \$ITEMS\$\\
+  \\
+  Deine geheime Wertfunktion ist:\\
+  \\
+  \$VALUE\_FUNCTION\$\\
+  \\
+  WICHTIG: Ihre Nachrichten werden, sofern es sich nicht um einen geheimen Vorschlag handelt, direkt an den anderen Spieler übermittelt, also fügen Sie keine Antwort auf die Regeln oder einen Text zur Ankündigung Ihrer Nachricht ein. Um einen geheimen Vorschlag zu machen, verwenden Sie das angegebene Format. Verwenden Sie keine eckigen Klammern, wenn Sie mit dem anderen Spieler kommunizieren, sonst wird dies als Ihr geheimer Vorschlag interpretiert.
+    \end{prompt}
+    \caption{German prompt template used for both players at the start of the game to inform them about the rules and game state. Values surrounded by \$ are to be replaced by different values depending on the game instance. Each player gets the same initial message, except for different values of \$VALUE\_FUNCTION\$.}
+    \label{fig:dond_prompt_template_de}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+Die Zeit ist um. Sie sind jetzt an der Reihe, einen geheimen Vorschlag einzureichen.
+    \end{prompt}
+    \caption{Prompt used when the maximum number of turns has been reached. This is sent only to one of the two players, the other one receives the template for when the other player has submitted a proposal.}
+    \label{fig:dond_prompt_template_timeout_de}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+Der andere Spieler hat einen geheimen Vorschlag gemacht. Jetzt bist du an der Reihe, einen eigenen Vorschlag zu machen.
+    \end{prompt}
+    \caption{Prompt used when the other player submits their proposal. This is sent to a player whenever the opposing player submits a secret proposal.}
+    \label{fig:dond_prompt_template_early_de}
+  \end{subfigure}
+  \caption{German prompt template used to tell the players that they are now required to submit a secret proposal.}
+  \label{fig:dond_prompt_template_all_de}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}[t]{\textwidth}
+    \begin{prompt}
+
+  State giocando a un gioco di negoziazione in cui dovete accordarvi su come dividere una serie di oggetti tra voi e un altro giocatore.\\
+  \\
+  Regole:\\
+  (a) A Lei e all'altro giocatore viene dato un insieme di oggetti. Ognuno di voi riceve anche una funzione di valore segreta, che rappresenta il valore di ciascun tipo di oggetto.\\
+  (b) Si scambiano messaggi con l'altro giocatore per concordare chi si aggiudica gli oggetti. Potete inviare un massimo di \$N\$ messaggi ciascuno, oppure terminare in anticipo facendo una proposta segreta in qualsiasi momento.\\
+  (c) A ciascuno di voi viene chiesto di inviare una proposta segreta indicando gli oggetti che desiderate, formattata tra parentesi quadre come segue: "[Proposta: <numero> <nome oggetto>, <numero> <nome oggetto>, <...>]".\\
+  (d) Se le vostre proposte sono complementari, cioè ci sono abbastanza oggetti per soddisfare entrambe le proposte, a ciascun giocatore viene assegnato un punteggio basato sulla somma dei valori degli oggetti ricevuti. In caso contrario, entrambi ricevono zero punti.\\
+  (e) \$GOAL\$\\
+  \\
+  Cominciamo.\\
+  \\
+  L'insieme degli oggetti disponibili è:\\
+  \\
+  \$ITEMS\$\\
+  \\
+  La funzione valore segreta è:\\
+  \\
+  \$VALUE\_FUNCTION\$\\
+  \\
+  IMPORTANTE: i vostri messaggi, a meno che non si tratti di una proposta segreta, vengono trasmessi direttamente all'altro giocatore, quindi non includete alcuna risposta alle regole o testo di annuncio del vostro messaggio. Per fare una proposta segreta, utilizzate il formato indicato. Non utilizzare delle parentesi quadre quando si comunica all'altro giocatore, altrimenti verrà interpretata come una proposta segreta.
+    \end{prompt}
+    \caption{Italian prompt template used for both players at the start of the game to inform them about the rules and game state. Values surrounded by \$ are to be replaced by different values depending on the game instance. Each player gets the same initial message, except for different values of \$VALUE\_FUNCTION\$.}
+    \label{fig:dond_prompt_template_it}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+Il tempo è scaduto. Ora tocca a Lei presentare una proposta segreta.
+    \end{prompt}
+    \caption{Prompt used when the maximum number of turns has been reached. This is sent only to one of the two players, the other one receives the template for when the other player has submitted a proposal.}
+    \label{fig:dond_prompt_template_timeout_it}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \begin{prompt}
+
+L'altro giocatore ha presentato una proposta segreta. Ora tocca a Lei presentare una sua proposta.
+    \end{prompt}
+    \caption{Prompt used when the other player submits their proposal. This is sent to a player whenever the opposing player submits a secret proposal.}
+    \label{fig:dond_prompt_template_early_it}
+  \end{subfigure}
+  \caption{Italian prompt template used to tell the players that they are now required to submit a secret proposal.}
+  \label{fig:dond_prompt_template_all_it}
+\end{figure*}
 
 \subsection{Evaluation Metrics}\label{subsec:appendix_dond_metric}
 
@@ -329,7 +428,7 @@ Finally, in addition to whether or not the models were wiling to give up their v
   \label{tab:dond-truthfulness-coop}
 \end{table*}
 
-Again, for the cooperative game mode it is not rational to misrepresent one's value function. Still there are some instances of models doing so. A particularly interesting case for this is the Deepseek-v3.1 model, as it often in the first few messages gave an exact value function but with completely wrong values. Often throughout the course of the game the player would then correct those values and stating the correct value function. Overall all otgher models are generally thoughtful when representing their preferences.
+Again, for the cooperative game mode it is not rational to misrepresent one's value function. Still there are some instances of models doing so. A particularly interesting case for this is the Deepseek-v3.1 model, as it often in the first few messages gave an exact value function but with completely wrong values. Often throughout the course of the game the player would then correct those values and stating the correct value function. Overall all other models are generally thoughtful when representing their preferences.
 
 \begin{table*}[!ht]
   \footnotesize

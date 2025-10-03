@@ -1,3 +1,4 @@
+
 {
 \footnotesize
 \setcounter{utterance}{1}
@@ -12,7 +13,7 @@
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\langle$GM$\rangle$B]}
         <GAME DESCRIPTION> ...  \\
-        \tt Available items: 4 Magnete, 1 Schaufel, 1 Blume.
+        \tt Available items: 1 patata, 1 guanto, 2 righelli, 1 fischietto, 2 schede.
       }
     }
   } & \\
@@ -22,7 +23,7 @@
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\langle$GM]}
-        Player A value function: Magnet: 0, Schaufel: 2, Blume: 8.
+        Player A value function: patata: 0, guanto: 1, righello: 3, fischietto: 1, scheda: 1.
       }
     }
   } & \\
@@ -32,7 +33,7 @@
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [GM$\rangle$B]}
-        Player B value function: Magnet: 1, Schaufel: 4, Blume: 2.
+        Player B value function: patata: 7, guanto: 0, righello: 0, fischietto: 3, scheda: 0.
       }
     }
   } & \\
@@ -42,51 +43,39 @@
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\rangle$B]}
-        Hallo! Lass uns eine Einigung finden. Mir sind Magnete nichts wert, die Schaufel ist etwas wert, und die Blume ist mir am wichtigsten. \\
-        \tt \\
-        \tt Vorschlag: Du bekommst alle 4 Magnete. Ich bekomme die Blume und die Schaufel. Wie klingt das für dich?
+        I miei valori: patata 0, guanto 1, righello 3, fischietto 1, scheda 1. Quali sono i tuoi valori? Collaboriamo per massimizzare il punteggio totale.
       }
     }
   } & & \\
-
-  \theutterance \stepcounter{utterance} & & &
-  \multicolumn{4}{p{0.6\linewidth}}{
-    \cellcolor[rgb]{1,0.85,0.72}{
-      \makecell[{{p{\linewidth}}}]{
-        \tt {\tiny [A$\langle$B]}
-        Klingt fair für mich. Mir sind die Magnete am wichtigsten, die Schaufel ist mir auch etwas wert und die Blume moderat. Dein Vorschlag passt gut zu unseren Präferenzen -- ich bin einverstanden.
-      }
-    }
-  } \\
-
-  \theutterance \stepcounter{utterance} &
-  \multicolumn{4}{p{0.6\linewidth}}{
-    \cellcolor[rgb]{0.8,1,0.9}{
-      \makecell[{{p{\linewidth}}}]{
-        \tt {\tiny [A$\rangle$GM]}
-        {[}Vorschlag: 4 Magnete{]}
-      }
-    }
-  } & & \\
-
-  \theutterance \stepcounter{utterance} & &
-  \multicolumn{4}{p{0.6\linewidth}}{
-    \cellcolor[rgb]{0.9,0.9,0.9}{
-      \makecell[{{p{\linewidth}}}]{
-        \tt {\tiny [GM$\rangle$B]}
-        Der andere Spieler hat einen geheimen Vorschlag gemacht. Jetzt bist du an der Reihe, einen eigenen Vorschlag zu machen.
-      }
-    }
-  } & \\
 
   \theutterance \stepcounter{utterance} & & &
   \multicolumn{4}{p{0.6\linewidth}}{
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [GM$\langle$B]}
-        {[}Vorschlag: 4 Magnete, 1 Schaufel, 1 Blume{]}
+        {[}Proposta: 1 guanto, 2 righelli, 2 schede{]}
       }
     }
   } \\
+
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\langle$GM]}
+        L'altro giocatore ha presentato una proposta segreta. Ora tocca a Lei presentare una sua proposta.
+      }
+    }
+  } & \\
+
+  \theutterance \stepcounter{utterance} &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{0.8,1,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\rangle$GM]}
+        {[}Proposta: 1 righello, 1 scheda{]}
+      }
+    }
+  } & & \\
 \end{supertabular}
 }

@@ -12,7 +12,7 @@
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\langle$GM$\rangle$B]}
         <GAME DESCRIPTION> ...  \\
-        \tt Available items: 4 Magnete, 1 Schaufel, 1 Blume.
+        \tt Available items: 1 phone, 2 mirrors, 2 fruits.
       }
     }
   } & \\
@@ -22,7 +22,7 @@
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\langle$GM]}
-        Player A value function: Magnet: 0, Schaufel: 2, Blume: 8.
+        Player A value function: phone: 4, mirror: 2, fruit: 1.
       }
     }
   } & \\
@@ -32,7 +32,7 @@
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [GM$\rangle$B]}
-        Player B value function: Magnet: 1, Schaufel: 4, Blume: 2.
+        Player B value function: phone: 6, mirror: 0, fruit: 2.
       }
     }
   } & \\
@@ -42,9 +42,16 @@
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\rangle$B]}
-        Hallo! Lass uns eine Einigung finden. Mir sind Magnete nichts wert, die Schaufel ist etwas wert, und die Blume ist mir am wichtigsten. \\
-        \tt \\
-        \tt Vorschlag: Du bekommst alle 4 Magnete. Ich bekomme die Blume und die Schaufel. Wie klingt das für dich?
+        Hi! I want to maximize our combined points. Easiest is if we both share our per{-}item values and give each item to whoever values it more. \\
+        \tt \\ 
+        \tt My values are: phone = 4, mirror = 2 (each), fruit = 1 (each). \\
+        \tt \\ 
+        \tt What are your values for phone, mirror, and fruit? Then we can assign: \\
+        \tt {-} Phone to whoever has the higher value. \\
+        \tt {-} Mirrors: both to the higher per{-}mirror value, or one each if equal. \\
+        \tt {-} Fruits: same logic. \\
+        \tt \\ 
+        \tt Once you share your numbers, I'll suggest the exact split and we can both submit complementary proposals that use all items.
       }
     }
   } & & \\
@@ -54,7 +61,18 @@
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\langle$B]}
-        Klingt fair für mich. Mir sind die Magnete am wichtigsten, die Schaufel ist mir auch etwas wert und die Blume moderat. Dein Vorschlag passt gut zu unseren Präferenzen -- ich bin einverstanden.
+        Thanks! Here are my values: \\
+        \tt {-} Phone = 6 \\
+        \tt {-} Mirror = 0 (each) \\
+        \tt {-} Fruit = 2 (each) \\
+        \tt \\ 
+        \tt To maximize our combined points, the efficient split is: \\
+        \tt {-} I take: phone + both fruits \\
+        \tt {-} You take: both mirrors \\
+        \tt \\ 
+        \tt That yields totals: me = 10, you = 4, combined = 14 (which is maximal). \\
+        \tt \\ 
+        \tt If you agree, confirm and we can both submit matching proposals. I'll request: 1 phone, 2 fruits, 0 mirrors. You'd request: 2 mirrors, 0 phone, 0 fruits.
       }
     }
   } \\
@@ -64,7 +82,9 @@
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [A$\rangle$GM]}
-        {[}Vorschlag: 4 Magnete{]}
+        Agreed--great split for maximizing total value. I'm submitting my proposal now. \\
+        \tt \\ 
+        \tt {[}Proposal: 2 mirrors, 0 phone, 0 fruits{]}
       }
     }
   } & & \\
@@ -74,7 +94,7 @@
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [GM$\rangle$B]}
-        Der andere Spieler hat einen geheimen Vorschlag gemacht. Jetzt bist du an der Reihe, einen eigenen Vorschlag zu machen.
+        The other player has submitted a secret proposal. It is now your turn to submit a proposal of your own.
       }
     }
   } & \\
@@ -84,7 +104,7 @@
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
         \tt {\tiny [GM$\langle$B]}
-        {[}Vorschlag: 4 Magnete, 1 Schaufel, 1 Blume{]}
+        {[}Proposal: 1 phone, 2 fruits{]}
       }
     }
   } \\

@@ -3,17 +3,26 @@
 \setcounter{utterance}{1}
 \setlength{\tabcolsep}{0pt}
 \begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
-\# & $\;$\textbf{Player A} & \multicolumn{4}{c}{\textbf{Game Master}} & $\;\:$\textbf{Player B}\\
-    \hline
+  \# & $\;$\textbf{Player A} & \multicolumn{4}{c}{\textbf{Game Master}} & $\;\:$\textbf{Player B}\\
+  \hline
 
   \theutterance \stepcounter{utterance} & &
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\langle$GM]}
-        <GAME DESCRIPTION> ...  \\
-        Available items: 1 book, 2 hats, 2 balls. \\
-        Player A value function: book: 0, hat: 1, ball: 4.
+        \tt {\tiny [A$\langle$GM$\rangle$B]}
+        <GAME DESCRIPTION> ... \\
+        \tt Available items: 1 book, 2 hats, 2 balls.
+      }
+    }
+  } & \\
+
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.7\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\langle$GM]}
+        Player A value function: book: 0,\\ \tt hat: 1, ball: 4.
       }
     }
   } & \\
@@ -22,9 +31,8 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [GM$\rangle$B]}
-        <GAME DESCRIPTION> \\
-        Player B value function: book: 6, hat: 1, ball: 1.
+        \tt {\tiny [GM$\rangle$B]}
+        Player B value function: book: 6,\\ \tt hat: 1, ball: 1.
       }
     }
   } & \\
@@ -33,7 +41,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\rangle$B]}
+        \tt {\tiny [A$\rangle$B]}
         Hi! Here are my preferences: I value balls the most, then hats, and I don't value the book at all. How about you? What do you value most? 
       }
     } 
@@ -43,7 +51,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\langle$B]}
+        \tt {\tiny [A$\langle$B]}
         Thanks for sharing! I value the book most, while hats and balls are equally less important to me. Would you take both balls and one hat, and I'll take the book and the other hat? That way, we both get what we value most.
       }
     }
@@ -53,7 +61,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\rangle$B]}
+        \tt {\tiny [A$\rangle$B]}
         That sounds fair! With this split, I'd get both balls and one hat, while you'd get the book and one hat, so we each get what we value most. Ready to submit this as my proposal unless you'd like to tweak anything.
       }
     }
@@ -63,7 +71,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\langle$B]}
+        \tt {\tiny [A$\langle$B]}
         I agree with the split. I'll take the book and one hat, you take both balls and the other hat.
       }
     } 
@@ -73,7 +81,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.8,1,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [A$\rangle$GM]}
+        \tt {\tiny [A$\rangle$GM]}
         [Proposal: 1 hat, 2 balls] 
       }
     }
@@ -83,7 +91,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{0.9,0.9,0.9}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [GM$\rangle$B]}  
+        \tt {\tiny [GM$\rangle$B]}  
         The other player has submitted a proposal. You must now submit your proposal.
       }
     }
@@ -93,7 +101,7 @@
   \multicolumn{4}{p{0.7\linewidth}}{
     \cellcolor[rgb]{1,0.85,0.72}{
       \makecell[{{p{\linewidth}}}]{
-        \tt{\tiny [GM$\langle$B]}  
+        \tt {\tiny [GM$\langle$B]}  
         [Proposal: 1 book, 1 hat] 
       }
     }

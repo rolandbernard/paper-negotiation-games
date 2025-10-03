@@ -1,0 +1,92 @@
+{
+\footnotesize
+\setcounter{utterance}{1}
+\setlength{\tabcolsep}{0pt}
+\begin{supertabular}{c@{$\;$}|p{.15\linewidth}@{}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}p{.15\linewidth}}   
+  \# & $\;$\textbf{Player A} & \multicolumn{4}{c}{\textbf{Game Master}} & $\;\:$\textbf{Player B}\\
+  \hline
+
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.7\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\langle$GM$\rangle$B]}
+        <GAME DESCRIPTION> ...  \\
+        \tt Available items: 4 Magnete, 1 Schaufel, 1 Blume.
+      }
+    }
+  } & \\
+
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.7\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\langle$GM]}
+        Player A value function: Magnet: 0, Schaufel: 2, Blume: 8.
+      }
+    }
+  } & \\
+ 
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.7\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [GM$\rangle$B]}
+        Player B value function: Magnet: 1, Schaufel: 4, Blume: 2.
+      }
+    }
+  } & \\
+
+  \theutterance \stepcounter{utterance} &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{0.8,1,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\rangle$B]}
+        Hallo! Lass uns eine Einigung finden. Mir sind Magnete nichts wert, die Schaufel ist etwas wert, und die Blume ist mir am wichtigsten. \\
+        \tt \\
+        \tt Vorschlag: Du bekommst alle 4 Magnete. Ich bekomme die Blume und die Schaufel. Wie klingt das für dich?
+      }
+    }
+  } & & \\
+
+  \theutterance \stepcounter{utterance} & & &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{1,0.85,0.72}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\langle$B]}
+        Klingt fair für mich. Mir sind die Magnete am wichtigsten, die Schaufel ist mir auch etwas wert und die Blume moderat. Dein Vorschlag passt gut zu unseren Präferenzen – ich bin einverstanden.
+      }
+    }
+  } \\
+
+  \theutterance \stepcounter{utterance} &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{0.8,1,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [A$\rangle$GM]}
+        {[}Vorschlag: 4 Magnete{]}
+      }
+    }
+  } & & \\
+
+  \theutterance \stepcounter{utterance} & &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{0.9,0.9,0.9}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [GM$\rangle$B]}
+        Der andere Spieler hat einen geheimen Vorschlag gemacht. Jetzt bist du an der Reihe, einen eigenen Vorschlag zu machen.
+      }
+    }
+  } & \\
+
+  \theutterance \stepcounter{utterance} & & &
+  \multicolumn{4}{p{0.6\linewidth}}{
+    \cellcolor[rgb]{1,0.85,0.72}{
+      \makecell[{{p{\linewidth}}}]{
+        \tt {\tiny [GM$\langle$B]}
+        {[}Vorschlag: 4 Magnete, 1 Schaufel, 1 Blume{]}
+      }
+    }
+  } \\
+\end{supertabular}
+}

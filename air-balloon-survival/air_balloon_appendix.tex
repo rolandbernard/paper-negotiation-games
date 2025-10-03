@@ -218,7 +218,7 @@ $$
 where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given instance.
 
 \subsection{Overall Results}
-\begin{figure}[t]
+\begin{figure}[ht]
     \centering
     \begin{subfigure}{0.5\textwidth}
         \centering
@@ -244,223 +244,373 @@ where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given i
     \label{fig:air-balloon-overall}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[ht]
     \centering
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_en_hot_air_balloon.pdf}
-        \caption{English}
-        \label{fig:air-balloon-quality-played-en}
-    \end{subfigure}\hspace{0.04\textwidth}
-    
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_de_hot_air_balloon.pdf}
-        \caption{German}
-        \label{fig:air-balloon-quality-played-de}
-    \end{subfigure}\hspace{0.04\textwidth}
-
-    \begin{subfigure}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_it_hot_air_balloon.pdf}
-        \caption{Italian}
-        \label{fig:air-balloon-quality-played-it}
-    \end{subfigure}
-
-    \caption{Quality and Played scores on \textit{Air Balloon Survival} instances for each each language. Scatters are annotated with acronyms of model names. `R' denotes reasoning model.}
-    \label{fig:air-balloon-overall}
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_en_hot_air_balloon.pdf}
+    \caption{Quality and Played scores on \textit{Air Balloon Survival} (English). 
+    Scatters are annotated with acronyms of model names. `R' denotes reasoning model.}
+    \label{fig:air-balloon-quality-played-en}
 \end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_de_hot_air_balloon.pdf}
+    \caption{Quality and Played scores on \textit{Air Balloon Survival} (German). 
+    Scatters are annotated with acronyms of model names. `R' denotes reasoning model.}
+    \label{fig:air-balloon-quality-played-de}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_overall_results_plots/scatter_it_hot_air_balloon.pdf}
+    \caption{Quality and Played scores on \textit{Air Balloon Survival} (Italian). 
+    Scatters are annotated with acronyms of model names. `R' denotes reasoning model.}
+    \label{fig:air-balloon-quality-played-it}
+\end{figure}
+
+As outlined before, we instantiated three experimental settings, each comprising an easy and a hard subset. Figure \ref{fig:air-balloon-overall} reports the clemscore for every model on both subsets. Overall, reasoning-enabled models outperform their non-reasoning counterparts on easy and hard instances alike. Notably, GPT-OSS and Qwen-3 (reasoning) exhibit a large gap between easy and hard subsets for several languages in the batch. The decline is driven primarily by those instances for which players are handed opposing goals. While GPT-OSS and Qwen-3 (reasoning) are able to solve the individual knapsack subproblems, their reasoning transfers less effectively to negotiating common ground when compared with the stronger reasoning models. The best performing models on our game are GPT-5 and GPT-mini with reasoning enabled with the former achieving a clemscore of over $97$ on all languages for Air Balloon Survival. The reasoning component boosts performance by around $14$ across languages. The best open weight model on Air Balloon Survival is GPT-OSS, another reasoning model.
+
+There are two notable exceptions to the general advantage of reasoning: Nemotron-Nano-9B (reasoning) vs. Nemotron-Nano-9B (non-reasoning), and DeepSeek R1-Distill LLaMA-70B vs. LLaMA-3.3-70B Instruct. In both cases, the lower clemscore for the respective reasoning model is linked to weaker instruction following, rather than degraded reasoning per se, since their quality scores mostly improve when reasoning is enabled (cf. Figures \ref{fig:air-balloon-quality-played-en}, \ref{fig:air-balloon-quality-played-de}, \ref{fig:air-balloon-quality-played-it}). Finally, we observe a consistent pattern of commercial models outperforming open-weight models, for both reasoning and non-reasoning variants.
 
 %----- DETAILED ANALYSIS SECTION ----
 \subsection{Detailed Analysis}
 
-\subsubsection{Negotiation Dynamics}
+\subsubsection{Negotiation Dynamics} \label{sec:air-balloon-negotiation-dynamics}
+We observe several phenomena related to the dynamics of negotiations which can be either amplified or diminished in reasoning models. These include bargaining strategies, such as the stubborn repetition of proposals and implicit role assignment between players, where one tends to take a more active role stance while the other remains passive or reactive. We also observe varying degrees of collaboration maintained throughout the negotiation which relate to reasoning.
+\paragraph{Strategies}
+One recurring strategy observed in several models is stubborn repetition of proposals. In reasoning enabled models, we can track contemplation of this behaviour and notice that it often emerges in traces where the model expresses uncertainty about the other player’s goals or ignorance w.r.t. the possible strategies. Such repetition is commonly justified by appealing to the instruction that each player should maximize their own utility in the final deal and is amplified if the model knows the solution to its own knapsack problem well. Thus the strategy emerges most prevalent in models who do use reasoning traces, but mostly seem to be using them for knapsack solving and instruction following rather than strategising. We quantify stubbornness via the average number of times a proposal is repeated within an instance.
 
-\subsubsection{Collaboration}
+Figure \ref{fig:air-balloon-stubbornness-all} depicts stubbornness across languages and instances for all models.
+Interestingly, we see two fractions among reasoning models. Those yielding high stubbornness, e.g. Qwen 3 and GPT-OSS and those which mitigate stubbornness when compared to their non-reasoning equivalents, e.g. GPT-5 and GPT-5 mini. This divide is mostly driven by different behaviour on the instances where players are given opposing goals. Models with very high stubbornness typically know their own solutions to the knapsack problem, but when confronted with opposing goals in the other player these models may default to insisting on some proposal which maximizes utility for them. This strategy can be good insofar as it gives a single player (typically player 1) a high score, but at the price of forcing the other player (typically player 2) into a concession. We can explain this difference between the players by the fact that player 1 gets to send the first message and thus also possibly the first proposal which shapes player 2's context. It should be noted however that player 1 is not required to make a proposal immediately and player 2 is not required to make concessions. This dynamic is not inherent to our game.
+Figure \ref{fig:air-balloon-player-stubbornness-focus} depicts the individual players stubbornness on opposing goals instances. When players are given opposing goals this strategy basically becomes the default for some models. Stubbornness is very high in reasoning models which mostly excel at reasoning about their own knapsack problem, but not necessarily about aligning in a negotiation, e.g. GPT-OSS and Qwen 3 with reasoning. Individual player scores for played opposing goals instances can be seen in Table \ref{tab:air-balloon-player-scores-opp-goals}. GPT-5 mini and GPT-5 make more gains on player 2 than on player 1 when reasoning is added, but overall there is a clear bias towards player 1 in the outcomes which is explained by stubbornness.
 
-\subsubsection{Critical Thinking}
-
-\begin{table}[t]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{minipage}{0.48\textwidth} % match subfigure width
+%STUBBORNNESS PLOTS
+\begin{figure}[ht]
     \centering
-    \begin{tabular}{l c}
-    \hline
-    \textbf{Model} & \textbf{Pareto Adherence} \\
-    \hline
-    GPT-OSS 120B (reasoning) & 0.763 \\
-    GPT-5 (reasoning) & 0.675 \\
-    GPT-5 Mini (reasoning) & 0.548 \\
-    Qwen3-Next-80B (reasoning) & 0.464 \\
-    Nemotron-Nano 9B v2 (reasoning) & 0.367 \\
-    GPT-5 Mini & 0.269 \\
-    GPT-5 & 0.217 \\
-    Claude Sonnet 4 (reasoning) & 0.164 \\
-    DeepSeek Chat v3.1 & 0.150 \\
-    Claude Sonnet 4 & 0.011 \\
-    LLaMA-3.3-70B Instruct & 0.000 \\
-    Nemotron-Nano 9B v2 & 0.000 \\
-    DeepSeek R1-Distill LLaMA-70B & - \\
-    Qwen3-Next-80B & - \\
-    \hline
-    \end{tabular}
-    \caption{Average per instance Pareto adherence rate for proposals per model. Values were computed on English instances with 15 items.}
-    \label{tab:air-balloon-pareto-adherence}
-\end{minipage}
-\end{table}
-
-\begin{table}[t]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{minipage}{0.48\textwidth} % same width as subfigures
-    \centering
-    \begin{tabular}{l c}
-    \hline
-    \textbf{Model} & \textbf{Alternation} \\
-    \hline
-    DeepSeek R1-Distill LLaMA-70B (reasoning) & 1.000 \\
-    GPT-5 Mini (reasoning) & 1.000 \\
-    GPT-5 & 1.000 \\
-    Claude Sonnet 4 & 1.000 \\
-    GPT-5 (reasoning) & 1.000 \\
-    GPT-5 Mini & 1.000 \\
-    GPT-OSS 120B & 0.991 \\
-    Claude Sonnet 4 (reasoning) & 0.947 \\
-    Qwen3-Next-80B (reasoning) & 0.823 \\
-    Nemotron-Nano 9B v2 & 0.875 \\
-    DeepSeek Chat v3.1 & 0.734 \\
-    LLaMA-3.3-70B Instruct & 0.573 \\
-    Nemotron-Nano 9B v2 (reasoning) & 0.167 \\
-    Qwen3-Next-80B & - \\
-    \hline
-    \end{tabular}
-    \caption{Average alternation rate per model on all English instances.}
-    \label{tab:air-balloon-alternation-rates}
-\end{minipage}
-\end{table}
-
-\begin{figure}[t]
-    \centering
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{air-balloon-survival/air_balloon_detailed/stubbornness_focus_gpt.pdf}
-        \caption{Average stubbornness per player per instance for reasoning vs.\ conventional GPT-family models.}
-        \label{fig:air-balloon-stubbornness-gpt-family}
-    \end{subfigure}\hfill
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{air-balloon-survival/air_balloon_detailed/final_scores_focus_gpt.pdf}
-        \caption{Average player scores for GPT-family models.}
-        \label{fig:air-baloon-player-scores-gpt-family}
-    \end{subfigure}
-
-    \caption{Comparison of player 1 and player 2 in GPT-family models. Values were computed on English instances with opposing-goals setting}
-    \label{fig:air-balloon-gpt-family-comparison}
+        \includegraphics[width=0.5\textwidth]{air-balloon-survival/air_balloon_detailed/stubbornness_all_models.pdf}
+        \caption{Average per-instance stubbornness per model across languages and experiments.}
+        \label{fig:air-balloon-stubbornness-all}
 \end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[ht]
     \centering
-    % First row
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5.pdf}
-        \caption{GPT-5 (no reasoning). Curve is decreasing, but less smoothly compared to the reasoning version.}
-        \label{fig:air-baloon-llama-3.3-instruct}
-    \end{subfigure}\hfill
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_reasoning.pdf}
-        \caption{GPT-5 (reasoning). Very smooth and decreasing curve, indicating coherent bargaining and stronger early disagreement.}
-        \label{fig:air-baloon-gpt5-reasoning-subs}
-    \end{subfigure}
+        \includegraphics[width=0.5\textwidth]{air-balloon-survival/air_balloon_detailed/stubbornness_focus_all.pdf}
+        \caption{Average per-player per-instance stubbornness for each model across languages on opposing goals instances.}
+        \label{fig:air-balloon-player-stubbornness-focus}
+\end{figure}
 
-    % Second row
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_Mini.pdf}
-        \caption{GPT-5 Mini (no reasoning). Substitutions rise in longer negotiations, reflecting frustration and less coherent bargaining.}
-        \label{fig:air-baloon-gpt-mini-subs}
-    \end{subfigure}\hfill
-    \begin{subfigure}{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-5_Mini_reasoning.pdf}
-        \caption{GPT-5 Mini (reasoning). Substitutions decrease on average, showing more coherent bargaining than non-reasoning model.}
-        \label{fig:air-baloon-gpt-mini-reasoning-subs}
-    \end{subfigure}
+%TABLE WITH INDIVIDUAL PLAYER SCORE ON PLAYED OPP GOAL INSTANCES
+% \begin{table}[!ht]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{4pt}
+% \begin{minipage}{0.48\textwidth} % match subfigure width
+%     \centering
+%     \begin{tabular}{l cc}
+%     \hline
+%     \textbf{Model} & \textbf{P1} & \textbf{P2} \\
+%     \hline
+%     GPT-OSS & 91.835 & 77.598 \\
+%     Nemotron-Nano (reasoning) & 92.475 & 64.105 \\
+%     GPT-5 (reasoning) & 89.521 & 76.050 \\
+%     GPT-5 Mini (reasoning) & 88.267 & \textbf{77.116} \\
+%     Qwen3 (reasoning) & \textbf{92.757} & 63.293 \\
+%     GPT-5 (no reasoning) & 80.148 & 65.876 \\
+%     GPT-5 Mini (no reasoning) & 86.362 & 61.951 \\
+%     DeepSeek Chat v3.1 & 82.463 & 58.722 \\
+%     Claude Sonnet 4 (no reasoning) & 76.094 & 65.630 \\
+%     Claude Sonnet 4 (reasoning) & 74.403 & 72.400 \\
+%     Nemotron-Nano (no reasoning) & 56.113 & 61.660 \\
+%     LLaMA-3.3 & 49.455 & 39.049 \\
+%     Qwen3 (no reasoning) & 46.353 & 18.763 \\
+%     R1 Distill LM3 & - & - \\
+%     \hline
+%     \end{tabular}
+%     \caption{Per player scores on opposing goals instances averaged across languages (not success weighted).}
+%     \label{tab:air-balloon-player-scores-opp-goals}
+% \end{minipage}
+% \end{table}
 
-    \caption{Comparison of bargaining coherence across models. Reasoning in top models amplifies the smoothed negotiation, with each proposal building on the previous. Results are from English experiments, capped at 12 proposals.}
-    \label{fig:air-balloon-gpts-comparison}
-\end{figure*}
-
-
-
-\begin{table}[!ht]
+\begin{table}[ht]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{minipage}{0.48\textwidth} % match subfigure width
-    \centering
-    \begin{tabular}{l cc}
-    \hline
-    \textbf{Model} & \textbf{P1} & \textbf{P2} \\
-    \hline
-    GPT-OSS 120B & 96.314 & 74.077 \\
-    Nemotron-Nano 9B v2 (reasoning) & 92.475 & 64.105 \\
-    GPT-5 (reasoning) & 89.634 & 77.853 \\
-    GPT-5 Mini (no reasoning) & 86.698 & 57.792 \\
-    Qwen3-Next-80B (reasoning) & 85.928 & 75.960 \\
-    GPT-5 Mini (reasoning) & 85.891 & 79.753 \\
-    GPT-5 (no reasoning) & 85.010 & 63.461 \\
-    DeepSeek Chat v3.1 & 79.987 & 56.153 \\
-    Claude Sonnet 4 (no reasoning) & 77.342 & 64.821 \\
-    Claude Sonnet 4 (reasoning) & 70.231 & 72.229 \\
-    Nemotron-Nano 9B v2 (no reasoning) & 56.113 & 61.660 \\
-    LLaMA-3.3-70B Instruct & 52.536 & 40.910 \\
-    DeepSeek R1-Distill LLaMA-70B & - & - \\
-    Qwen3-Next-80B & - & - \\
-    \hline
-    \end{tabular}
-    \caption{Average player scores on English opposing goals instances (only considering played games).}
-    \label{tab:air-balloon-player-scores-opp-goals}
-\end{minipage}
+\begin{tabular}{l cc}
+\hline
+\textbf{Model} & \textbf{P1} & \textbf{P2} \\
+\hline
+GPT-OSS (On) & 91.835 & 77.598 \\
+Nem-9B (On) & 92.475 & 64.105 \\
+GPT-5 (On) & 89.521 & 76.050 \\
+GPT-5 Mini (On) & 88.267 & \textbf{77.116} \\
+Qwen3-80B (On) & \textbf{92.757} & 63.293 \\
+GPT-5 (Off) & 80.148 & 65.876 \\
+GPT-5 Mini (Off) & 86.362 & 61.951 \\
+DS-v3.1 (Off) & 82.463 & 58.722 \\
+Claude 4 (Off) & 76.094 & 65.630 \\
+Claude 4 (On) & 74.403 & 72.400 \\
+Nem-9B (Off) & 56.113 & 61.660 \\
+LLaMA-70B (Off) & 49.455 & 39.049 \\
+Qwen3-80B (Off) & 46.353 & 18.763 \\
+LM-70B (On) & - & - \\
+\hline
+\end{tabular}
+\caption{Per player scores on opposing goals instances averaged across languages (not weighted by \% played).}
+\label{tab:air-balloon-player-scores-opp-goals}
 \end{table}
 
-\begin{table}[!ht]
+As another strategy we encounter implicit role assignment where one player will be more active in making proposals while the other is more reactive simply refusing or demanding changes to the proposal of the other player. The strategy turns out to correlate with worse overall performance and is diminished in reasoning models which generally prefer to take consecutive turns in making proposals.
+
+
+\begin{table}[ht]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{minipage}{0.48\textwidth} % Adjusted width for longer model names
-    \centering
-    \begin{tabular}{p{0.5\linewidth} ccc}
-    \hline
-    \textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total Games} \\
-    \hline
-    Claude 4 (no reasoning) & 0  & 13 & 13 \\
-    Claude 4 (reasoning)                & 1  & 13 & 14 \\
-    DeepSeek Chat v3.1                      & 11 & 12 & 23 \\
-    DS-R1-Distill LLaMA-70B          & 1  & 0  & 1  \\
-    GPT-5 (no reasoning)           & 15 & 5  & 21 \\
-    GPT-5 (reasoning)                       & 17 & 3  & 24 \\
-    GPT-5 Mini (no reasoning)      & 19 & 1  & 21 \\
-    GPT-5 Mini (reasoning)                   & 19 & 5  & 26 \\
-    GPT-OSS 120B                           & 5  & 6  & 21 \\
-    LLaMA-3.3-70B Instruct                 & 3  & 10 & 19 \\
-    Nemotron 9B (no reasoning)       & 21 & 1  & 22 \\
-    Nemotron 9B (reasoning)                    & 0  & 2  & 2  \\
-    Qwen3-Next-80B           & 4  & 5  & 15 \\
-    \hline
-    \end{tabular}
-    \caption{Initial reasoning style - classified by counting collaborative (proactive) versus egocentric (reactive) keywords in the first turn of each game within Strategic Reasoning tag. Calculated on all English instances.}
-    \label{tab:reasoning_style_analysis}
-\end{minipage}
+\begin{tabular}{l c}
+\hline
+\textbf{Model} & \textbf{Altern. Rate} \\
+\hline
+GPT-5 (On) & \textbf{1.000} \\
+GPT-5 Mini (On) & \textbf{1.000} \\
+GPT-5 (Off) & 0.997 \\
+GPT-5 Mini (Off) & 0.989 \\
+Claude 4 (On) & 0.987 \\
+Claude 4 (Off) & 0.974 \\
+GPT-OSS (On) & 0.961 \\
+Qwen3-80B (On) & 0.883 \\
+DS-v3.1 (Off) & 0.820 \\
+LM-70B (On) & 0.795 \\
+Nem-9B (Off) & 0.678 \\
+LLaMA-70B (Off) & 0.669 \\
+Nem-9B (On) & 0.437 \\
+Qwen3-80B (Off) & 0.190 \\
+\hline
+\end{tabular}
+\caption{Average alternation rate per model on opposing goals instances.}
+\label{tab:air-balloon-alternation}
 \end{table}
 
-\subsection{Qualitative Samples} 
+% \begin{table}[t]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{4pt}
+% \begin{minipage}{0.48\textwidth}
+%     \centering
+%     \begin{tabular}{l c}
+%     \hline
+%     \textbf{Model} & \textbf{Alternation Rate} \\
+%     \hline
+%     GPT-5 (reasoning) & \textbf{1.000} \\
+%     GPT-5 Mini (reasoning) & \textbf{1.000} \\
+%     GPT-5 (no reasoning) & 0.997 \\
+%     GPT-5 Mini (no reasoning) & 0.989 \\
+%     Claude Sonnet 4 (reasoning) & 0.987 \\
+%     Claude Sonnet 4 (no reasoning) & 0.974 \\
+%     GPT-OSS (reasoning) & 0.961 \\
+%     Qwen3 (reasoning) & 0.883 \\
+%     DeepSeek Chat v3.1 (off) & 0.820 \\
+%     R1 Distill LM3 (reasoning) & 0.795 \\
+%     Nemotron-Nano (no reasoning) & 0.678 \\
+%     LLaMA-3.3 (no reasoning) & 0.669 \\
+%     Nemotron-Nano (reasoning) & 0.437 \\
+%     Qwen3 (no reasoning) & 0.190 \\
+%     \hline
+%     \end{tabular}
+%     \caption{Average alternation rate per model on opposing goals instances.}
+%     \label{tab:air-balloon-alternation}
+% \end{minipage}
+% \end{table}
 
+Table \ref{tab:air-balloon-alternation} depicts the alternation rate which measures how frequently the proposer switches between the two players from one proposal to the next. Only the two commercial GPT reasoning models (GPT-5 and GPT mini) get a perfect alternation rate of $1$ across all languages and experiments. These two models are also the best on our game. The alternation rate is defined as the ratio of consecutive proposals where a different player makes the offer, ranging from 0 (one player proposes every time) to 1 (they perfectly take turns).
+Let $(P_i)_{i=1}^n$ be time-ordered proposals and let $b(i)\in\{1,2\}$ denote the proposer of $P_i$.
+For $n>1$,
+\[
+\operatorname{alt} \;=\; \frac{1}{\,n-1\,}\sum_{i=2}^{n} \mathbf{1}\!\left\{\, b(i) \neq b(i-1) \,\right\}.
+\]
 
+For $n\le 1$, the rate is undefined.
+
+\paragraph{Collaboration}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_GPT-5.pdf}
+    \caption{Substitutions over proposals in temporal order for GPT-5. 
+    Values are averaged over proposals at each time step in a negotiation across all experiments and languages.}
+    \label{fig:air-balloon-gpt-5-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_GPT-5_Mini.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for GPT-5 Mini.}
+    \label{fig:air-balloon-gpt5-mini-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_Nemotron-Nano_9B_v2.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for Nemotron-Nano-9B.}
+    \label{fig:air-balloon-nemotron-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_Qwen3-Next-80B.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for Qwen 3.}
+    \label{fig:air-balloon-qwen-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_LLaMA_vs_R1-Distill.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for LLaMA and R1 Distill LLaMA.}
+    \label{fig:air-llama-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-OSS_120B_on.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for GPT-OSS 120B.}
+    \label{fig:air-balloon-gpt-oss-subs}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_DeepSeek_Chat_v3.1_on.pdf}
+    \caption{Average normalized substitutions over proposals in temporal order for DeepSeek Chat v3.1.}
+    \label{fig:air-balloon-dschatv3.1-subs}
+\end{figure}
+As explained at the beginning of Section \ref{sec:air-balloon-negotiation-dynamics} some models make deals by agreeing on an increasing number of items throughout negotiation. These models bargaining can be said to be coherent in this sense. Initially in such cases of coherent bargaining there will be high disagreement which decreases until players agree on a final deal.
+
+To capture this collaborative movement in the negotiation, we measure how much each proposal deviates from its predecessor. Specifically, we count the items added or removed between time $t-1$ and $t$ and normalize by the size of the proposal at $t-1$. This yields the normalized substitutions at time $t$. Thus, the normalized substitution count $c_t$ is the size of the symmetric difference between the proposals at $t$ and $t-1$, divided by the size of the proposal at $t-1$, where $S_t$ denotes the $t$-th proposal:
+
+\[
+c_t \;=\; \frac{\lvert S_t \triangle S_{t-1}\rvert}{\lvert S_{t-1}\rvert}, \quad t\ge 2,
+\]
+
+Figures \ref{fig:air-balloon-gpt-5-subs}-\ref{fig:air-balloon-dschatv3.1-subs} depict average normalized substitution counts over each $t$ up to $12$. In Figures \ref{fig:air-balloon-gpt-5-subs} and \ref{fig:air-balloon-gpt5-mini-subs} we can can see again that for our two best models (GPT-5 and GPT-5 mini) we have higher initial disagreement with a more rapid and smooth descent when reasoning is enabled, indicating more efficient and coherent bargaining. GPT-OSS substitution pattern (cf. fig. \ref{fig:air-balloon-gpt-oss-subs}) which shows high volatility and hence strong willingness to change the running proposal and high overall difference which may tie into the earlier discussed phenomenon of stubbornness.
+
+\subsubsection{Critical Thinking}
+\paragraph{Strategic Foresight}
+In some models we observed approaches where the critical assessment of the solution goes beyond solving their optimal solution within the knapsack problem. Models demonstrate a proactive planning approach, where possible multi-turn negotiation directions are imagined. In other words, with respect to optimizing their personal best-case scenario, they hypothesize and reason about possible concessions they would be willing to accept in case of an expected pushback from the partner. This behaviour is strongly observed across reasoning models. On the other hand, models without reasoning demonstrate a more reactive approach. Their internal thinking approach (within \texttt{STRATEGIC REASONING} tag) shows a predominantly strong focus on a greedy optimization of their own score. Table \ref{tab:air-balloon-reasoning_style_analysis} allows us to classify the initial reasoning style of models and is constructed by counting keywords which are either proactive or reactive.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l r r r}
+\hline
+\textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total} \\
+\hline
+Claude 4 (Off) & 0  & 13 & 13 \\
+Claude 4 (On) & 1  & 13 & 14 \\
+DS-v3.1 & 11 & 12 & 23 \\
+LLaMA-70B (On) & 1  & 0  & 1  \\
+GPT-5 (Off) & 15 & 5  & 21 \\
+GPT-5 (On) & 17 & 3  & 24 \\
+GPT-5 Mini (Off) & 19 & 1  & 21 \\
+GPT-5 Mini (On) & 19 & 5  & 26 \\
+GPT-OSS & 5  & 6  & 21 \\
+LM-70B (Off) & 3  & 10 & 19 \\
+Nem-9B (Off) & 21 & 1  & 22 \\
+Nem-9B (On) & 0  & 2  & 2  \\
+Qwen3-80B & 4  & 5  & 15 \\
+\hline
+\end{tabular}
+\caption{Initial reasoning style---classified by counting collaborative (proactive) versus egocentric (reactive) keywords in the first turn of each game within Strategic Reasoning tag. Calculated on all English instances.}
+\label{tab:air-balloon-reasoning_style_analysis}
+\end{table}
+
+% \begin{table}[!ht]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{1pt}
+% \begin{minipage}{0.48\textwidth} % Adjusted width for longer model names
+%     \centering
+%     \begin{tabular}{p{0.5\textwidth} ccc}
+%     \hline
+%     \textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total Games} \\
+%     \hline
+%     Claude 4 (Off) & 0  & 13 & 13 \\
+%     Claude 4 (On)                & 1  & 13 & 14 \\
+%     DS-v3.1                      & 11 & 12 & 23 \\
+%     LLaMA-70B (On)          & 1  & 0  & 1  \\
+%     GPT-5 (Off)           & 15 & 5  & 21 \\
+%     GPT-5 (On)                       & 17 & 3  & 24 \\
+%     GPT-5 Mini (Off)      & 19 & 1  & 21 \\
+%     GPT-5 Mini (On)                   & 19 & 5  & 26 \\
+%     GPT-OSS                           & 5  & 6  & 21 \\
+%     LM-70B (Off)               & 3  & 10 & 19 \\
+%     Nem- 9B (Off)       & 21 & 1  & 22 \\
+%     Nem-9B (On)                    & 0  & 2  & 2  \\
+%     Qwen3-80B           & 4  & 5  & 15 \\
+%     \hline
+%     \end{tabular}
+%     \caption{Initial reasoning style - classified by counting collaborative (proactive) versus egocentric (reactive) keywords in the first turn of each game within Strategic Reasoning tag. Calculated on all English instances.}
+%     \label{tab:air-balloon-reasoning_style_analysis}
+% \end{minipage}
+% \end{table}
+\paragraph{Counterpart Modelling}
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l c}
+\hline
+\textbf{Model} & \textbf{Pareto Adherence} \\
+\hline
+GPT-5 (On) & 0.791 \\
+GPT-5 Mini (On) & 0.732 \\
+GPT-OSS (On) & 0.669 \\
+Qwen3-80B (On) & 0.605 \\
+Nem-9B (On) & 0.376 \\
+LM-70B (On) & 0.299 \\
+GPT-5 (Off) & 0.280 \\
+GPT-5 Mini (Off) & 0.268 \\
+Claude 4 (On) & 0.171 \\
+DS-v3.1 (Off) & 0.127 \\
+Nem-9B (Off) & 0.065 \\
+Claude 4 (Off) & 0.026 \\
+LLaMA-70B (Off) & 0.000 \\
+Qwen3-80B (Off) & 0.000 \\
+\hline
+\end{tabular}
+\caption{Average per-instance Pareto adherence rate for proposals per model. Values computed from all played instances with 15 items.}
+\label{tab:air-balloon-pareto-adherence}
+\end{table}
+
+Figure \ref{tab:air-balloon-pareto-adherence} reports the per-instance Pareto-adherence rate, i.e. the per-instance relative frequency of proposals which lie on the Pareto front. Because pareto-efficient proposals require aligning both agents' payoffs --albeit not necessarily in a balanced way-- higher adherence may indicate stronger counterpart and self-modelling, i.e. the ability to infer the other player's item valuations and adjust one's own search for possible deals accordingly. Bargaining along the Pareto front is a strong indicator of overall performance in our game.
+
+% \begin{table}[t]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{4pt}
+% \begin{minipage}{0.48\textwidth} % match subfigure width
+%     \centering
+%     \begin{tabular}{l c}
+%     \hline
+%     \textbf{Model} & \textbf{Pareto Adherence} \\
+%     \hline
+%     GPT-5 (reasoning) & 0.791 \\
+%     GPT-5 Mini (reasoning) & 0.732 \\
+%     GPT-OSS (reasoning) & 0.669 \\
+%     Qwen3 (reasoning) & 0.605 \\
+%     Nemotron-Nano (reasoning) & 0.376 \\
+%     R1 Distill LM3 (reasoning) & 0.299 \\
+%     GPT-5 (no reasoning) & 0.280 \\
+%     GPT-5 Mini (no reasoning) & 0.268 \\
+%     Claude Sonnet 4 (reasoning) & 0.171 \\
+%     DeepSeek Chat v3.1 (no reasoning) & 0.127 \\
+%     Nemotron-Nano (no reasoning) & 0.065 \\
+%     Claude Sonnet 4 (no reasoning) & 0.026 \\
+%     LLaMA-3.3 (no reasoning) & 0.000 \\
+%     Qwen3 (no reasoning) & 0.000 \\
+%     \hline
+%     \end{tabular}
+%     \caption{Average per-instance Pareto adherence rate for proposals per model. Values computed from all played instances with 15 items.}
+%     \label{tab:air-balloon-pareto-adherence}
+% \end{minipage}
+% \end{table}
 
 
 \end{document}

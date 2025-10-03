@@ -103,6 +103,56 @@ The average token usage and cost for English, German and Italian experiments are
 \end{figure*}
 
 
+\subsection{Cycles in Reasoning Traces}
+\label{sec:cyclic_analysis}
 
+\subsubsection{Definition}
+
+We label the reasoning traces as sequences over five discrete states—ASSERT, PROPOSE, UNDERMINE, ALTERNATIVE, CONCLUDE—detected via lightweight lexical cues and conflict resolution rules (e.g., maybe/could → PROPOSE; but/however → UNDERMINE; PROPOSE shadows other labels co-occuring in one sentence, sentences like "but maybe we should" will be labeled as PROPOSE). Each trace is a path on a finite-state machine (FSM, see Figure ~\ref{fig:fsm}) with observed transitions (including self-loops), from which we compute per-trace statistics and aggregate at model/game level.
+
+We treat a trace as a directed walk over labels and compute two cycle-aware metrics:
+
+\paragraph{Number of segments.} We partition the labels extracted from each reasoning trace by absorbing states (ASSERT, INTERIM\_CONCLUSION). The count serves as coarse “reasoning units”: higher counts could mean more dispersed reasoning (multiple restarts before final commitment); lower counts could mean more concentrated reasoning (a plan developed and resolved within fewer units).
+
+\paragraph{Cycle edge ratio.}\label{def:cycle_edge_ratio}
+Within each segment’s induced subgraph, we mark edges that belong to any simple cycle and compute the fraction of transitions on such edges, then aggregate across segments to obtain one single metric for each reasoning trace. Higher ratios indicate local looping/hedging (e.g., PROPOSE <-> UNDERMINE); lower ratios indicate forward motion towards absorbing states.
+
+These metrics capture cyclicity at two levels: inter-segment shifting/restarts (segments) before final commitment, and intra-segment circling before interim resolution (cycle edge ratio). Strategically adaptive behaviours should advance and commit—e.g., PROPOSE → ASSERT → CONCLUDE or PROPOSE → ALTERNATIVE → ASSERT → CONCLUDE—rather than cyclic hedges like PROPOSE <-> UNDERMINE <-> ALTERNATIVE. Thus, high cyclicity signals surface patterning (stalling/hedging/“explainers that never decide”).
+
+We relate both metrics to clemscore across games and languages to test whether low number of reasoning segments and low-cyclic reasoning aligns with better negotiation outcomes.
+
+\subsubsection{Analysis}
+
+\textbf{Number of Segments}
+We compare paired non-reasoning and reasoning variants of models across games, plotting clemscore (y) against the number of segments (x) in Figure ~\ref{fig:clemscore_VS_n_segment}. There is a slight U-shaped relationship: both a small increase and an excessive increase in the number of segments coincide with improved performance, while a moderate addition of segments shows unclear correlation. Claude-4 adds only a few segments and shows small gains in \textit{Clean Up} and \textit{Deal or No Deal} and a pronounced gain in \textit{Air Balloon Survival}. Deepseek exhibits moderate segment inflation with consistently lower clemscores. Nemotron shows mixed effects at similar segment increases. Qwen introduces the largest segment increases and performance gains; its performance is competitive with Claude in two of the three games, but in Deal or No Deal its substantial over-segmentation coincides with a relative underperformance.
+We compare paired non-reasoning and reasoning variants of models across games, plotting clemscore (y) against the number of segments (x) in Figure ~\ref{fig:clemscore_VS_n_segment}. There is a slight U-shaped relationship: both a small increase and an excessive increase in the number of segments coincide with improved performance, while a moderate addition of segments shows unclear correlation. Claude-4 adds only a few segments and shows small gains in \textit{Clean Up} and \textit{Deal or No Deal} and a pronounced gain in \textit{Air Balloon Survival}. Deepseek exhibits moderate segment inflation with consistently lower clemscores. Nemotron shows mixed effects at similar segment increases. Qwen introduces the largest segment increases and performance gains; its performance is competitive with Claude in two of the three games, but in Deal or No Deal its substantial over-segmentation coincides with a relative underperformance.
+
+
+\textbf{Cycle Edge Ratio}
+The relation between clemscore and Cycle Edge Ratio is shown in Figure ~\ref{fig:clemscore_VS_cycle_edge_ratio}.
+Across panels, open-weight models tend to have a much higher cycle edge ratio, indicating frequent cyclic hedging before reaching interim conclusions or assertions. Although there is no uniform monotonic link between cycle-edge ratio and clemscore, we observe model-dependent trends: for Qwen and Claude, an increase in cycle edge ratio consistently coincides with better performance; DeepSeek tends to lose performance as the ratio increases; GPT-OSS and Nemotron show mixed associations. 
+
+Claude points cluster at lower cycle ratios while remaining competitive in score; open-weight models occupy a wider band—extending into higher ratios—with correspondingly higher variance in outcomes. This suggests that additional cycling in open-weights is not reliably converted into payoff. 
+
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fsm.pdf}
+  \caption{Finate state machine states for reasoning tokens}
+  \label{fig:fsm}
+\end{figure*}
+
+
+\begin{figure}[ht!] 
+    \centering 
+    \includegraphics[width=1.0\linewidth]{figures/clemscore_VS_Number_of_Segment.pdf} 
+    \caption{Clemscore plotted against number of Segment. A Segment is defined as a continuous chunk of a series of reasoning labels extracted from reasoning traces. It is obtained by partitioning the reasoning labels with absorbing states in Figure~\ref{fig:fsm}. Solid markers denote reasoning models; translucent markers denote their non-reasoning counterparts; dashed lines connect each pair.} \label{fig:clemscore_VS_n_segment} 
+\end{figure}
+
+\begin{figure}[ht!] 
+    \centering 
+    \includegraphics[width=1.0\linewidth]{figures/clemscore_VS_Cyle_Edge_Ratio.pdf} 
+    \caption{Clemscore plotted against Cycle Edge Ratio, defined in  Appendix~\ref{def:cycle_edge_ratio}. Solid markers denote reasoning models; translucent markers denote their non-reasoning counterparts; dashed lines connect each pair.} \label{fig:clemscore_VS_cycle_edge_ratio} 
+\end{figure}
 
 \end{document}

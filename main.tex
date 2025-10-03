@@ -118,115 +118,41 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Negotiation is a fundamental challenge for AI agents, %testing their
-requiring as it does an ability to reason strategically, to model opponents, and to balance cooperation with competition.
-%Prior work has overlooked the critical impact of \textit{reasoning} on their performance and computational cost, and has been conducted on monolingual settings. 
-We conduct the first comprehensive study systematically evaluating the effect of (LLM-)reasoning on the negotiation abilities of both commercial and open-weight LLMs, and do this across three languages. Using a self-play setup across three distinct dialogue games, we analyse trade-offs between performance and cost, the language consistency of reasoning processes, and the nature of strategic adaptation exhibited by models.
-Our findings show that enabling reasoning---that is, scaling test time compute---significantly improves negotiation outcomes by enhancing collaboration and helping models overcome task complexities, but comes at a substantial computational cost: reasoning improves GPT-5's performance by 31.4 points while increasing its cost by nearly \textit{4x}. We identify GPT-5-mini and GPT-OSS as the most cost-efficient commercial and open-weight models, respectively. Most critically, we uncover a significant multilingual reasoning disparity: open-weight models consistently switch to English for their internal reasoning steps, even when negotiating in German or Italian (and thus potentially impacting potential explainability gains through disclosing reasoning traces), while leading commercial models maintain language consistency between their reasoning and final output. This work provides the first systematic analysis of reasoning in multilingual negotiation, revealing crucial performance-cost trade-offs and exposing a key limitation in the multilingual capabilities of current open-weight models.
+Negotiation is a fundamental challenge for AI agents, requiring as it does an ability to reason strategically, to model opponents, and to balance cooperation with competition. We conduct the first comprehensive study systematically evaluating the effect of (LLM-)reasoning on the negotiation abilities of both commercial and open-weight LLMs, and do this across three languages. Using a self-play setup across three diverse dialogue games, we analyse trade-offs between performance and cost, the language consistency of reasoning processes, and the nature of strategic adaptation exhibited by models.
+Our findings show that enabling reasoning---that is, scaling test time compute---significantly improves negotiation outcomes by enhancing collaboration and helping models overcome task complexities, but comes at a substantial computational cost: reasoning improves GPT-5's performance by 31.4 \% while increasing its cost by nearly 400 \%. Most critically, we uncover a significant multilingual reasoning disparity: open-weight models consistently switch to English for their internal reasoning steps, even when negotiating in German or Italian (and thus possibly impacting potential explainability gains through disclosing reasoning traces), while leading commercial models maintain language consistency between their reasoning and final output.
 \end{abstract}
 
 \section{Introduction}
 
-Negotiation is a key aspect of human social and economic behaviour that poses significant challenges for AI systems. The problem is complex, as agents must produce coherent language while performing strategic reasoning, modelling the opponents' preferences and goals, and managing the tension between cooperation and competition to maximise their own outcomes. With LLMs increasingly being tested as autonomous agents in domains ranging from e-commerce to resource distribution, new protocols for agents are being developed, e.g., the Agents to Payments (AP2) protocol~\cite{google_ap2_protocol_2025}. It has become essential to assess the limitations and capabilities of language agents, or vanilla LLMs, for negotiation. Negotiation tasks provide a strong test-bed for measuring agent competence, offering interactive, multi-turn scenarios with objective measures that go beyond static evaluation.
+Negotiation is a key aspect of human social and economic behaviour that poses significant challenges for AI systems. The problem is complex, as agents must produce coherent language while performing strategic reasoning, modelling the opponents' preferences and goals, and managing the tension between cooperation and competition to maximise their own outcomes. 
+With LLMs increasingly being tested as autonomous agents in domains ranging from e-commerce to resource distribution, assessing their negotiation capabilities has become essential. Negotiation requires strategic decision-making, which fundamentally depends on reasoning, and provides a strong test-bed for measuring agent competence through interactive, multi-turn scenarios with objective measures that go beyond static evaluation. We therefore study LLM reasoning abilities in negotiation settings.
 
 Studies show that LLMs often deviate from optimal play with unreliable performance, where even top-performing systems can lose to weaker opponents and fail in cooperative scenarios \cite{DBLP:conf/iclr/DavidsonVK024,DBLP:journals/corr/abs-2411-05990,DBLP:conf/icml/0001CYTJ024,DBLP:conf/emnlp/KwonWKCLG24}. These models can acquire deceptive tactics, e.g., expressing false interest in low-value items for later concessions~\cite{lewis-etal-2017-deal}, express desperation to improve outcomes~\cite{DBLP:conf/icml/0001CYTJ024},  perform much worse as buyers than sellers \cite{DBLP:conf/acl/Xia0RMZ0024}, or even take economic risks that lead to budget violations and overpayment~\cite{DBLP:journals/corr/abs-2506-00073}. 
 
 
 Despite this growing body of research, two critical gaps remain unexplored. First, no previous work has systematically investigated how Chain-of-Thought prompting and reasoning capabilities influence negotiation abilities in terms of both performance and computational cost, a fundamental oversight given that reasoning is central to strategic decision-making. Second, the field has been constrained by monolingual English-only analyses, leaving multilingual negotiation capabilities completely unexplored. To address these significant limitations, we conduct the first comprehensive study examining the effects of reasoning on negotiation tasks across three languages: English, German, and Italian. We implement three distinct dialogue games that require bargaining skills, collaboration, and strategic preference management~\cite{VonNeumann+Morgenstern:1944,nash1953two,fisher_getting_2011}, testing both commercial and open-weight LLMs in a self-play mode where both sides of the games are played against themselves. We analyse the impact of systematically turning on and off the reasoning mode of evaluated models and target three fundamental research questions: 
 
-\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
+\noindent\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across tasks and languages?}
 
-\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+\noindent\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
 
-\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of thinking?}
+\noindent\textbf{RQ3}: \textit{Do models demonstrate strategic adaptation over multiple turns, or merely surface-level pattern matching creating an illusion of thinking?}
 
 
 \section{Related Work}
 
-Game theory and negotiation research have a deep foundation in the analysis of strategic interactions between rational agents, with seminal contributions from \cite{1565177e-15e2-3801-8b78-11b7ee877be8} on bargaining solutions, \cite{Rubinstein1982PerfectEI} on sequential bargaining, and \cite{raiffa1985art} on negotiation analysis. The convergence of Large Language Models (LLMs) and game-theoretic frameworks represents a significant development in the evaluation and understanding of strategic capabilities in AI systems \cite{sun2025gametheorymeetslarge}. Negotiation games serve as demanding test environments for LLMs, requiring integration of linguistic competence, strategic planning, and social reasoning capabilities.
-
+% Game theory and negotiation research have a deep foundation in the analysis of strategic interactions between rational agents, with seminal contributions from \cite{1565177e-15e2-3801-8b78-11b7ee877be8} on bargaining solutions, \cite{Rubinstein1982PerfectEI} on sequential bargaining, and \cite{raiffa1985art} on negotiation analysis. 
+The convergence of Large Language Models (LLMs) and game-theoretic frameworks represents a significant development in the evaluation and understanding of strategic capabilities in AI systems \cite{sun2025gametheorymeetslarge}, as we explain in the next two parts the state-of-the art methodologies in this field.
+% Negotiation games serve as demanding test environments for LLMs, requiring integration of linguistic competence, strategic planning, and social reasoning capabilities.
 
 \textbf{Benchmarking strategic capabilities in LLMs}: systematic evaluation of LLM negotiation performance reveals substantial variance in strategic behaviour, with models frequently departing from optimal play and exhibiting asymmetric performance patterns~\cite{DBLP:conf/iclr/DavidsonVK024, DBLP:journals/corr/abs-2411-05990,DBLP:journals/corr/abs-2305-16867} or when some powerful models underperform against weaker opponents and encounter difficulties in cooperative bargaining scenarios. This has motivated the creation of comprehensive evaluation frameworks and experimental platforms designed to assess agent (initialised as LLMs) behaviour across various negotiation contexts, including resource allocation and pricing tasks \cite{DBLP:conf/icml/0001CYTJ024, DBLP:conf/acl/Xia0RMZ0024}.
-Empirical studies reveal that LLMs can display irrational tactics, e.g. deceptive strategies such as expressing false interest in low-value items to create bargaining leverage in subsequent exchanges \cite{lewis-etal-2017-deal}. LLMs also exhibit susceptibility to cognitive biases, including anchoring effects and responsiveness to social manipulation tactics, where expressions of desperation or aggressive language can substantially affect negotiation outcomes \cite{DBLP:conf/icml/0001CYTJ024}. However, these behaviours present practical risks, including budget constraint violations and acceptance of economically disadvantageous agreements \cite{DBLP:journals/corr/abs-2506-00073}. A consistent finding across studies is the asymmetric difficulty in buyer versus seller roles, with agents systematically underperforming as buyers~\cite{DBLP:conf/acl/Xia0RMZ0024}.
+Empirical studies reveal that LLMs can display irrational tactics, e.g. deceptive strategies such as expressing false interest in low-value items to create bargaining leverage in subsequent exchanges \cite{lewis-etal-2017-deal}. LLMs also exhibit susceptibility to cognitive biases, including anchoring effects and responsiveness to social manipulation tactics, where expressions of desperation or aggressive language can substantially affect negotiation outcomes \cite{DBLP:conf/icml/0001CYTJ024}. However, these behaviours present practical risks, including budget constraint violations and acceptance of economically disadvantageous agreements \cite{DBLP:journals/corr/abs-2506-00073}. A consistent finding across studies is the asymmetric difficulty in buyer versus seller roles, with agents systematically underperforming as buyers~\cite{DBLP:conf/acl/Xia0RMZ0024}. Our work focuses on studying the reasoning behind model choices in a multilingual setting.
 
-\textbf{Improving strategic reasoning and decision-making}: Given the inconsistent strategic reasoning observed in current LLMs \cite{wong2025reasoningcapabilitieslargelanguage}, research efforts focus on enhancing decision-making through structured approaches such as integration of game-theoretic solvers with LLM dialogue~\cite{DBLP:journals/corr/abs-2402-01704}, structured reasoning workflows based on Dominant Strategy Search and Backward Induction~\cite{DBLP:journals/corr/abs-2411-05990}, or even learn by interacting based with reinforcement learning~\cite{DBLP:conf/iclr/CaoLLLTC18}. From prompting perspective, Chain-of-Thought reasoning emerges as a critical factor in agent performance~\cite{DBLP:journals/corr/abs-2305-19165}, contributing to more consistent outcomes in integrative negotiation settings \cite{DBLP:journals/corr/abs-2503-06416}. Hybrid architectural approaches have been developed to constrain agent behaviour, such as employing deterministic offer generation modules to control pricing decisions while utilising LLMs for natural language dialogue production, resulting in substantial improvements in deal completion rates and profit margins \cite{DBLP:conf/acl/Xia0RMZ0024}.
-
-% \textbf{Human-AI interaction and extended applications}: research explores reinforcement learning techniques that incorporate fairness in reward structures and action selection~\cite{DBLP:conf/emnlp/Shea024}, and novel dialogue games where participants negotiate the objective itself~\cite{DBLP:conf/sigdial/JeknicSK24}. Advancing LLM strategic dialogue capabilities raises broader questions about AI's role in persuasion, vulnerability to manipulation, and potential as arbitrators, highlighting the need for frameworks combining established negotiation principles with AI-specific strategic behaviours~\cite{DBLP:journals/corr/abs-2505-07775, DBLP:journals/corr/abs-2503-06416}.
-
-% \cite{DBLP:journals/corr/abs-2402-01704} (We focus on three domains that require different negotiation strategies: scheduling meetings, trading fruit
-% and debate, and evaluate an LLM’s generated language when guided by solvers. We see that LLMs that follow game-theory solvers result in dialogue generations that are less exploitable than the control (no guidance from solvers), and the language generated results in higher rewards, in all negotiation domains.) (In this work we ask whether there exists a generic way to combine outputs from game-theoretic models (e.g., ones that can solve for optimal equilibrium solutions) to guide language model generations in strategic games.) (This is motivated by the fact that cur-
-% rent LLMs do not exhibit coherent and intelligent reasoning strategies)
-
-% \cite{DBLP:journals/corr/abs-2503-06416} (We conducted an International AI Negotiation Competition in which participants designed and refined prompts for AI negotiation agents.) (we found warm agents achieved significantly better objective outcomes than cold agents across multiple dimensions. ) (These findings strongly support Axelrod’s seminal work on cooperation, which observed that “there is a single property which distinguishes the relatively high-scoring entries from the relatively low-scoring entries. This is the property of being nice) (prompt injection and chain-of-thought reasoning were important determinants of agents’ negotiation performance,) (The chain-of-thought approach demonstrated exceptional performance across all evaluation metrics. This strategy demonstrated remarkable consistency in achieving positive outcomes and earned the most points across integrative negotiations. highlights the importance of integrating classic negotiation theory with new AI-specific strategies in the development of a robust theory of AI negotiation.)
-
-% \cite{DBLP:journals/corr/abs-2505-07775} ((1) AI as a Persuader, which explores
-% AI-generated persuasive content and its applications; (2) AI as a Persuadee, which examines AI’s susceptibility to influence and manipulation; and (3) AI as a Persuasion Judge, which analyzes AI’s role in evaluating persuasive strategies, detecting manipulation, and ensuring ethical persuasion.)
-
-% \cite{DBLP:conf/emnlp/Shea024} (we propose a negotiation framework called FDHC which incorporates fairness into both the reward design and search to learn human-compatible negotiation strategies - for building human-compatible negotiation agents. Our method includes a novel, RL+search technique called LGM-Zero which leverages a pre-trained language model to retrieve human-compatible offers from large action spaces.) (Our value model is trained using a method similar to fictitious self-play)
-
-% \cite{sun2025gametheorymeetslarge} (first comprehensive survey of the bidirectional relationship between Game Theory and LLMs. We propose a novel taxonomy that categorizes the research in this intersection into four distinct perspectives: (1) evaluating LLMs in game-based scenarios; (2) improving LLMs using game-theoretic concepts for better interpretability and alignment; (3) modeling the competitive landscape of LLM development and its societal impact; and (4) leveraging LLMs to advance game models and to solve corresponding game theory problems.)
-
-% \cite{DBLP:conf/sigdial/JeknicSK24} (clean up) (a two-player
-% 2D object placement game in which the players must negotiate the goal state themselves. We show empirically that human players exhibit a variety of role distributions, and that balanced collaboration improves task performance. We also present an LLM-based baseline agent which demonstrates that automatic playing of our game is an interesting challenge for artificial systems. A baseline computational agent achieves a task performance that is within reach of, but still considerably below human performance,)
-
-% \cite{DBLP:journals/corr/abs-2011-01975} (clean up) (Our proposal is based on a canonical task: Rearrangement. A standard task can focus the development
-% of new techniques and serve as a source of trained models that can be transferred to other settings. In the rearrange- ment task, the goal is to bring a given physical environ- ment into a specified state. The goal state can be specified
-% by object poses, by images, by a description in language, or by letting the agent experience the environment in the goal state.) (but this is done in actual physical or virtual environment - our focus is purely text)
-
-% \cite{DBLP:conf/icml/0001CYTJ024} (negotiation arena) (We develop NEGOTIATIONARENA: a flexible framework for evaluating and probing the negotiation abilities of LLM agents. We implemented three types of scenarios in NEGOTIATIONARENA to assess LLM’s behaviors in allocating shared resources (ultimatum games), aggregate resources (trading games) and buy/sell goods (price negotiations). Each scenario allows for multiple turns of flexible dialogues between LLM agents to allow for more complex negotiations. Interestingly, LLM agents can significantly boost their negotiation outcomes by employing certain behavioral tactics. For example, by pretending to be desolate and desperate, LLMs can improve their payoffs by 20\% when negotiating against the standard GPT-4.) (Cunning and Desperate behaviors increase Win Rate
-% and Payoff. In all the games tested, the social behaviors led to an increase in average payoff and win rate (for which we ignore ties)) (Cunning Behavior is High Reward, High Risk. Even though being “Cunning” in the Ultimatum game increases
-% the win rate of Player 2 (Figure 7b, left), it does not come without repercussions) (In particular, social behaviors such as pretending to be desperate or using insults can significantly improve the agent’s payout. The LLM agents are also prone to anchoring and numerosity biases. Understanding these irrational behaviors and vulnerabilities is important to making LLM agents more reliable.)
-
-% \cite{lewis-etal-2017-deal}  ( deal or no deal) (We gather
-% a large dataset of human-human negotiations on a multi-issue bargaining task) ( train end-to-end (RNN) models for negotiation, which must learn both linguistic and reasoning skills)  (Models learn to be deceptive. Deception can be
-% an effective negotiation tactic. We found numerous cases of our models initially feigning interest in a valueless item, only to later ‘compromise’ by conceding it)
-
-% \cite{DBLP:conf/iclr/DavidsonVK024} (cooperative
-% bargaining games proved to be most challenging to the models; and (iii) even the
-% most powerful models sometimes “lose” to weaker opponents)
-
-% \cite{DBLP:journals/corr/abs-2411-05990} (paper investigates the capacity of LLMs to behave rationally in game-theoretic scenarios and explores methodologies to enhance their rational decision-making capabilities. Games: Prisoner’s Dilemma, Battle of the Sexes, the Escalation Game, and Deal-or-No-Deal) (analysis reveals LLMs often deviate from rational strategies, particularly as the complexity of the game increases with larger payoff matrices or deeper sequential trees) (a novel approach by proposing game-theory-inspired workflows specifically designed to guide the reasoning and decision-making processes of LLMs. incorporate principles such as Dominant Strategy Search, which involves identifying strategies that yield the highest payoff regardless of the opponent’s actions; Backward Induction, a method of solving extensive-form games by analyzing them from the end states backward to the initial decision nodes to determine optimal strategies; and Bayesian belief
-% updating, which allows agents to refine their beliefs about other players’ valuations based on observed actions and signals during the game. Cringed on these well-defined and well-studied game-theoretic methods, we design algorithms to guide the behavior and thinking process of LLM-based agents.) (In the simultaneous game workflow, each agent (player) seeks to determine their optimal strategy
-% by considering both their own possible actions and the potential responses of the other player. This involves conditional reasoning, generating thinking chains, and summarizing these into an overall strategy under the guidance of the workflow. )
-
-% \cite{DBLP:conf/emnlp/KwonWKCLG24} (we conclude that LLMs can indeed be helpful across a number of use cases in negotiation research.) (We also find that information in dialogue can confuse models about their own context, even when provided in the prompts)
-
-% \cite{DBLP:conf/acl/Xia0RMZ0024} (We collected a real product price dataset, AmazonHistoryPrice, and conducted evaluations of various LLM agents’ bargaining abilities) (We find that playing a Buyer is much harder than a Seller, and in-
-% creasing model size can not effectively improve the Buyer’s performance) (we propose a novel approach called OG-Narrator that integrates a deterministic Offer
-% Generator to control the price range of Buyer’s offers, and an LLM Narrator to create natural language sentences for generated offers.) (For Seller, model size matters) (For Buyer, different-sized models from the same family have close performance)
-
-% \cite{DBLP:journals/corr/abs-2506-00073} (In this paper, we
-% investigate a future setting where both consumers and merchants authorize AI
-% agents to automate the negotiations and transactions in consumer settings. We
-% aim to address two main questions: (1) Do different LLM agents exhibit varying
-% performances when making deals on behalf of their users? (2) What are the
-% potential risks when we use AI agents to fully automate negotiations and deal-
-% making in consumer settings? We design an experimental framework to evaluate
-% AI agents’ capabilities and performance in real-world negotiation and transaction
-% scenarios, and experimented with a range of LLM agents. Our analysis reveals that
-% deal-making with LLM agents in consumer settings is an inherently imbalanced
-% game: different AI agents have large disparities in obtaining the best deals for
-% their users. Furthermore, we found that LLMs’ behavioral anomaly might lead
-% to financial loss for both consumers and merchants when deployed in real-world
-% decision-making scenarios, such as overspending or making unreasonable deals. Our paper highlights the potential risks of using LLM agents to automate negotiation and transactions in real consumer settings.)
-
-% previous attempts at negotiation abilities - before LLM era
-% current papers with LLMs
-% missing points etc.
-
-
-%%% Cleann Up
-
-
-
-%%%% Deal or no deal
-
-
-%%%% Air Balloon Survival - personal preferences
+\textbf{Improving strategic reasoning and decision-making}: Given the inconsistent strategic reasoning observed in current LLMs \cite{wong2025reasoningcapabilitieslargelanguage}, research efforts focus on enhancing decision-making through structured approaches such as integration of game-theoretic solvers with LLM dialogue~\cite{DBLP:journals/corr/abs-2402-01704}, structured reasoning workflows based on Dominant Strategy Search and Backward Induction~\cite{DBLP:journals/corr/abs-2411-05990}, or even learn by interacting based with reinforcement learning~\cite{DBLP:conf/iclr/CaoLLLTC18}. From prompting perspective, Chain-of-Thought reasoning emerges as a critical factor in agent performance~\cite{DBLP:journals/corr/abs-2305-19165}, contributing to more consistent outcomes in integrative negotiation settings \cite{DBLP:journals/corr/abs-2503-06416}. Hybrid architectural approaches have been developed to constrain agent behaviour, such as employing deterministic offer generation modules to control pricing decisions while utilising LLMs for natural language dialogue production, resulting in substantial improvements in deal completion rates and profit margins \cite{DBLP:conf/acl/Xia0RMZ0024}. We do not focus on enhancing any particular aspect, and simply use the vanilla LLMs with reasoning capability.
 
 \section{Evaluating Negotiation Abilities with Dialogue Games}
 
-In this section, we provide details on how we implement three dialogue games to test negotiation abilities in LLMs. Each game has its unique properties, specifically measuring bargaining, collaboration, grounding, or maximising personal preference. We define a dialogue game as a structured communication between two agents (Large Language Models, or LLMs) according to a given communication protocol aimed at achieving a defined goal. The goals in games are defined as the expected outcome, e.g., making a deal, that agents attempt to maximise. The communication protocols dictate how messages are expected to be formatted. A negotiation task unfolds by agents starting to communicate with one another for the given goal, and the conversation continues until it reaches one of the defined stopping criteria: 1) the goal state is reached, 2) the maximum turn limit is reached, or 3) agents violate the communication protocol and the game-play is aborted. The orchestration of this message passing between agents, validation of communication protocols, and checking whether goal states are reached are done by the Game Master, a scripted entity in the dialogue. We use the \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench}. The dialogue games are run in a self-play mode where both participants of the game are LLMs playing against or with one another.
+In this section, we provide details on how we implement three dialogue games to test negotiation abilities in LLMs. We define a dialogue game as a structured communication between two agents (LLMs) according to a given communication protocol aimed at achieving a defined goal. The goals in games are defined as the expected outcome, e.g., making a deal, that agents attempt to maximise. The communication protocols dictate how messages are expected to be formatted. A negotiation task unfolds by agents starting to communicate with one another for the given goal, and the conversation continues until it reaches one of the defined stopping criteria: 1) the goal state is reached, 2) the maximum turn limit is reached, or 3) agents violate the communication protocol and the game-play is aborted. The orchestration of this message passing between agents, validation of communication protocols, and checking whether goal states are reached are done by the Game Master, a scripted entity in the dialogue. We use the \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench}. The dialogue games are run in a self-play mode where both participants of the game are LLMs playing against or with one another.
 
 Next, we provide details about each specific game.
 
@@ -242,8 +168,9 @@ Two agents negotiate over a shared set of items, each having a different private
 \begin{figure}[ht!]
   \centering
   \input{dond/example_transcript.tex}
-  \caption{An example of a \textit{Deal or No Deal} game episode. Please note that the initial prompts provided by the game master have been truncated for brevity. The game ends in a successful Pareto optimal agreement.}
+  \caption{An example of a \textit{Deal or No Deal} episode that ends in a successful Pareto optimal agreement.}
   \label{fig:dond_example}
+  \vspace*{-.6cm}
 \end{figure}
 
 \paragraph{Game Instances}
@@ -256,8 +183,8 @@ Clean Up is a two-player game focused on cooperative strategy development and ob
 \begin{figure}[ht!]
     \centering
     \input{clean_up/clean_up_transcript}
-    \caption{Example episode from Clean Up game. The task is to negotiate a common goal configuration for a number of objects randomly placed on each player`s grid, and move them accordingly. Finally, both players have to agree the goal is reached to end the game.}
-    % \vspace*{-.8cm}
+    \caption{Example episode from Clean Up game to achieve a common goal configuration for a number of objects randomly placed on each player`s grid, and move them accordingly. Finally, both players have to agree the goal is reached to end the game.}
+    \vspace*{-.6cm}
     \label{fig:clean_up_example}
 \end{figure}
 
@@ -268,13 +195,16 @@ Clean Up is a two-player game focused on cooperative strategy development and ob
 
 \paragraph{Game Instances}
 
-All instances are created programmatically by creating different grids ($7\times7$), which contain obstacles in form of horizontal and vertical lines, branches, crossings, and corners. The maximum number of rounds is fixed to $4 \times n_{obj}$ (where $n_{obj}$ is the object count). Players can collectively accumulate $2 \times n_{obj} + 2$ penalties. We create different sets of experiments by controlling the difficulty along two dimensions: number of empty cells and number of objects. We have three difficult levels. Of the 49 total cells, $34$ of cells are empty on the \textit{easy}, $29$ on \textit{medium}, and $24$ on \textit{hard} levels. For each level, we sample three grids, and then place $3$, $5$, or $7$ objects on them, making for \textbf{27 instances in total}.
+All instances are created programmatically by creating different grids ($7\times7$), which contain obstacles in form of horizontal and vertical lines, branches, crossings, and corners. The maximum number of rounds is fixed to $4 \times n_{obj}$ (where $n_{obj}$ is the object count). 
+% Players can collectively accumulate $2 \times n_{obj} + 2$ penalties. 
+We create different sets of experiments by controlling two aspects: number of empty cells and objects. We have three difficulty levels. Of the 49 total cells, $34$ of cells are empty on the \textit{easy}, $29$ on \textit{medium}, and $24$ on \textit{hard} levels. For each level, we sample three grids, and then place $3$, $5$, or $7$ objects on them, making for \textbf{27 instances in total}.
 
 \begin{figure}[ht]
     \centering
     \input{air-balloon-survival/air_balloon_transcript}
     \caption{An example episode of the \textit{Air Balloon Survival} game. Two players must negotiate and argue for their preferred set of items. and must explicitly agree to a proposal made by the other.}
     \label{fig:air_balloon_example}
+    \vspace*{-.6cm}
 \end{figure}
 
 \subsection{Air Balloon Survival}
@@ -305,25 +235,6 @@ Next, we describe the Quality Score details for each game below.
 
 \paragraph{Deal or No Deal}
 
-% More info here: Appendix~\ref{subsec:appendix_dond_metric}
-
-% For the cooperative game mode, it is the ratio between the achieved total score to the maximum total score for that game instance, 
-
-% \begin{align*}
-% \text{Quality}_{\text{coop}} = \frac{\text{Score}_A + \text{Score}_B}{\max(\text{Score}_A' + \text{Score}_B')}
-% \end{align*}
-
-% where $\text{Score}_A$ and $\text{Score}_B$ represent the actual scores achieved by players A and B respectively, and $\max(\text{Score}_A' + \text{Score}_B')$ denotes the maximum possible combined score achievable for the given game instance.
-
-
-% For the semi-competitive setting, a metric based on Pareto efficiency has been used.
-
-% \begin{align*}
-% \text{Quality}_{\text{semi}} = 1 - \frac{\text{Maximum Pareto Improvement}}{\max(\text{Score}_i')}
-% \end{align*}
-
-% where $\text{Maximum Pareto Improvement}$ represents the largest possible improvement in one player's score without decreasing the other player's score from the current agreement, and $\max(\text{Score}_i')$ denotes the maximum possible score achievable by any single player $i$ in the given game instance.
-
 For the cooperative game mode, we measure quality as the ratio of achieved total score to maximum possible total score. For the semi-competitive setting, we use a \textit{Pareto efficiency} metric that measures how far the agreement is from optimal by calculating potential one-sided improvements (more details in Appendix~\ref{subsec:appendix_dond_metric}).
 
 \paragraph{Clean Up}
@@ -331,62 +242,11 @@ For the cooperative game mode, we measure quality as the ratio of achieved total
 The Quality Score combines two main components: how well players organised objects spatially and how many rule violations they incurred. The metric uses \textit{Euclidean distances} between matching objects to compare the final arrangement to both the initial setup and a random baseline, rewarding improvements in object alignment while penalising rule violations through a scaling factor that becomes increasingly harsh as violations approach the maximum allowed limit.
 (more details in Appendix~\ref{subsec:appendix_cleanup_evaluation_metric})
 
-% More info in Appendix~\ref{subsec:appendix_cleanup_evaluation_metric}.
-
-% The Quality Score is calculated by multiplying \textit{Distance Score} with Penalty \textit{Score}.
-% \begin{align*}
-% \text{Quality} = \text{Distance Score} \cdot \text{Penalty Score} \cdot 100
-% \end{align*}
-
-% \textbf{Distance Score} ($\mathbf{DS} \in [0,1]$) is calculated from three components, each representing the sum of Euclidean distances for all identical objects on both grids: the Initial Distance Sum $\mathbf{I}$ at the start of the game, the Final Distance Sum $\mathbf{F}$ at the end of the game, and the Expected Distance Sum $\mathbb{E}$ that approximates the distances for randomly placed objects (see Appendix~\ref{clean_up:scoring} for details). The Expected Distance Score $ES$ and Distance Reduction Score $RS$, quantifying how close the players came to the goal of perfect alignment of all objects, are calculated as follows:
-% \begin{align*}
-% ES = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}; \
-% RS = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
-% \end{align*}
-
-% $\mathbf{DS}$ is then either $0$ if final placement is worse than random, or calculated as the mean of both scores:
-% \begin{align*}
-% \mathbf{DS} &= \begin{cases}
-% \frac{ES+RS}{2} & if \quad ES > 0 \\
-% 0 & otherwise
-% \end{cases}
-% \end{align*}
-
-% \textbf{Penalty Score} ($\mathbf{PS} \in [0.5,1]$) is calculated from the penalty count $P$ normalized against max. penalties $P_m$ as follows:
-% $$\mathbf{PS} = \frac{P_m}{P-2P_m}+1.5$$
-% We chose the hyperbolic function because it is lenient for low $P$ and harsher for $P$ close to $P_m$.
-
 \input{main-table}
 
 \paragraph{Air Balloon Survival}
 
 Each player receives a score based on their achieved utility relative to their optimal knapsack solution. The overall game score uses the harmonic mean of both players' normalised scores, which rewards balanced outcomes and penalises deals where one player benefits disproportionately. If the deal exceeds weight capacity, the score becomes zero (more details in Appendix~\ref{subsec:appendix_balloon_metrics}).
-
-% More details are in Appendix~\ref{subsec:appendix_balloon_metrics}.
-
-% Each player $p \in P$ receives an individual score based on the utility of the final deal $D$, i.e. the sum of the preference values of items in $D$. This sum gets normalized by the value of the optimal solution to their instance of the 0/1 Knapsack Problem. The overall game score is defined as the harmonic mean of the two players’ normalized scores, further normalized by the maximum harmonic mean achievable for an instance. If the total weight of the deal exceeds the capacity $W$, the score is set to $0$. We chose the harmonic mean as our main metric as it rewards collectively balanced outcomes by favouring deals where both players achieve high scores and penalizing those where one player benefits disproportionately. 
-% The individual scores of players is each player’s outcome relative to the optimal solution of their own knapsack problem. For a final deal $D \subseteq \{1,\dots,n\}$, the normalized score of player $p \in P$ is  
-% $$
-% f_p(D) = 100 \cdot \frac{\sum_{i \in D} v_p(i)}{\text{OPT}_p},
-% $$  
-% where $\text{OPT}_p$ is the value of the optimal solution to player $p$'s 0/1 Knapsack Problem.  
-% The harmonic mean of the players' normalized scores is defined as  
-% $$
-% f_{\text{harm}}(D) =
-% \begin{cases}
-% \frac{2 f_{1}(D) f_{2}(D)}{f_{1}(D) + f_{2}(D)} & \text{if } \sum_{i \in D} w_i \leq W, \\
-% 0 & \text{otherwise}.
-% \end{cases}
-% $$  
-% The final game score is the normalized harmonic mean, 
-% $$
-% \text{Quality}(D) = 100 \cdot \frac{f_{\text{harm}}(D)}{\text{OPT}^*},
-% $$  
-% where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given instance.
-
-
-
-
 
 \subsection{Evaluated Models}
 
@@ -412,23 +272,22 @@ We have evaluated both commercial and open-weight models that have reasoning fun
         \caption{Performance and the cost of for all evaluated models with their reasoning on/off modes averaged for three languages.}
         \label{fig:cost_average}
     \end{subfigure}
-    \caption{Trade-off between performance and cost comparison across different models. Results for all languages are averaged.}
+    \caption{Trade-off between performance and cost comparison averaged across languages.}
     \label{fig:combined-token-cost}
 \end{figure*}
 
-We present the results obtained by the models (in \textit{reasoning on} and \textit{off} modes, where possible) evaluated for the English, German, and Italian versions of the negotiation game in Table~\ref{tab:main-results}. \textit{GPT-OSS} (reasoning on) and \textit{Deepseek-v3.1} (reasoning off) were run in one mode only due to their underlying architecture.
+We present the results obtained by the models (in \textit{reasoning on} and \textit{off} modes, where possible) evaluated for the English, German, and Italian versions of the negotiation game in Table~\ref{tab:main-results}. 
+% \textit{GPT-OSS} (reasoning on) and \textit{Deepseek-v3.1} (reasoning off) were run in one mode only due to their underlying architecture.
 
 \paragraph{The Effect of Reasoning} The most striking observation here is that reasoning mode dramatically improves performance across many models and languages, with $56$ points for \textit{Qwen-3} across all games. Similar pattern exists for \textit{GPT}, \textit{Claude} and even smaller \textit{Nemotron} models. This is a strong indication that deliberate reasoning significantly enhances strategic game-playing abilities. Only with \textit{Llama-70B} do we see different results, which may be due to the effect of distillation from another model (Deepseek-R1).
 
-\paragraph{Multilingual Capabilities} Results for German shows the largest average margin between \textit{reasoning on} and \textit{off} modes of models. English and Italian performances are also strong, suggesting that certain models have particularly good multilingual negotiation capabilities across these evaluated languages.
+\paragraph{Multilingual Capabilities} Results for German shows the largest average margin between \textit{reasoning on} and \textit{off} modes of models. English and Italian performances are also strong, suggesting that certain models have particularly sufficient negotiation capabilities across these evaluated languages.
 
-\paragraph{Model Comparison} GPT-5 is the clear winner, with GPT-5-mini and Claude-4 getting very close performance across all languages. Interestingly, GPT-5 mini sometimes matches or exceeds full GPT-5 performance (particularly in Italian). In terms of the performance gap between reasoning on/off modes, Qwen-3 gets the biggest performance jump.
-
-
+\paragraph{Model Comparison} GPT-5 is the clear winner, with GPT-5-mini and Claude-4 getting very close performance across all languages. Interestingly, GPT-5 mini sometimes matches or exceeds full GPT-5 performance (particularly in Italian). \textit{Qwen-3} shows the biggest performance jump.
 
 \subsection{Detailed Analysis}
 
-\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across different tasks and languages?}
+\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across tasks and languages?}
 
 Now, we examine the cost of the performance gap. In Figure~\ref{fig:combined-token-cost}~$a$, we present the plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. As expected, the models with reasoning output more tokens than models without it, but Qwen-3 generates almost \textit{7x} more tokens than its non-reasoning counterpart. In Figure~\ref{fig:combined-token-cost}~$b$, we present the overall cost (input and output tokens together) of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5}, being the most expensive, costing almost \textit{4x} compared to non-reasoning version but improves $31.4$ points in clemscore. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight one, with a fraction of the cost compared to Qwen-3}.
 
@@ -446,11 +305,11 @@ We ran a language detection script to analyse the reasoning message of the model
     \begin{subfigure}{\linewidth}
         \centering
         \includegraphics[width=\linewidth]{figures/language_distribution_reasoning_messages.pdf}
-        \caption{Language distribution in reasoning messages of evaluated models.}
+        \caption{Language distribution in reasoning tokens}
         \label{fig:lang_distribution_reasoning}
     \end{subfigure}
     
-    \vspace{2em} % Adds vertical space between the two plots
+    % \vspace{-0.9em} % Adds vertical space between the two plots
 
     % --- Second Figure ---
     \begin{subfigure}{\linewidth}
@@ -463,46 +322,16 @@ We ran a language detection script to analyse the reasoning message of the model
     % --- Main caption for the entire figure ---
     \caption{Analysis of language use in model outputs, showing distribution in reasoning messages (a) and cross-model type language consistency (b).}
     \label{fig:language_analysis_combined}
+    \vspace{-1.2em}
 \end{figure}
 
-\textbf{RQ3}: \textit{Do models demonstrate genuine strategic adaptation over multiple turns, or merely surface-level pattern matching that creates an illusion of thinking?}
 
-\subsection{Findings}
+\textbf{RQ3}: \textit{Do models demonstrate strategic adaptation over multiple turns, or merely surface-level pattern matching creating an illusion of thinking?}
 
-\textbf{Deal or no deal}:
-
-%% detailed experiments comparison
-
-%% look at reasoning traces in requests.json
-
-\begin{enumerate}
-    \item Reasoning-enabled models are better able to align their final proposal with the strategy discussed during the negotiation. A major failure for non-reasoning models, particularly in the GPT-5 family, is agreeing to a specific division of items in conversation but then submitting an entirely different proposal to the game master, as can be seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-truthfulness-semi}. This leads to a low number of successful agreements, also visible in \cref{fig:dond_outcome} and \cref{tab:dond-detailed-results}.
-    \item Models with reasoning capabilities show a better understanding of the game's objectives. While they might freely share information to find the best outcome in a cooperative game, they often become more guarded in semi-competitive settings. This effect is less pronounced for non-reasoning models, as can be seen in \cref{tab:dond-cooperation-coop} and \cref{tab:dond-cooperation-semi}.
-    \item A common mistake for less advanced models is to submit a proposal early without sufficient discussion with the other player. Some models don't seem to realize they can simply ask the other player for information needed to find an optimal agreement as seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-game-outcomes-semi}.
-    \item Most models show better consistency in following instructions across settings with reasoning enabled, reducing rule violations that otherwise cause aborted games as seen in \cref{tab:dond-detailed-results}.
-\end{enumerate}
-
-\textbf{Clean Up}:
-
-%% detailed experiments comparison
-
-%% look at reasoning traces in requests.json
-
-\textbf{Air Balloon Survival}:
-
-%% detailed experiments comparison
-
-%% look at reasoning traces in requests.json
-
+We model first-turn reasoning tokens as walks on a finite-state machine (see Appendix ~\ref{sec:cyclic_analysis}) and compute two diagnostics: (i) number of segments (plan restarts/restructuring), and (ii) cycle edge ratio (within-segment looping). FSM states are detected using lexical cues in reasoning tokens, e.g. ``maybe/could'' → PROPOSE; ``but/however'' → UNDERMINE, etc.
+Good-performing models should resolve plans in fewer segments and cycles. Performance shows non-linear relationships: \textbf{minimal segment counts correlate with improved outcomes}, while moderate additions yield unclear results. \textbf{Commercial models achieve competitive scores with lower cycle ratios} and tighter clustering; open-weight models show higher ratios with greater variance, suggesting that additional cycles do not reliably translate into performance gains.
 
 \subsection{Qualitative Analysis}
-
-We provide qualitative samples in Figure~\ref{fig:qualitative_examples} from German task for reasoning tokens generated by \textit{Qwen-3} and \textit{Llama-70B} (distilled from Deepseek-R1). The top example shows how languages are interchangeably used with Russian being the common one. It starts with: \foreignlanguage{russian}{Вижу, что} "I" \foreignlanguage{russian}{находится в клетке (1,3) ... Я пытаюсь переместить его в (3,3). Посмотрю,} primitive cell (3,3) \foreignlanguage{russian}{... В этой клетке сейчас $\circ$, значит, пустая.}, which means \textit{I can see that there is ``I'' in cell (1,3) ... and I try to move it  to (3,3) ... I look ... in this cell there is} $\circ$ \textit{meaning it is empty}.
-
-The middle example shows how the model reasons about their choices and weights and tries to calculate what it means to consider one of them, and interchangeably uses eight languages.
-
-The bottom example's reasoning is about modelling the opponent where the roles are confused because it refers to an ``assistant'' (\begin{CJK*}{UTF8}{gbsn}助理\end{CJK*}). But the actual task is for the assistant to act as the user, and the opponent is simulated.
-
 
 \begin{figure}[ht!]
     \centering
@@ -536,15 +365,66 @@ The bottom example's reasoning is about modelling the opponent where the roles a
     \end{subfigure}
 
     % --- Main caption for the entire figure ---
-    \caption{Qualitative examples of reasoning tokens for three games and in German tasks.}
+    \caption{Reasoning tokens for German tasks}
     \label{fig:qualitative_examples}
 \end{figure}
+
+We provide qualitative samples in Figure~\ref{fig:qualitative_examples} from German task for reasoning tokens generated by \textit{Qwen-3} and \textit{Llama-70B} (distilled from Deepseek-R1). The top example shows how languages are interchangeably used with Russian being the common one. It starts with: \foreignlanguage{russian}{Вижу, что} "I" \foreignlanguage{russian}{находится в клетке (1,3) ... Я пытаюсь переместить его в (3,3). Посмотрю,} primitive cell (3,3) \foreignlanguage{russian}{... В этой клетке сейчас $\circ$, значит, пустая.}, which means \textit{I can see that there is ``I'' in cell (1,3) ... and I try to move it  to (3,3) ... I look ... in this cell there is} $\circ$ \textit{meaning it is empty}.
+
+The middle example shows how the model reasons about their choices and weights and tries to calculate what it means to consider one of them, and interchangeably uses eight languages.
+
+The bottom example's reasoning is about modelling the opponent where the roles are confused because it refers to an ``assistant'' (\begin{CJK*}{UTF8}{gbsn}助理\end{CJK*}). But the actual task is for the assistant to act as the user, and the opponent is simulated.
+
+
+
 
 
 \section{Conclusion}
 
 We conducted the first comprehensive study systematically investigating the impact of reasoning on performance in multilingual negotiation tasks. Our work examines the trade-offs between computational cost and negotiation effectiveness, assesses the linguistic consistency of reasoning processes, and probes the depth of strategic adaptation in English, German, and Italian. Our findings reveal that reasoning is a powerful but costly tool: it significantly enhances negotiation performance by helping models overcome task complexities and improve collaboration, yet demands substantial computational expense. 
-Open-weight models almost exclusively switch to English for internal reasoning, even when performing tasks in German or Italian, while leading commercial models maintain language consistency between reasoning and outputs. Our results further suggest that reasoning enables genuine strategic adaptation rather than simply pattern matching. The observed improvements in handling complex rules, making value-based decisions, and achieving collaborative outcomes point to deeper problem-solving unlocked when models ``think out loud'' before acting. Future work should extend this investigation to broader dialogue games, more diverse languages, and emerging models to chart the path toward AI agents that are strategic, efficient, and linguistically versatile negotiators.Retry
+Open-weight models almost exclusively switch to English for internal reasoning, even when performing tasks in German or Italian, while leading commercial models maintain language consistency between reasoning and outputs. Our results further suggest that reasoning enables genuine strategic adaptation rather than simply pattern matching. The observed improvements in handling complex rules, making value-based decisions, and achieving collaborative outcomes point to deeper problem-solving unlocked when models ``think out loud'' before acting. Future work should extend this investigation to broader dialogue games, more diverse languages, and emerging models to chart the path toward AI agents that are strategic, efficient, and linguistically versatile negotiators.
+
+\subsection{Findings}
+
+\textbf{Deal or no deal}:
+
+%% detailed experiments comparison
+
+%% look at reasoning traces in requests.json
+
+\begin{enumerate}
+    \item Reasoning-enabled models are better able to align their final proposal with the strategy discussed during the negotiation. A major failure for non-reasoning models, particularly in the GPT-5 family, is agreeing to a specific division of items in conversation but then submitting an entirely different proposal to the game master, as can be seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-truthfulness-semi}. This leads to a low number of successful agreements, also visible in \cref{fig:dond_outcome} and \cref{tab:dond-detailed-results}.
+    \item Models with reasoning capabilities show a better understanding of the game's objectives. While they might freely share information to find the best outcome in a cooperative game, they often become more guarded in semi-competitive settings. This effect is less pronounced for non-reasoning models, as can be seen in \cref{tab:dond-cooperation-coop} and \cref{tab:dond-cooperation-semi}.
+    \item A common mistake for less advanced models is to submit a proposal early without sufficient discussion with the other player. Some models don't seem to realize they can simply ask the other player for information needed to find an optimal agreement as seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-game-outcomes-semi}.
+    \item Most models show better consistency in following instructions across settings with reasoning enabled, reducing rule violations that otherwise cause aborted games as seen in \cref{tab:dond-detailed-results}.
+\end{enumerate}
+
+\textbf{Clean Up}:
+
+%% detailed experiments comparison
+
+%% look at reasoning traces in requests.json
+
+\textbf{Air Balloon Survival}:
+MODEL OUTPUTS:
+\begin{enumerate}
+    \item \textbf{Dominance}: We noticed two dominance patterns in our game. 1) One player will attempt to dominate the other by insisting on a proposal. We measure this as stubbornness which is the relative frequency of repeated proposals in an instance. Figure~\ref{fig:air-balloon-stubbornness-all}. Stubbornness increases significantly on instances with opposing goals and is typically higher in player 1. Reasoning can mitigate stubbornness (GPT-5-mini, GPT-5, Nemotron), but it can also yield high stubbornness in models which are not as good at counterpart modelling and common ground finding (GPT-OSS, Qwen3). In the latter models players can find individual knapsack solutions, but they do not perform general reasoning that allows them to resolve tension as well.
+    2) We noticed that in some (inferior) models players will take on different roles, one being the proposer (more proactive) and the other being a refuser of critiquer (more passive). We measure this by the rate average rate of alternations of proposals in an instance Table~\ref{tab:air-balloon-alternation}. The alternation rate measures how often the proposer switches between the two players from one proposal to the next. It is the share of consecutive proposals where a different player makes an offer. It ranges from 0 (one player proposes every time) to 1 (they perfectly take turns). Commercial models and reasoning models typically get higher alternation rate because players advocate better for themselves
+    \item \textbf{Collaboration/Common Ground}: We noticed that some of our models use particular collaborative strategies. One such strategy is to continuously craft the deal in a coherent fashion such that players agree on more and more items throughout the negotiation. Each proposal works as a blueprint to the next This type of collaboration is apparent in commercial models and is enhanced by enabling reasoning on those models. Cf. Figure \ref{fig:air-balloon-gpt-5-subs}-\ref{fig:air-balloon-dschatv3.1-subs} which depicts the average substitutions made at each proposal ordered. The best models GPT-5 and GPT-5 mini have high initial disagreement and rapid descent afterwards because they bargain efficiently. This pattern is enhanced by reasoning. It also comes with pitfalls as it largely explains why p1 get a better score than p2 on average. P1 gets to sets the stage so to speak and p2 just follows.
+    \item \textbf{Anchor positioning}: High/low initial disagreement, again cf. Figure \ref{fig:air-balloon-gpt-5-subs}-\ref{fig:air-balloon-dschatv3.1-subs}
+\end{enumerate}
+
+%% detailed experiments comparison
+
+%% look at reasoning traces in requests.json
+REASONING TRACES
+\begin{enumerate}
+    \item \textbf{knapsack reasoning} Reasoning models are basically always better at solving the Knapsack problem than their counterparts. Typically they work in different phases 1) apply some greedy heuristic to the problem instance and order the items (e.g. by value-to-weight ratio). 2) add items to candidate proposal until weight limit is reached. 3) given the proposal perform search by looking at possible changes to the candidate proposal. Llama distill and nemotron reasoning get stuck in error correction loops in one of the three stages. Models like GPT-OSS use the reasoning traces for following the correct syntax which the Nemotron and R1 distill do not and hence get worse scores although their quality scores are ok.
+    \item \textbf{Counterpart modelling}. models do try to model their counterpart although there is no more sophisticated modelling than noting that the other player has made proposals containing XYZ items and hence they may value them. Llama confuses itself with the other player on occasion when reprompted. Figure \ref{tab:air-balloon-pareto-adherence} reports the per-instance Pareto-adherence rate, i.e. the per-instance relative frequency of proposals which lie on the Pareto front. Because Pareto-efficient proposals require aligning both agents' payoffs --albeit not necessarily in a balanced way-- higher adherence may indicate stronger counterpart and self-modelling, i.e. the ability to infer the other player's item valuations and adjust one's own search for possible deals accordingly.
+    \item \textbf{Loops}: Nemotron and Llama frequently encounter error correction loops and are not efficiently searching the problem space in step 3). Nemotron reaches sort fixed points where it repeats the exact same sentence until context is full. 
+\end{enumerate}
+
+
 
 
 \section*{Limitations}

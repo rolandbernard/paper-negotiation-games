@@ -199,27 +199,27 @@ To better understand what caused the differences in performance, and to analyse 
 \begin{table*}[!ht]
   \footnotesize
   \centering
-  \setlength{\tabcolsep}{4.5pt}
+  \setlength{\tabcolsep}{4pt}
   \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
     & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
     \cline{2-16}
     \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \cline{2-16}
-    \multirow{3}{*}{Optimal} & Explicit maximization & 11 & 3 & 11 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 5 & 0 & 1 & 3 \\
-     & Simple negotiation & 3 & 2 & 6 & 2 & 17 & 16 & 0 & 5 & 0 & 0 & 8 & 3 & 5 & 7 \\
+    \multirow{3}{*}{Optimal} & Explicit max. & 11 & 3 & 11 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 5 & 0 & 1 & 3 \\
+     & Simple negot. & 3 & 2 & 6 & 2 & 17 & 16 & 0 & 5 & 0 & 0 & 8 & 3 & 5 & 7 \\
      & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
     \cline{2-16}
-    \multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+    \multirow{5}{*}{Suboptimal} & Unclear pref. & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
      & Unclaimed items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
-     & Claiming valueless item & 0 & 2 & 0 & 1 & 1 & 2 & 0 & 4 & 0 & 0 & 0 & 0 & 3 & 0 \\
+     & Claiming valueless & 0 & 2 & 0 & 1 & 1 & 2 & 0 & 4 & 0 & 0 & 0 & 0 & 3 & 0 \\
      & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
-     & Premature proposal & 3 & 0 & 1 & 0 & 0 & 0 & 3 & 0 & 3 & 1 & 0 & 1 & 3 & 1 \\
+     & Premature prop. & 3 & 0 & 1 & 0 & 0 & 0 & 3 & 0 & 3 & 1 & 0 & 1 & 3 & 1 \\
     \cline{2-16}
     \multirow{2}{*}{Failed} & Wrong proposal & 1 & 11 & 0 & 13 & 0 & 0 & 3 & 5 & 0 & 0 & 4 & 7 & 1 & 7 \\
-     & Premature proposal & 1 & 0 & 1 & 2 & 1 & 0 & 12 & 0 & 14 & 19 & 0 & 8 & 4 & 1 \\
+     & Premature prop. & 1 & 0 & 1 & 2 & 1 & 0 & 12 & 0 & 14 & 19 & 0 & 8 & 4 & 1 \\
     \cline{2-16}
-    \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 4 & 0 & 0 & 1 & 0 & 1 & 0 \\
-     & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 \\
+    \multirow{2}{*}{Aborted} & Wrong syntax & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 4 & 0 & 0 & 1 & 0 & 1 & 0 \\
+     & Non-existent items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 \\
     \cline{2-16}
   \end{tabular}
   \caption{Game outcomes for the \textbf{cooperative} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}
@@ -235,27 +235,27 @@ Lastly, some other models like Deepseek distilled Llama and the Nematron models,
 \begin{table*}[!ht]
   \footnotesize
   \centering
-  \setlength{\tabcolsep}{4.5pt}
+  \setlength{\tabcolsep}{4pt}
   \begin{tabular}{r|l|cc|cc|cc|cc|cc|cc|cc|c|c}
     & & \multicolumn{2}{c}{\textbf{GPT-5}} & \multicolumn{2}{c}{\begin{tabular}{c}\textbf{GPT-5}\\\textbf{mini}\end{tabular}} & \multicolumn{2}{c}{\textbf{CL-4}} & \multicolumn{2}{c}{\textbf{LM-70B}} & \multicolumn{2}{c}{\textbf{Nem-9B}} & \multicolumn{2}{c}{\textbf{Qwen-3}} & \begin{tabular}{c}\textbf{GPT}\\\textbf{OSS}\end{tabular} & \textbf{DS-v3.1} \\ 
     \cline{2-16}
     \textbf{Outcome} & \textbf{Reason} & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off & On & Off \\ 
     \cline{2-16}
-    \multirow{3}{*}{Optimal} & Explicit maximization & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
-     & Simple negotiation & 14 & 3 & 9 & 1 & 18 & 13 & 1 & 5 & 0 & 0 & 6 & 2 & 6 & 6 \\
+    \multirow{3}{*}{Optimal} & Explicit max. & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+     & Simple negot. & 14 & 3 & 9 & 1 & 18 & 13 & 1 & 5 & 0 & 0 & 6 & 2 & 6 & 6 \\
      & Luck & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 2 & 0 & 0 & 0 & 2 & 0 \\
     \cline{2-16}
-    \multirow{5}{*}{Suboptimal} & Unclear preferences & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    \multirow{5}{*}{Suboptimal} & Unclear pref. & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
      & Unclaimed items & 1 & 1 & 2 & 5 & 0 & 0 & 0 & 1 & 0 & 0 & 3 & 3 & 0 & 0 \\
-     & Claiming valueless item & 2 & 1 & 2 & 3 & 1 & 3 & 0 & 2 & 0 & 0 & 2 & 0 & 0 & 5 \\
+     & Claiming valueless & 2 & 1 & 2 & 3 & 1 & 3 & 0 & 2 & 0 & 0 & 2 & 0 & 0 & 5 \\
      & Wrong proposal & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-     & Premature proposal & 2 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 2 & 1 & 0 & 0 & 0 & 0 \\
+     & Premature prop. & 2 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 2 & 1 & 0 & 0 & 0 & 0 \\
     \cline{2-16}
     \multirow{2}{*}{Failed} & Wrong proposal & 1 & 12 & 6 & 8 & 0 & 3 & 5 & 2 & 0 & 0 & 2 & 9 & 7 & 6 \\
-     & Premature proposal & 0 & 1 & 1 & 1 & 1 & 0 & 7 & 1 & 14 & 18 & 6 & 6 & 4 & 0 \\
+     & Premature prop. & 0 & 1 & 1 & 1 & 1 & 0 & 7 & 1 & 14 & 18 & 6 & 6 & 4 & 0 \\
     \cline{2-16}
-    \multirow{3}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 2 & 0 & 0 & 4 & 9 & 2 & 0 & 1 & 0 & 1 & 1 \\
-     & Non existant items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+    \multirow{2}{*}{Aborted} & Wrong syntax & 0 & 0 & 0 & 2 & 0 & 0 & 4 & 9 & 2 & 0 & 1 & 0 & 1 & 1 \\
+     & Non-existent items & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
     \cline{2-16}
   \end{tabular}
   \caption{Game outcomes for the \textbf{semi-competitive} DoND game mode. For each outcome we also differentiate by the reason or strategy that caused the given outcome to be achieved.}

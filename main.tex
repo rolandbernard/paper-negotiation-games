@@ -331,6 +331,27 @@ We ran a language detection script to analyse the reasoning message of the model
 We model first-turn reasoning tokens as walks on a finite-state machine (see Appendix ~\ref{sec:cyclic_analysis}) and compute two diagnostics: (i) number of segments (plan restarts/restructuring), and (ii) cycle edge ratio (within-segment looping). FSM states are detected using lexical cues in reasoning tokens, e.g. ``maybe/could'' → PROPOSE; ``but/however'' → UNDERMINE, etc.
 Good-performing models should resolve plans in fewer segments and cycles. Performance shows non-linear relationships: \textbf{minimal segment counts correlate with improved outcomes}, while moderate additions yield unclear results. \textbf{Commercial models achieve competitive scores with lower cycle ratios} and tighter clustering; open-weight models show higher ratios with greater variance, suggesting that additional cycles do not reliably translate into performance gains.
 
+Additionally, we employed an LLM-based analysis to identify the percentage of reasoning traces containing loops, where an action or thought is repeated at least three times, in 309 sampled transcripts, see \ref{sec:llm-based_reasoning_analysis}. Fig.~\ref{fig:reasoning_loops} shows that Claude-4 and GPT-OSS virtually never display loops in their traces and achieve high scores, whereas 34.3\% of the reasoning traces of Llama-70B and 54.4\% of  Nemotron-9B contain loops 
+
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/author_role_vs_quality_score.pdf}
+        \caption{Percentage of reasoning traces where the model assumes a player role, as opposed to an assistant/helper role, plotted \textit{vs.} quality score.}
+        \label{fig:assumed_role}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/loops_vs_quality_score.pdf}
+        \caption{Percentage of reasoning traces that display thinking loops (i.e., at least three repetitions of the same action) plotted \textit{vs.} quality score.}
+        \label{fig:reasoning_loops}
+    \end{subfigure}
+    \caption{Results of automated analysis of reasoning traces. Most data points low below the main diagonal, with the notable exception of Qwen-3, which displays extensive looping combined with high scores.}
+    \label{fig:trace_analysis}
+\end{figure*}
+
 \subsection{Qualitative Analysis}
 
 \begin{figure}[ht!]

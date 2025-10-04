@@ -155,4 +155,26 @@ Claude points cluster at lower cycle ratios while remaining competitive in score
     \caption{Clemscore plotted against Cycle Edge Ratio, defined in  Appendix~\ref{def:cycle_edge_ratio}. Solid markers denote reasoning models; translucent markers denote their non-reasoning counterparts; dashed lines connect each pair.} \label{fig:clemscore_VS_cycle_edge_ratio} 
 \end{figure}
 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/n_segments_vs_loops.pdf}
+    \caption{Number of segments vs. loops identified by automated LLM analysis}
+    \label{fig:n_segments_vs_loops}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/author_role_vs_user_mentioned.pdf}
+    \caption{Percentage of reasoning traces where the model assumes a player role \textit{vs.} percentage where it explicitly mentions a user, as identified by automated LLM analysis}
+    \label{fig:player_vs_user}
+\end{figure}
+
+\subsection{LLM-based Analysis of Reasoning Traces}
+\label{sec:llm-based_reasoning_analysis}
+For all thinking models with available reasoning traces, we sampled a total of 309 transcripts with at least one instance for each game, language, and experiment combination for automated analysis.
+
+Among other things, we prompted \textit{GPT-5} to mark traces as containing loops if a thought or an action is repeated at least three times and then calculated the percentage of traces in the transcript that contain loops. Fig.~\ref{fig:n_segments_vs_loops} shows that this correlates with the segment analysis of \ref{sec:cyclic_analysis}. It has to be noted that a large number of segments does not necessarily imply loops, and \textit{vice versa}; additionally, the loop analysis stretches over the whole transcript instead of just the first round. Manual checking of sampled transcripts corroborates a fair accuracy of this classification.
+
+Additionally, we tasked the LLM with classifying the role of the author of the trace as either `player' or `helper' to find out which role the model assumes within the game: is it aware of being an active participant, or takes it an assistant role? Again we calculated the percentage of traces written from a player's perspective for each transcript.
+To strengthen this analysis, we also let the LLM identify whether or not a `user' is mentioned in the thinking traces. In most cases, this is a sign that the model perceives the user as a player and itself as an assistant, although in some cases it also identified the user as the game master. Fig.~\ref{fig:player_vs_user} shows that these percentages are fairly complementary.
+
 \end{document}

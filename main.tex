@@ -362,10 +362,11 @@ Good-performing models should resolve plans in fewer segments and cycles. Perfor
         \includegraphics[width=\linewidth]{qualitative_examples/3.pdf}
         \caption{Qwen-3 reasoning tokens for Deal or No Deal game}
         \label{fig:qual_italian_balloon}
+        
     \end{subfigure}
 
     % --- Main caption for the entire figure ---
-    \caption{Reasoning tokens for German tasks}
+    \caption{Sample reasoning tokens for German tasks}
     \label{fig:qualitative_examples}
 \end{figure}
 
@@ -417,9 +418,6 @@ Open-weight models almost exclusively switch to English for internal reasoning, 
 \item \textbf{Loops}: Nemotron and Llama often fall into error-correction loops, failing to search effectively in step (3). 
 \item \textbf{Counterpart Modelling}: Models attempt to infer counterpart preferences, usually by noting repeated items in proposals, but rarely go beyond this. Llama occasionally confuses itself with the other player when reprompted. Figure~\ref{tab:air-balloon-pareto-adherence} shows per-instance Pareto-adherence (relative frequency of proposals per instance which lie on the pareto-front). Since Pareto efficiency requires aligning both players’ payoffs (even if they can still be very unbalanced), higher adherence may suggest stronger counterpart and self-modelling, i.e., inferring the other’s valuations and adjusting one’s own search accordingly.
 \end{enumerate}
-
-
-
 
 \section*{Limitations}
 

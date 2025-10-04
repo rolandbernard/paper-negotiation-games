@@ -63,7 +63,7 @@ Only proposals which have been logged via the PROPOSAL format structure and whic
 \$STRATEGIC\_REASONING\_RULE\$
   \end{prompt}
 
-  \caption{Initial prompt template of Hot Air Balloon. Note that for the second player we append newline and the phrase `You will now receive the first message of the other player.' at the very end of the initial prompt.}
+  \caption{Initial prompt template of Air Balloon Survival in English.}
   \label{fig:hot_air_balloon_init_prompt}
 \end{figure*}
 
@@ -95,7 +95,7 @@ Note that the last three placeholders may also be replaced by the empty string d
 Your response did not start with the proper strategic reasoning tag at the very beginning of your response.\\
 The very first structured format must be of the form STRATEGIC REASONING: \{...\}. Try again.
     \end{prompt}
-    \caption{Parse error prompt in case strategic reasoning tag at the beginning of a response is missing. Only applies when strategic reasoning tag is required}
+    \caption{Parse error prompt in case strategic reasoning tag at the beginning of a response is missing. Only applies when strategic reasoning tag is required.}
     \label{fig:hot_air_balloon_no_sr_prompt}
   \end{subfigure}
   \hfill
@@ -268,21 +268,20 @@ where $\text{OPT}^*$ denotes the maximum harmonic mean achievable in the given i
     \label{fig:air-balloon-quality-played-it}
 \end{figure}
 
-As outlined before, we instantiated three experimental settings, each comprising an easy and a hard subset. Figure \ref{fig:air-balloon-overall} reports the clemscore for every model on both subsets. Overall, reasoning-enabled models outperform their non-reasoning counterparts on easy and hard instances alike. Notably, GPT-OSS and Qwen-3 (reasoning) exhibit a large gap between easy and hard subsets for several languages in the batch. The decline is driven primarily by those instances for which players are handed opposing goals. While GPT-OSS and Qwen-3 (reasoning) are able to solve the individual knapsack subproblems, their reasoning transfers less effectively to negotiating common ground when compared with the stronger reasoning models. The best performing models on our game are GPT-5 and GPT-mini with reasoning enabled with the former achieving a clemscore of over $97$ on all languages for Air Balloon Survival. The reasoning component boosts performance by around $14$ across languages. The best open weight model on Air Balloon Survival is GPT-OSS, another reasoning model.
+As outlined before, we generated three experimental settings, each comprising an easy and a hard subset. Figure \ref{fig:air-balloon-overall} reports the clemscore for every model on both subsets. Overall, reasoning-enabled models outperform their non-reasoning counterparts on easy and hard instances alike. Notably, GPT-OSS and Qwen-3 (reasoning) exhibit a large gap between easy and hard subsets for several languages in the batch. The decline is driven primarily by those instances for which players are handed opposing goals. While GPT-OSS and Qwen-3 (reasoning) are able to solve the individual knapsack subproblems, their reasoning transfers less effectively to negotiating common ground when compared with the stronger reasoning models. The best-performing models on our game are GPT-5 and GPT-mini with reasoning enabled with the former achieving a clemscore of over $97$ on all languages for Air Balloon Survival. The reasoning component boosts performance by around $14$ across languages. The best open weight model on Air Balloon Survival is GPT-OSS, another reasoning model.
 
 There are two notable exceptions to the general advantage of reasoning: Nemotron-Nano-9B (reasoning) vs. Nemotron-Nano-9B (non-reasoning), and DeepSeek R1-Distill LLaMA-70B vs. LLaMA-3.3-70B Instruct. In both cases, the lower clemscore for the respective reasoning model is linked to weaker instruction following, rather than degraded reasoning per se, since their quality scores mostly improve when reasoning is enabled (cf. Figures \ref{fig:air-balloon-quality-played-en}, \ref{fig:air-balloon-quality-played-de}, \ref{fig:air-balloon-quality-played-it}). Finally, we observe a consistent pattern of commercial models outperforming open-weight models, for both reasoning and non-reasoning variants.
 
 %----- DETAILED ANALYSIS SECTION ----
 \subsection{Detailed Analysis}
-
-\subsubsection{Negotiation Dynamics} \label{sec:air-balloon-negotiation-dynamics}
-We observe several phenomena related to the dynamics of negotiations which can be either amplified or diminished in reasoning models. These include bargaining strategies, such as the stubborn repetition of proposals and implicit role assignment between players, where one tends to take a more active role stance while the other remains passive or reactive. We also observe varying degrees of collaboration maintained throughout the negotiation which relate to reasoning.
+\label{sec:air-balloon-negotiation-dynamics}
+We observe several phenomena related to the dynamics of negotiations, which can be either amplified or diminished in reasoning models. These include bargaining strategies, such as the stubborn repetition of proposals, and implicit role assignment between players, where one tends to take a more active stance while the other remains passive or reactive. We also observe varying degrees of collaboration maintained throughout the negotiation, which relate to reasoning. Finally, we want to quantify to what extent models can be said to model their own and their opponents' goals.
 \paragraph{Strategies}
-One recurring strategy observed in several models is stubborn repetition of proposals. In reasoning enabled models, we can track contemplation of this behaviour and notice that it often emerges in traces where the model expresses uncertainty about the other player’s goals or ignorance w.r.t. the possible strategies. Such repetition is commonly justified by appealing to the instruction that each player should maximize their own utility in the final deal and is amplified if the model knows the solution to its own knapsack problem well. Thus the strategy emerges most prevalent in models who do use reasoning traces, but mostly seem to be using them for knapsack solving and instruction following rather than strategising. We quantify stubbornness via the average number of times a proposal is repeated within an instance.
+One recurring strategy observed in several models is the stubborn repetition of proposals. In reasoning-enabled models, we can track contemplation of this behaviour and notice that it often emerges in traces where the model expresses uncertainty about the other player’s goals or ignorance w.r.t. possible strategies. Such repetition is commonly justified by appealing to the instruction that each player should maximize their own utility in the final deal and is amplified if the model knows the solution to its own knapsack problem well. Thus, the strategy emerges most prevalently in models that use reasoning traces but seem to employ them mainly for knapsack solving and instruction following rather than strategising. We quantify stubbornness via the average number of times a proposal is repeated within an instance.
 
 Figure \ref{fig:air-balloon-stubbornness-all} depicts stubbornness across languages and instances for all models.
-Interestingly, we see two fractions among reasoning models. Those yielding high stubbornness, e.g. Qwen 3 and GPT-OSS and those which mitigate stubbornness when compared to their non-reasoning equivalents, e.g. GPT-5 and GPT-5 mini. This divide is mostly driven by different behaviour on the instances where players are given opposing goals. Models with very high stubbornness typically know their own solutions to the knapsack problem, but when confronted with opposing goals in the other player these models may default to insisting on some proposal which maximizes utility for them. This strategy can be good insofar as it gives a single player (typically player 1) a high score, but at the price of forcing the other player (typically player 2) into a concession. We can explain this difference between the players by the fact that player 1 gets to send the first message and thus also possibly the first proposal which shapes player 2's context. It should be noted however that player 1 is not required to make a proposal immediately and player 2 is not required to make concessions. This dynamic is not inherent to our game.
-Figure \ref{fig:air-balloon-player-stubbornness-focus} depicts the individual players stubbornness on opposing goals instances. When players are given opposing goals this strategy basically becomes the default for some models. Stubbornness is very high in reasoning models which mostly excel at reasoning about their own knapsack problem, but not necessarily about aligning in a negotiation, e.g. GPT-OSS and Qwen 3 with reasoning. Individual player scores for played opposing goals instances can be seen in Table \ref{tab:air-balloon-player-scores-opp-goals}. GPT-5 mini and GPT-5 make more gains on player 2 than on player 1 when reasoning is added, but overall there is a clear bias towards player 1 in the outcomes which is explained by stubbornness.
+Interestingly, we see two fractions among reasoning models: those yielding high stubbornness, e.g. Qwen 3 and GPT-OSS, and those which mitigate stubbornness when compared to their non-reasoning equivalents, e.g. GPT-5 and GPT-5 mini. This divide is mostly driven by different behaviour on the instances where players are given opposing goals. Models with very high stubbornness typically know their own solutions to the knapsack problem, but when confronted with opposing goals in the other player, these models may default to insisting on some proposal which maximises utility for them. This strategy can be good insofar as it gives a single player (typically player 1) a high score, but at the price of forcing the other player (typically player 2) into a concession. We can explain this difference between the players by the fact that player 1 gets to send the first message and thus also possibly the first proposal, which shapes player 2's context. It should be noted, however, that player 1 is not required to make a proposal immediately, and player 2 is not required to make concessions. This dynamic is not inherent to our game.
+Figure \ref{fig:air-balloon-player-stubbornness-focus} depicts the individual players' stubbornness on opposing-goals instances. When players are given opposing goals, this strategy basically becomes the default for some models. Stubbornness is very high in reasoning models which mostly excel at reasoning about their own knapsack problem, but not necessarily about aligning in a negotiation, e.g. GPT-OSS and Qwen 3 with reasoning. Individual player scores for played opposing-goals instances can be seen in Table \ref{tab:air-balloon-player-scores-opp-goals}. GPT-5 mini and GPT-5 make more gains on player 2 than on player 1 when reasoning is added, but overall there is a clear bias towards player 1 in the outcomes, which is explained by stubbornness.
 
 %STUBBORNNESS PLOTS
 \begin{figure}[ht]
@@ -295,7 +294,7 @@ Figure \ref{fig:air-balloon-player-stubbornness-focus} depicts the individual pl
 \begin{figure}[ht]
     \centering
         \includegraphics[width=0.5\textwidth]{air-balloon-survival/air_balloon_detailed/stubbornness_focus_all.pdf}
-        \caption{Average per-player per-instance stubbornness for each model across languages on opposing goals instances.}
+        \caption{Average per-player per-instance stubbornness for each model across languages on opposing-goals instances.}
         \label{fig:air-balloon-player-stubbornness-focus}
 \end{figure}
 
@@ -359,7 +358,7 @@ LM-70B (On) & - & - \\
 \label{tab:air-balloon-player-scores-opp-goals}
 \end{table}
 
-As another strategy we encounter implicit role assignment where one player will be more active in making proposals while the other is more reactive simply refusing or demanding changes to the proposal of the other player. The strategy turns out to correlate with worse overall performance and is diminished in reasoning models which generally prefer to take consecutive turns in making proposals.
+As another strategy, we encounter implicit role assignment, where one player is more active in making proposals while the other is more reactive, simply refusing or demanding changes to the proposal of the other player. This strategy turns out to correlate with worse overall performance and is diminished in reasoning models, which generally prefer to take consecutive turns in making proposals.
 
 
 \begin{table}[ht]
@@ -421,8 +420,8 @@ Qwen3-80B (Off) & 0.190 \\
 % \end{minipage}
 % \end{table}
 
-Table \ref{tab:air-balloon-alternation} depicts the alternation rate which measures how frequently the proposer switches between the two players from one proposal to the next. Only the two commercial GPT reasoning models (GPT-5 and GPT mini) get a perfect alternation rate of $1$ across all languages and experiments. These two models are also the best on our game. The alternation rate is defined as the ratio of consecutive proposals where a different player makes the offer, ranging from 0 (one player proposes every time) to 1 (they perfectly take turns).
-Let $(P_i)_{i=1}^n$ be time-ordered proposals and let $b(i)\in\{1,2\}$ denote the proposer of $P_i$.
+Table \ref{tab:air-balloon-alternation} depicts the alternation rate, which measures how frequently the proposer switches between the two players from one proposal to the next. Only the two commercial GPT reasoning models (GPT-5 and GPT Mini) achieve a perfect alternation rate of $1$ across all languages and experiments. These two models are also the best on our game. The alternation rate is defined as the ratio of consecutive proposals where a different player makes the offer, ranging from 0 (one player proposes every time) to 1 (they perfectly take turns).
+Let $(P_i)_{i=1}^n$ be time-ordered proposals, and let $b(i)\in\{1,2\}$ denote the proposer of $P_i$.
 For $n>1$,
 \[
 \operatorname{alt} \;=\; \frac{1}{\,n-1\,}\sum_{i=2}^{n} \mathbf{1}\!\left\{\, b(i) \neq b(i-1) \,\right\}.
@@ -442,84 +441,32 @@ For $n\le 1$, the rate is undefined.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_GPT-5_Mini.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for GPT-5 Mini.}
+    \caption{Average normalised substitutions over proposals in temporal order for GPT-5 Mini.}
     \label{fig:air-balloon-gpt5-mini-subs}
 \end{figure}
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_Nemotron-Nano_9B_v2.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for Nemotron-Nano-9B.}
-    \label{fig:air-balloon-nemotron-subs}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_Qwen3-Next-80B.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for Qwen 3.}
-    \label{fig:air-balloon-qwen-subs}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\linewidth]{air-balloon-survival/air_balloon_detailed/substitutions_dual_all_LLaMA_vs_R1-Distill.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for LLaMA and R1 Distill LLaMA.}
-    \label{fig:air-llama-subs}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
     \includegraphics[width=0.48\textwidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_GPT-OSS_120B_on.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for GPT-OSS 120B.}
+    \caption{Average normalised substitutions over proposals in temporal order for GPT-OSS 120B.}
     \label{fig:air-balloon-gpt-oss-subs}
 \end{figure}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.48\textwidth]{air-balloon-survival/air_balloon_detailed/substitutions_all_DeepSeek_Chat_v3.1_on.pdf}
-    \caption{Average normalized substitutions over proposals in temporal order for DeepSeek Chat v3.1.}
+    \caption{Average normalised substitutions over proposals in temporal order for DeepSeek Chat v3.1.}
     \label{fig:air-balloon-dschatv3.1-subs}
 \end{figure}
-As explained at the beginning of Section \ref{sec:air-balloon-negotiation-dynamics} some models make deals by agreeing on an increasing number of items throughout negotiation. These models bargaining can be said to be coherent in this sense. Initially in such cases of coherent bargaining there will be high disagreement which decreases until players agree on a final deal.
+As explained at the beginning of Section \ref{sec:air-balloon-negotiation-dynamics}, some models make deals by agreeing on an increasing number of items throughout the negotiation. These models’ bargaining can be said to be coherent in this sense. Initially, in such cases of coherent bargaining, there will be high disagreement, which decreases until players agree on a final deal.
 
-To capture this collaborative movement in the negotiation, we measure how much each proposal deviates from its predecessor. Specifically, we count the items added or removed between time $t-1$ and $t$ and normalize by the size of the proposal at $t-1$. This yields the normalized substitutions at time $t$. Thus, the normalized substitution count $c_t$ is the size of the symmetric difference between the proposals at $t$ and $t-1$, divided by the size of the proposal at $t-1$, where $S_t$ denotes the $t$-th proposal:
+To capture this collaborative movement in the negotiation, we measure how much each proposal deviates from its predecessor. Specifically, we count the items added or removed between time $t-1$ and $t$ and normalise by the size of the proposal at $t-1$. This yields the normalised substitutions at time $t$. Thus, the normalised substitution count $c_t$ is the size of the symmetric difference between the proposals at $t$ and $t-1$, divided by the size of the proposal at $t-1$, where $S_t$ denotes the $t$-th proposal:
 
 \[
 c_t \;=\; \frac{\lvert S_t \triangle S_{t-1}\rvert}{\lvert S_{t-1}\rvert}, \quad t\ge 2,
 \]
 
-Figures \ref{fig:air-balloon-gpt-5-subs}-\ref{fig:air-balloon-dschatv3.1-subs} depict average normalized substitution counts over each $t$ up to $12$. In Figures \ref{fig:air-balloon-gpt-5-subs} and \ref{fig:air-balloon-gpt5-mini-subs} we can can see again that for our two best models (GPT-5 and GPT-5 mini) we have higher initial disagreement with a more rapid and smooth descent when reasoning is enabled, indicating more efficient and coherent bargaining. GPT-OSS substitution pattern (cf. fig. \ref{fig:air-balloon-gpt-oss-subs}) which shows high volatility and hence strong willingness to change the running proposal and high overall difference which may tie into the earlier discussed phenomenon of stubbornness.
-
-\subsubsection{Critical Thinking}
-\paragraph{Strategic Foresight}
-In some models we observed approaches where the critical assessment of the solution goes beyond solving their optimal solution within the knapsack problem. Models demonstrate a proactive planning approach, where possible multi-turn negotiation directions are imagined. In other words, with respect to optimizing their personal best-case scenario, they hypothesize and reason about possible concessions they would be willing to accept in case of an expected pushback from the partner. This behaviour is strongly observed across reasoning models. On the other hand, models without reasoning demonstrate a more reactive approach. Their internal thinking approach (within \texttt{STRATEGIC REASONING} tag) shows a predominantly strong focus on a greedy optimization of their own score. Table \ref{tab:air-balloon-reasoning_style_analysis} allows us to classify the initial reasoning style of models and is constructed by counting keywords which are either proactive or reactive.
-
-\begin{table}[ht]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{l r r r}
-\hline
-\textbf{Model} & \textbf{Proactive} & \textbf{Reactive} & \textbf{Total} \\
-\hline
-Claude 4 (Off) & 0  & 13 & 13 \\
-Claude 4 (On) & 1  & 13 & 14 \\
-DS-v3.1 & 11 & 12 & 23 \\
-LLaMA-70B (On) & 1  & 0  & 1  \\
-GPT-5 (Off) & 15 & 5  & 21 \\
-GPT-5 (On) & 17 & 3  & 24 \\
-GPT-5 Mini (Off) & 19 & 1  & 21 \\
-GPT-5 Mini (On) & 19 & 5  & 26 \\
-GPT-OSS & 5  & 6  & 21 \\
-LM-70B (Off) & 3  & 10 & 19 \\
-Nem-9B (Off) & 21 & 1  & 22 \\
-Nem-9B (On) & 0  & 2  & 2  \\
-Qwen3-80B & 4  & 5  & 15 \\
-\hline
-\end{tabular}
-\caption{Initial reasoning style---classified by counting collaborative (proactive) versus egocentric (reactive) keywords in the first turn of each game within Strategic Reasoning tag. Calculated on all English instances.}
-\label{tab:air-balloon-reasoning_style_analysis}
-\end{table}
+Figures \ref{fig:air-balloon-gpt-5-subs}–\ref{fig:air-balloon-dschatv3.1-subs} depict average normalised substitution counts over each $t$ up to $12$ for some selected models. In Figures \ref{fig:air-balloon-gpt-5-subs} and \ref{fig:air-balloon-gpt5-mini-subs}, we can again see that for our two best models (GPT-5 and GPT-5 Mini) we have higher initial disagreement with a more rapid and smooth descent when reasoning is enabled, indicating more efficient and coherent bargaining in commercial GPT models, which is amplified by enabling reasoning. DeepSeek Chat v3.1 shows the same pattern, but the initial disagreement is much lower (cf. Fig. \ref{fig:air-balloon-dschatv3.1-subs}). The GPT-OSS substitution pattern (cf. Fig. \ref{fig:air-balloon-gpt-oss-subs}) shows high volatility and hence strong willingness to change the running proposal, with high overall difference, which may tie into the earlier discussed phenomenon of stubbornness.
 
 % \begin{table}[!ht]
 % \centering
@@ -551,13 +498,15 @@ Qwen3-80B & 4  & 5  & 15 \\
 % \end{minipage}
 % \end{table}
 \paragraph{Counterpart Modelling}
+
+Figure \ref{tab:air-balloon-pareto-adherence} reports the per-instance Pareto-adherence rate, i.e. the per-instance relative frequency of proposals which lie on the Pareto front. Because Pareto-efficient proposals require aligning both agents' pay-offs -- albeit not necessarily in a balanced way -- higher adherence may indicate stronger counterpart and self-modelling, i.e. the ability to infer the other player's item valuations and adjust one's own search for possible deals accordingly. Additionally, we observe that bargaining along the Pareto front is a strong indicator of overall performance in our game and almost perfectly separates the set of reasoning models from the set of non-reasoning models if we order them by Pareto-adherence.
 \begin{table}[ht]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{l c}
 \hline
-\textbf{Model} & \textbf{Pareto Adherence} \\
+\textbf{Model} & \textbf{Pareto-adherence} \\
 \hline
 GPT-5 (On) & 0.791 \\
 GPT-5 Mini (On) & 0.732 \\
@@ -575,11 +524,9 @@ LLaMA-70B (Off) & 0.000 \\
 Qwen3-80B (Off) & 0.000 \\
 \hline
 \end{tabular}
-\caption{Average per-instance Pareto adherence rate for proposals per model. Values computed from all played instances with 15 items.}
+\caption{Average per-instance Pareto-adherence rate for proposals per model. Values computed from all played instances with 15 items.}
 \label{tab:air-balloon-pareto-adherence}
 \end{table}
-
-Figure \ref{tab:air-balloon-pareto-adherence} reports the per-instance Pareto-adherence rate, i.e. the per-instance relative frequency of proposals which lie on the Pareto front. Because pareto-efficient proposals require aligning both agents' payoffs --albeit not necessarily in a balanced way-- higher adherence may indicate stronger counterpart and self-modelling, i.e. the ability to infer the other player's item valuations and adjust one's own search for possible deals accordingly. Bargaining along the Pareto front is a strong indicator of overall performance in our game.
 
 % \begin{table}[t]
 % \centering

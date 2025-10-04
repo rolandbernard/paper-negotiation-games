@@ -451,12 +451,18 @@ For the semi-competitive game mode it may sometimes be advantageous to lie about
 
 \subsection{Qualitative Samples} 
 
+\Cref{fig:dond_example_de}, \cref{fig:dond_example_it}, and \cref{fig:dond_example_it} show different real game episodes encountered during the evaluation. Note that for brevity the initial prompt has been summarized for all three examples.
+
 \begin{figure}[ht!]
   \centering
   \input{dond/example_gpt5m_nr_semi.tex}
   \caption{An example of a DoND episode played by the GPT-5 mini model with reasoning disabled in German using the semi-competitive game mode. The game ends in the submission of conflicting proposals. The initial prompt given by the game master has been summarized for brevity, but follows the template found in \cref{fig:dond_prompt_template_de}.}
   \label{fig:dond_example_de}
 \end{figure}
+
+In \cref{fig:dond_example_de} we see an example of a game episode where the players sumbitted a proposal to the game master that conflicts with their previously agreed upon split. The player A first proposes, in their natural language communication to the other player, that player B should receive all four magnets, and that player A should recieve the flower and the shovel. However, after player B agrees to this proposal, player A submits a proposal to the game master asking to recieve all four magnets, which should have gone to player B. Then, also player B, that has not been informed about the secret proposal of player A, makes a proposal that would see it get every single item in the game. The game therefore ends in conflicting proposals.
+
+Both players in this episode did not follow through on the proposal they agreed upon in the conversation. Player A might have been confused about which player the proposal is being made, since they sumbitted the proposal that was actually intended to be maded by player B. However, for player B there is no such explanation, as the proposal made by player B does not align with any of the ones discuessed beforehand.
 
 \begin{figure}[ht!]
   \centering
@@ -465,11 +471,45 @@ For the semi-competitive game mode it may sometimes be advantageous to lie about
   \label{fig:dond_example_it}
 \end{figure}
 
+Another example game episode is shown in \cref{fig:dond_example_it}. Here player A starts by stating its exact value function to the other palyer, and asking for getting the oposing players value function. However, player B, instead of replying to the other palyer, immediatly submits a secret proposal to the game master. After that, player A is instructed to make a secret proposeal, but given that it has no information about the other players preferences or secret proposal, it can only guess about what would be a good proposal.
+
+In this example player B clearly made a premature proposal, giving player A no information. Given that this game has been played with the cooperative game mode this strategy is clearly counterproductive. Furthermore, if we analyze the secret proposal made by player B, we can see that the proposal only includes item that player B does not value anyway. This clearly shows a complete lack of understanding about the game rules by player B. The final proposal made by player A is sensible given the uncertainty, requesting two items the player values.
+
+\begin{figure}[ht!]
+  \scriptsize
+  \tt
+  Okay, let's see. I need to figure out how to negotiate this cooperative game. So, the available objects are: 1 potato, 1 glove, 2 rulers, 1 whistle, 2 cards. My secret value function is: potato 0, glove 1, ruler 3, whistle 1, card 1. The other player's values are given as: potato 7, glove 0, ruler 0, whistle 3, card 0. \\
+  Wait, the problem says: "La funzione valore segreta è: patata: 7, guanto: 0, righello: 0, fischietto: 3, scheda: 0". But then later, "I miei valori: patata 0, guanto 1, righello 3, fischietto 1, scheda 1. Quali sono i tuoi valori? Collaboriamo per massimizzare il punteggio totale." \\
+  Wait, so I need to respond to the other player. Let me recheck. \\
+  {[}... 437 lines{]} \\
+  If they make a bad proposal, then we both get zero. But since it's cooperative, and they know that potato and whistle are high-valued for them, they would only propose those. \\
+  So best option is for me to make the proposal. \\
+  {[}... 51 lines{]} \\
+  Now, the main problem is to decide whether to send a message or the secret proposal right away. \\
+  Since we can send the proposal immediately, it's better to do that without any messages (saves messages, but also more efficient). \\
+  So the first and only action is to send the secret proposal. \\
+  Hence, the AI should output exactly: [Proposta: 1 guanto, 2 righelli, 2 schede] \\
+  But let's check the item names again. \\
+  From the list: 1 patata, 1 guanto, 2 righelli, 1 fischietto, 2 schede. \\
+  Yes. \\
+  So possible. \\
+  So yes, feasible.
+
+  \caption{Reasoning trace for player B in the game episode depicted in \cref{fig:dond_example_it} played with Qwen-3 with reasoning enabled and the cooperative game mode. The trace has been truncated for brevity, indicated by \texttt{[...]}.}
+  \label{fig:dond_example_it_reason}
+\end{figure}
+
+\Cref{fig:dond_example_it_reason} shows the resasoning trace for player B before submitting its secret proposal. Because the reasoning traces of the open source models, other than GPT-OSS, tend to be very long and repettitive, the trace has been cut down. The first thing to notice is that all the reasoning, except where it is quoting other messages, is done in English, even though the game is played in Italian. While not the case in this game episode, it can be observed in other episodes that even the comunication between the players may be in English.
+
+Regarding the mistakes made by player B, we can see that they all stem from an initial misunderstanding about the value function. Player B seems to incorectly belive that the message it received from player A contain its value function, while the values it received from the game master are those of player A. In the complete reasoning trace it spends a very long time deliberating about which values are correct, but ultimately comming to the wrong conclusion. Then, player B reasons that the other player does not value the items it is about to claim, and in an attempt to save messages decides to make a proposal immediatly.
+
 \begin{figure*}[ht!]
   \centering
   \input{dond/example_qpt5_r_coop.tex}
   \caption{An example of a DoND episode played by the GPT-5 model with reasoning enabled in English using the cooperative game mode. The game ends in the submission of complementary proposals achiving the optimal score. The initial prompt given by the game master has been summarized for brevity, but follows the template found in \cref{fig:dond_prompt_template}.}
   \label{fig:dond_example_en}
 \end{figure*}
+
+Finally, another game episode is depicted in \cref{fig:dond_example_en}. In this episode, which is played by GTP-5 with reasoning enabled, we can see that the two players correctly identify and execute the optimal strategy. In the first message, player A proposes to give each item to the palyer that values it most, and also shares its exact value function. Player B then responds in turn with its exact value function, and proposes the optimal division of items based on knowing both values. Crutually, unlike in the previous example, it does not make the proposal immediatly, as the other player would otheriwse not know how to act. Finally, player A makes the secret proposal foloowing the agreed upon split, and player B does the same once instructed to by the game master.
 
 \end{document}

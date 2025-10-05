@@ -291,7 +291,30 @@ We present the results obtained by the models (in \textit{reasoning on} and \tex
 
 Now, we examine the cost of the performance gap. In Figure~\ref{fig:combined-token-cost}~$a$, we present the plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. As expected, the models with reasoning output more tokens than models without it, but Qwen-3 generates almost \textit{7x} more tokens than its non-reasoning counterpart. In Figure~\ref{fig:combined-token-cost}~$b$, we present the overall cost (input and output tokens together) of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5}, being the most expensive, costing almost \textit{4x} compared to non-reasoning version but improves $31.4$ points in clemscore. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight one, with a fraction of the cost compared to Qwen-3}.
 
+Additionally, we employed an LLM-based analysis to identify the percentage of reasoning traces containing loops, where an action or thought is repeated at least three times, in 309 sampled transcripts, see \ref{sec:llm-based_reasoning_analysis}. Fig.~\ref{fig:reasoning_loops} shows the percentage of reasoning traces containing loops in the transcripts on the x-axis and the quality score on the y-axis for these analysed transcripts. 
+Strikingly, Claude-4 and GPT-OSS virtually never display loops in their traces (0.2\% and 0.3\%) and achieve high scores, whereas 34.3\% of the reasoning traces of Llama-70B and 54.4\% of Nemotron-9B contain loops and achieve low scores. An overwhelming majority of 95.18\% of data points for these models are below the dotted diagonal, indicating that reasoning loops, a behaviour also known as \textit{overthinking} \cite{DBLP:journals/corr/abs-2506-06941}, tend to reduce performance.
 
+Perplexingly, the picture is reversed for Qwen-3, where 60.3\% of traces contain loops, but the average quality score for these instances is at 79.3, and 75\% of data points are above the diagonal. 
+Manual annotation of the last reasoning trace in a transcript for the hardest Clean Up experiment\footnote{Namely instance 1 of `2\_hard\_7obj\_en'.} revealed that the model tried to parse the current grid no less than 19 times, and additionally five times the initial grid, which has lost all relevance at this point. Still the model eventually reaches the conclusion that \textit{`probably multiple objects are already in place'} and opts to finish the game, reaching a Quality Score of 82.2. The high frequency of unnecessary loops is thus also the main reason for the extremely high numbers of output tokens seen for Qwen-3 in Fig.~\ref{fig:token_average}.
+
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/author_role_vs_quality_score.pdf}
+        \caption{Percentage of reasoning traces where the model assumes a player role, as opposed to an assistant/helper role, plotted \textit{vs.} quality score.}
+        \label{fig:assumed_role}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/loops_vs_quality_score.pdf}
+        \caption{Percentage of reasoning traces that display thinking loops (i.e., at least three repetitions of the same action) plotted \textit{vs.} quality score.}
+        \label{fig:reasoning_loops}
+    \end{subfigure}
+    \caption{Results of automated analysis of reasoning traces. Most data points low below the main diagonal, with the notable exception of Qwen-3, which displays extensive looping combined with high scores.}
+    \label{fig:trace_analysis}
+\end{figure*}
 
 \textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
 
@@ -327,30 +350,15 @@ We ran a language detection script to analyse the reasoning message of the model
 
 
 \textbf{RQ3}: \textit{Do models demonstrate strategic adaptation over multiple turns, or merely surface-level pattern matching creating an illusion of thinking?}
+\she{The cycle analysis only deals with the first round, so RQ3 should probably be altered (\textit{`strategic adaptation over multiple turns'})}
 
 We model first-turn reasoning tokens as walks on a finite-state machine (see Appendix ~\ref{sec:cyclic_analysis}) and compute two diagnostics: (i) number of segments (plan restarts/restructuring), and (ii) cycle edge ratio (within-segment looping). FSM states are detected using lexical cues in reasoning tokens, e.g. ``maybe/could'' → PROPOSE; ``but/however'' → UNDERMINE, etc.
 Good-performing models should resolve plans in fewer segments and cycles. Performance shows non-linear relationships: \textbf{minimal segment counts correlate with improved outcomes}, while moderate additions yield unclear results. \textbf{Commercial models achieve competitive scores with lower cycle ratios} and tighter clustering; open-weight models show higher ratios with greater variance, suggesting that additional cycles do not reliably translate into performance gains.
 
-Additionally, we employed an LLM-based analysis to identify the percentage of reasoning traces containing loops, where an action or thought is repeated at least three times, in 309 sampled transcripts, see \ref{sec:llm-based_reasoning_analysis}. Fig.~\ref{fig:reasoning_loops} shows that Claude-4 and GPT-OSS virtually never display loops in their traces and achieve high scores, whereas 34.3\% of the reasoning traces of Llama-70B and 54.4\% of  Nemotron-9B contain loops 
+\textbf{RQ4}: \textit{Do reasoning traces display awareness of the models active role in the game, and how does this affect performance?}
+\she{Question is preliminary, feel free to change or merge with one of the other questions.}
 
-\begin{figure*}[ht]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/author_role_vs_quality_score.pdf}
-        \caption{Percentage of reasoning traces where the model assumes a player role, as opposed to an assistant/helper role, plotted \textit{vs.} quality score.}
-        \label{fig:assumed_role}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/loops_vs_quality_score.pdf}
-        \caption{Percentage of reasoning traces that display thinking loops (i.e., at least three repetitions of the same action) plotted \textit{vs.} quality score.}
-        \label{fig:reasoning_loops}
-    \end{subfigure}
-    \caption{Results of automated analysis of reasoning traces. Most data points low below the main diagonal, with the notable exception of Qwen-3, which displays extensive looping combined with high scores.}
-    \label{fig:trace_analysis}
-\end{figure*}
+Since the games prompt the model to be active \textit{agents,} reasoning traces should show awareness of this. Using LLM-based analysis (see \ref{sec:llm-based_reasoning_analysis}, we determined the role a model assumes in each t
 
 \subsection{Qualitative Analysis}
 

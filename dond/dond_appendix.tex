@@ -211,12 +211,12 @@ Generally, we can see that the models perform better with reasoning enabled than
 
 To better understand the performance of the models, we show a more detailed breakdown by language and game mode in \cref{tab:dond-detailed-results}. These results are also depicted in \cref{fig:dond_perlanguage}, which shows the performance differences between experiments for English, German, and Italian tasks.
 
-We can see here again that most models follow the instructions well. We can also see that the reason the Nematron model with reasoning enabled has such a low percentage of played games overall is that it has not played a single game in German correctly, while its percentage of played games is otherwise comparable to Llama. By inspecting the transcripts of some games played by Nematron in German, it becomes clear that the reason for the aborted games is that Nematron always made the proposal in English, whereas it should have made it in German. This is likely because Nematron also seems to reason exclusively in English.
+We can see here again that most models follow the instructions well. We can also see that the reason the Nematron model with reasoning enabled has such a low percentage of played games overall is that it has not played a single game in German correctly. Its percentage of played games is otherwise comparable to Llama. By inspecting the transcripts of some games played by Nematron in German, it becomes clear that the reason for the aborted games is that Nematron always made the proposal in English, whereas it should have made it in German. This is likely because Nematron also seems to reason exclusively in English.
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{dond/figures/perlanguage.pdf}
-    \caption{Clemscores for different models separated by language and game mode.}
+    \caption{Clemscore for different models separated by language and game mode.}
     \label{fig:dond_perlanguage}
 \end{figure}
 
@@ -329,7 +329,7 @@ In the analysis of the cooperative game mode shown in \cref{tab:dond-game-outcom
 
 We can further observe that a main reason for the low scores of the non-reasoning versions of the GPT-5 models is that they submit the wrong proposal. This means that the proposal they submit to the game master is often not the one they discussed with the other player in the natural language messages. This manifests itself sometimes as submitting the proposal for the other player, sometimes as proposals that include the complete set of items, and, at other times, even completely unrelated proposals. Deepseek-v3.1 also suffers from a less severe version of this problem.
 
-Lastly, some other models, like Deepseek distilled Llama and the Nematron models, as well as the Qwen-3 model without reasoning, often submit proposals before discussing and agreeing to a division with the other player. This is particularly severe for the Nematron models, as these nearly always submit a proposal as the first message, without exchanging any messages with the other player. Looking at the reasoning traces, we can observe that the Nematron model does not seem to understand that it can communicate with the other player, expressing correctly that it does not know the other player's values, but not realizing that it could ask for them.
+Lastly, some other models, like Deepseek distilled Llama and the Nematron models, as well as the Qwen-3 model without reasoning, often submit proposals before discussing and agreeing to a division with the other player. This is particularly severe for the Nematron models, as these nearly always submit a proposal as the first message, without exchanging any messages with the other player. Looking at the reasoning traces, we can observe that the Nematron model does not seem to understand that it can communicate with the other player. It often expresses correctly that it does not know the other player's values, but does not realize that it could ask for them.
 
 \begin{table*}[!ht]
   \footnotesize

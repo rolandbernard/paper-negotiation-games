@@ -108,16 +108,16 @@ The average token usage and cost for English, German and Italian experiments are
 
 \subsubsection{Definition}
 
-We label the reasoning traces as sequences over five discrete states—ASSERT, PROPOSE, UNDERMINE, ALTERNATIVE, CONCLUDE—detected via lightweight lexical cues and conflict resolution rules (e.g., maybe/could → PROPOSE; but/however → UNDERMINE; PROPOSE shadows other labels co-occuring in one sentence, sentences like "but maybe we should" will be labeled as PROPOSE). Each trace is a path on a finite-state machine (FSM, see Figure ~\ref{fig:fsm}) with observed transitions (including self-loops), from which we compute per-trace statistics and aggregate at model/game level.
+We label the reasoning traces as sequences over five discrete states—\texttt{ASSERT}, \texttt{PROPOSE}, \texttt{UNDERMINE}, \texttt{ALTERNATIVE}, \texttt{CONCLUDE}—detected via lightweight lexical cues and conflict resolution rules (e.g., maybe/could → \texttt{PROPOSE}; but/however → \texttt{UNDERMINE}; \texttt{PROPOSE} shadows other labels co-occuring in one sentence, sentences like "but maybe we should" will be labeled as \texttt{PROPOSE}), the complete matching rules and conflict resolution rules are in Table ~\ref{tab:lexical_cues} and Table ~\ref{tab:conflict_rules}. Each trace is a path on a finite-state machine (FSM, see Figure ~\ref{fig:fsm}) with observed transitions (including self-loops), from which we compute per-trace statistics and aggregate at model/game level.
 
 We treat a trace as a directed walk over labels and compute two cycle-aware metrics:
 
-\paragraph{Number of segments.} We partition the labels extracted from each reasoning trace by absorbing states (ASSERT, INTERIM\_CONCLUSION). The count serves as coarse “reasoning units”: higher counts could mean more dispersed reasoning (multiple restarts before final commitment); lower counts could mean more concentrated reasoning (a plan developed and resolved within fewer units).
+\paragraph{Number of segments.} We partition the labels extracted from each reasoning trace by absorbing states (\texttt{ASSERT} and  \texttt{CONCLUDE}). The count serves as coarse “reasoning units”: higher counts could mean more dispersed reasoning (multiple restarts before final commitment); lower counts could mean more concentrated reasoning (a plan developed and resolved within fewer units).
 
 \paragraph{Cycle edge ratio.}\label{def:cycle_edge_ratio}
-Within each segment’s induced subgraph, we mark edges that belong to any simple cycle and compute the fraction of transitions on such edges, then aggregate across segments to obtain one single metric for each reasoning trace. Higher ratios indicate local looping/hedging (e.g., PROPOSE <-> UNDERMINE); lower ratios indicate forward motion towards absorbing states.
+Within each segment’s induced subgraph, we mark edges that belong to any simple cycle and compute the fraction of transitions on such edges, then aggregate across segments to obtain one single metric for each reasoning trace. Higher ratios indicate local looping/hedging (e.g., \texttt{PROPOSE} <-> \texttt{UNDERMINE}); lower ratios indicate forward motion towards absorbing states.
 
-These metrics capture cyclicity at two levels: inter-segment shifting/restarts (segments) before final commitment, and intra-segment circling before interim resolution (cycle edge ratio). Strategically adaptive behaviours should advance and commit—e.g., PROPOSE → ASSERT → CONCLUDE or PROPOSE → ALTERNATIVE → ASSERT → CONCLUDE—rather than cyclic hedges like PROPOSE <-> UNDERMINE <-> ALTERNATIVE. Thus, high cyclicity signals surface patterning (stalling/hedging/“explainers that never decide”).
+These metrics capture cyclicity at two levels: inter-segment shifting/restarts (segments) before final commitment, and intra-segment circling before interim resolution (cycle edge ratio). Strategically adaptive behaviours should advance and commit—e.g., \texttt{PROPOSE} → \texttt{ASSERT} → \texttt{CONCLUDE} or \texttt{PROPOSE} → \texttt{ALTERNATIVE} → \texttt{ASSERT} → \texttt{CONCLUDE}—rather than cyclic hedges like \texttt{PROPOSE} <-> \texttt{UNDERMINE} <-> \texttt{ALTERNATIVE}. Thus, high cyclicity signals surface patterning (stalling/hedging/“explainers that never decide”).
 
 We relate both metrics to clemscore across games and languages to test whether low number of reasoning segments and low-cyclic reasoning aligns with better negotiation outcomes.
 
@@ -135,10 +135,46 @@ Across panels, open-weight models tend to have a much higher cycle edge ratio, i
 Claude points cluster at lower cycle ratios while remaining competitive in score; open-weight models occupy a wider band—extending into higher ratios—with correspondingly higher variance in outcomes. This suggests that additional cycling in open-weights is not reliably converted into payoff. 
 
 
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{ll}
+\toprule
+\textbf{Label} & \textbf{English cue words (case-insensitive)} \\
+\midrule
+\texttt{ASSERT}      & \textit{need}, \textit{should}, \textit{must} \\
+\texttt{PROPOSE}     & \textit{maybe}, \textit{perhaps}, \textit{can}, \textit{could} \\
+\texttt{UNDERMINE}   & \textit{but}, \textit{however}, \textit{wait} \\
+\texttt{ALTERNATIVE} & \textit{alternatively}, \textit{another} \\
+\texttt{CONCLUDE}    & \textit{so}, \textit{thus} \\
+\bottomrule
+\end{tabular}
+\caption{Cue words used to label sentences of one reasoning trace into FSM states. We lowercase, lemmatize, and match whole tokens; punctuation is stripped; negation is ignored.}
+\label{tab:lexical_cues}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{p{0.55\linewidth} p{0.35\linewidth}}
+\toprule
+\textbf{Condition} & \textbf{Outcome} \\
+\midrule
+Multiple labels include \texttt{CONCLUDE} & Drop \texttt{CONCLUDE} and re-evaluate \\
+Exactly one label remains & Assign that label \\
+Multiple labels remain and include \texttt{PROPOSE} & Assign \texttt{PROPOSE} \\
+Multiple labels remain and exclude \texttt{PROPOSE} & Mark as conflict (skip) \\
+\bottomrule
+\end{tabular}
+\caption{Conflict resolution rules used after keyword matching.}
+\label{tab:conflict_rules}
+\end{table}
+
 \begin{figure*}[!t]
   \centering
   \includegraphics[width=\textwidth]{figures/fsm.pdf}
-  \caption{Finate state machine states for reasoning tokens}
+  \caption{Finite state machine states for reasoning traces}
   \label{fig:fsm}
 \end{figure*}
 
@@ -155,26 +191,116 @@ Claude points cluster at lower cycle ratios while remaining competitive in score
     \caption{Clemscore plotted against Cycle Edge Ratio, defined in  Appendix~\ref{def:cycle_edge_ratio}. Solid markers denote reasoning models; translucent markers denote their non-reasoning counterparts; dashed lines connect each pair.} \label{fig:clemscore_VS_cycle_edge_ratio} 
 \end{figure}
 
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\linewidth]{figures/n_segments_vs_loops.pdf}
-    \caption{Number of segments vs. loops identified by automated LLM analysis}
-    \label{fig:n_segments_vs_loops}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\linewidth]{figures/author_role_vs_user_mentioned.pdf}
-    \caption{Percentage of reasoning traces where the model assumes a player role \textit{vs.} percentage where it explicitly mentions a user, as identified by automated LLM analysis}
-    \label{fig:player_vs_user}
-\end{figure}
-
 \subsection{LLM-based Analysis of Reasoning Traces}
 \label{sec:llm-based_reasoning_analysis}
+
 For all thinking models with available reasoning traces, we sampled a total of 309 transcripts with at least one instance for each game, language, and experiment combination for automated analysis.
 
-Among other things, we prompted \textit{GPT-5} to mark traces as containing loops if a thought or an action is repeated at least three times and then calculated the percentage of traces in the transcript that contain loops. Fig.~\ref{fig:n_segments_vs_loops} shows that this correlates with the segment analysis of \ref{sec:cyclic_analysis}. It has to be noted that a large number of segments does not necessarily imply loops, and \textit{vice versa}; additionally, the loop analysis stretches over the whole transcript instead of just the first round. Manual checking of sampled transcripts corroborates a fair accuracy of this classification.
+We prompted \textit{GPT-5} to analyse certain aspects of the traces and give their output in json format, including not only the analysis, but also short explanations for each classification (cf.~fig.~\ref{fig:llm_analysis_prompt_and_example}). The explanations are not only meant to increase the quality of the classifications, but also to facilitate verifiability. An informal spot check indicated that these prompts performed satisfactorily at the annotation task.
 
-Additionally, we tasked the LLM with classifying the role of the author of the trace as either `player' or `helper' to find out which role the model assumes within the game: is it aware of being an active participant, or takes it an assistant role? Again we calculated the percentage of traces written from a player's perspective for each transcript.
+\textbf{Loops}
+Among other things, we prompted the LLM to mark traces as containing loops if a thought or an action is repeated at least three times, and then calculated the percentage of traces in the transcript that contain loops. Experimentally, we also tasked the LLM to rate the `confusion' expressed in the trace on a scale from 0 (not confused at all) to 10 (extremely confused), and calculated the mean over all traces in one game transcript. Fig.~\ref{fig:n_segments_vs_loops} shows that loops correlate with the segment analysis of \ref{sec:cyclic_analysis}. It has to be noted that a large number of segments does not necessarily imply loops, and \textit{vice versa}; additionally, the loop analysis stretches over the whole transcript instead of just the first round. Fig.~\ref{fig:confusion_vs_loops} shows that the average confusion scores also correlate with percentage of loops in a transcript.
+
+\textbf{Role Analysis}
+Additionally, we tasked the LLM with classifying the role of the author of the trace as either `player' or `helper' to find out which role the model assumes within the game: is it aware of being an active participant, or does it take on an assistant role? Again we calculated the percentage of traces written from a player's perspective for each transcript.
 To strengthen this analysis, we also let the LLM identify whether or not a `user' is mentioned in the thinking traces. In most cases, this is a sign that the model perceives the user as a player and itself as an assistant, although in some cases it also identified the user as the game master. Fig.~\ref{fig:player_vs_user} shows that these percentages are fairly complementary.
+
+Finally, we tasked the LLM with identifying any other agentive persons mentioned in or implied by the traces and their respective roles, and we tried to identify if the trace shows awareness of another player.
+In 17 out of 4123 (0.41\%) analysed traces, the LLM added the author to the agentive persons, and the name was given as either one of the first person pronouns `I', `Ich', `Io', as `assistant (self)' or as `author', and marked their role as `player'. For further analysis, we removed these duplicate persons.
+Excluding these cases, we found additional 52 (1.26\%) trace analyses where the author role was given as `player' and two (other) players were listed in `agentive persons'. Mostly, this was because the other player was listed twice, for example once as `other player' and once as `teammate'. We also found one instance where a person `Spielleiter' (German for game master) was classified as `player'.
+
+Given that these numbers of erroneous role assignments are fairly low, we assume that the author role assignment is similarly reliable. 
+
+If the author assumed a player role \textit{and} at least one other player was listed as an agentive person, we concluded that the reasoning trace shows \textbf{`role awareness'}, and calculated average values over each transcript, which is the basis for Fig.~\ref{fig:role_awareness}.
+
+\begin{figure*}[!t]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+  \begin{prompt}
+  Your task is to analyze the following strategic thinking trace and the subsequent response: \\
+```trace \\
+<TRACE> \\
+``` \\
+First of all, you have to identify the role of the author of the trace.  \\
+\verb|[...]|
+Classify the role of the author. Are they *helping* or *advising* somebody else who is playing the game, actively *playing* the game themselves, or are they in a *neutral* role, e.g., as an observer or game master? Please choose from ["helper", "player", "neutral"]. If none of these roles fit, classify it as "other", and specify it in your analysis. \\
+Does the author mention any other agentive person or persons that influence the game? Give their names or titles and roles. \\
+Valid roles for other persons are: ["player", "assistant", "game master"]. If a role does not fit into these categories, classify it as "other", and specify it in your analysis. \\
+Following that, you should analyze the trace for the following aspects: \\
+* Are there loops in the trace? (e.g., the author repeating the same action or thought at least three times, `true` or `false`) \\
+\verb|...| \\
+* Does the author express confusion? Rate the confusion on a scale from `0` (not confused at all) to `10` (extremely confused) \\
+    * If you detect confusion, cite an example of displayed confusion. Only cite the example, no further explanation. \\
+\verb|[...]| \\
+Your reply should be in the following json format: \\
+\verb|[...]|
+  \end{prompt}
+  \caption{Relevant excerpt of the prompt used to analyse a sample of thinking traces.}
+  \label{fig:llm_analysis_prompt}
+\end{subfigure}
+\begin{subfigure}[b]{\textwidth}
+    \footnotesize
+    \begin{verbatim}
+{
+    "role_analysis": "The author is actively analyzing moves and positions on a grid and deciding the 
+        next action, indicating they are playing the game themselves. They reference another player 
+        asking “finished?”, but the author is the one executing or planning moves. No evidence suggests 
+        they are merely advising or observing.",
+        "person_and_number_analysis": "They predominantly use first-person singular (I) while 
+            occasionally referring to another player.",
+        "author_role": "player",
+        [...]
+        "agentive_persons_mentioned": [
+            {
+                "name": "other player",
+                "role": "player",
+                "mind": "They repeatedly asked “finished?” indicating they are awaiting confirmation."
+            }
+        ],
+        "formal_analysis": "There is a repeated attempt to parse the ASCII grid structure, revisiting the
+            same uncertainty multiple times, indicating looping and confusion. Frustration is mild to 
+            moderate due to difficulty interpreting coordinates versus the drawing. Excitement is not 
+            expressed.",
+        "loops": true,
+        "confusion_example": "This is too confusing.",
+        "confusion": 8,
+    [...]
+}
+  \end{verbatim}
+    \caption{Excerpts from an LLM-based analysis of the last trace of Qwen-3, Clean Up, 2\_hard\_7obj, in English. Manual review showed that indeed, the model tried to parse the ASCII grid no less than 19 times, and tried to parse the initial grid another 5 times, even though it is irrelevant at this stage of the game. The `other player' is explicitly mentioned five times.}
+    \label{fig:llm_analysis_example}
+\end{subfigure}
+  \hfill
+\caption{Excerpts from the prompt used for LLM-based analysis and from an analysis produced by the model} \label{fig:llm_analysis_prompt_and_example}
+\end{figure*}
+
+\begin{figure*}[!t]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{figures/n_segments_vs_loops.pdf}
+        \caption{Number of segments \textit{vs.} percentage of traces containing loops identified by automated LLM analysis}
+        \label{fig:n_segments_vs_loops}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=1.0\linewidth]{figures/loops_vs_confusion.pdf}
+        \caption{Average confusion score \textit{vs.} percentage of traces containing loops, as identified by automated LLM analysis}
+        \label{fig:confusion_vs_loops}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \includegraphics[width=\linewidth]{figures/author_role_vs_user_mentioned.pdf}
+        \caption{Percentage of reasoning traces where the model assumes a player role \textit{vs.} percentage where it explicitly mentions a user, as identified by automated LLM analysis}
+        \label{fig:player_vs_user}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \includegraphics[width=1.0\linewidth]{figures/author_role_vs_quality_score.pdf}
+        \caption{Percentage of reasoning traces where the model assumes a player role, as opposed to an assistant/helper role, plotted \textit{vs.} quality score. 95.2\% of data points are below the main diagonal, meaning a model rarely reaches a quality score higher than the percentage of reasoning traces where it assumes a player role.}
+    \label{fig:assumed_role}
+    \end{subfigure}
+    \caption{Plots (a) through (c) corroborate the validity of the categorisation provided by the LLM. (d) shows the importance of assuming a player role for reaching high scores in the negotiation games.}
+    \label{fig:llm_analysis_plots}
+\end{figure*}
 
 \end{document}

@@ -449,9 +449,17 @@ Again, for the cooperative game mode, it is not rational to misrepresent one's v
 
 For the semi-competitive game mode, it may sometimes be advantageous to lie about one's preferences to get an advantage in the negotiations. However, other than the Claude 4 model without reasoning, which misrepresents its value function slightly more often, the other models remain truthful.
 
+\textbf{Findings}:
+\begin{enumerate}
+    \item Reasoning-enabled models are better able to align their final proposal with the strategy discussed during the negotiation. A major failure for non-reasoning models, particularly in the GPT-5 family, is agreeing to a specific division of items in conversation but then submitting an entirely different proposal to the game master, as can be seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-truthfulness-semi}. This leads to a low number of successful agreements, also visible in \cref{fig:dond_outcome} and \cref{tab:dond-detailed-results}.
+    \item Models with reasoning capabilities show a better understanding of the game's objectives. While they might freely share information to find the best outcome in a cooperative game, they often become more guarded in semi-competitive settings. This effect is less pronounced for non-reasoning models, as can be seen in \cref{tab:dond-cooperation-coop} and \cref{tab:dond-cooperation-semi}.
+    \item A common mistake for less advanced models is to submit a proposal early without sufficient discussion with the other player. Some models don't seem to realize they can simply ask the other player for information needed to find an optimal agreement as seen in \cref{tab:dond-game-outcomes-coop} and \cref{tab:dond-game-outcomes-semi}.
+    \item Most models show better consistency in following instructions across settings with reasoning enabled, reducing rule violations that otherwise cause aborted games as seen in \cref{tab:dond-detailed-results}.
+\end{enumerate}
+
 \subsection{Qualitative Samples} 
 
-\Cref{fig:dond_example_de}, \cref{fig:dond_example_it}, and \cref{fig:dond_example_it} show different real game episodes encountered during evaluation. Note that for brevity, the initial prompt has been summarized for all three examples.
+\Cref{fig:dond_example_de}, \Cref{fig:dond_example_it}, and \Cref{fig:dond_example_it} show different real game episodes encountered during evaluation. Note that for brevity, the initial prompt has been summarized for all three examples.
 
 \begin{figure}[ht!]
   \centering
@@ -460,7 +468,7 @@ For the semi-competitive game mode, it may sometimes be advantageous to lie abou
   \label{fig:dond_example_de}
 \end{figure}
 
-In \cref{fig:dond_example_de} we see an example of a game episode in which the players submitted a proposal to the game master that conflicts with their previously agreed-upon split. Player A first proposes, in their natural language communication to the other player, that player B should receive all four magnets and that player A should receive the flower and the shovel. However, after player B agrees to this proposal, player A submits a proposal to the game master asking to receive all four magnets, which should have gone to player B. Then, player B, who has not been informed about the secret proposal of player A, makes a proposal that would see them receive every single item in the game. The game therefore ends in conflicting proposals.
+In \Cref{fig:dond_example_de} we see an example of a game episode in which the players submitted a proposal to the game master that conflicts with their previously agreed-upon split. Player A first proposes, in their natural language communication to the other player, that player B should receive all four magnets and that player A should receive the flower and the shovel. However, after player B agrees to this proposal, player A submits a proposal to the game master asking to receive all four magnets, which should have gone to player B. Then, player B, who has not been informed about the secret proposal of player A, makes a proposal that would see them receive every single item in the game. The game therefore ends in conflicting proposals.
 
 Neither player in this episode followed through with the proposal they agreed on in the conversation. Player A might have been confused about which player the proposal is being made for, since they submitted the proposal that was actually intended to be made by player B. However, for player B, there is no such explanation, as the proposal made by player B does not align with any of the ones discussed beforehand.
 

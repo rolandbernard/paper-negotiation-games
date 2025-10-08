@@ -10,8 +10,9 @@ Intermittent messages sent by the Game Master to the players are given in Figure
 \begin{figure*}
   \centering
   \begin{prompt}
+  \small
   I am your game master, and you are playing a collaborative game with the following grid as game board:\\
-  \includegraphics[height=120pt]{clean_up/example_grid.pdf}\\
+  \includegraphics[height=100pt]{clean_up/example_grid.pdf}\\
 * The upper edge displays x-coordinates increasing to the right, and the right edge y-coordinates increasing downward.\\
 * The following objects are randomly placed on your grid: 'W', 'I', 'T', 'C', 'H'.\\
 The other player sees a variation of the game board, where the objects are placed at different random locations. You cannot see the other player's board, and they cannot see yours.\\
@@ -45,6 +46,7 @@ The closer the identical objects are in both game boards, the more points you ge
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
     \begin{prompt}
+    \small
     Please send a message to the other player to start the game!
     \end{prompt}
 % \vspace*{-2ex}
@@ -56,6 +58,7 @@ The closer the identical objects are in both game boards, the more points you ge
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
     \begin{prompt}
+    \small
 The other player started the game by sending this message:\\
 "<START\_MESSAGE>"\\
 What is your first command?
@@ -219,7 +222,7 @@ This is only an approximation, since we neither take into account the actual gri
 
 
 \subsubsection{Overall Results across levels}
-As explained in section \ref{sec:clean_up_difficulty_levels}, we designed three broad game difficulty levels based on the ratio of empty cells in a grid. We hypothesize that the denser the background grid is, the more likely the target locations clash with occupied cells, and therefore the more likely models get penalized in scoring. In addition, at each difficulty level, there are three sub-levels: either 3, 5, or 7 objects are placed on the grid, on the assumption that the more objects there are, the longer the gameplay traces are, and the less likely that models achieve a high score with mere luck.
+We designed three broad game difficulty levels based on the ratio of empty cells in a grid. We hypothesize that the denser the background grid is, the more likely the target locations clash with occupied cells, and therefore the more likely models get penalized in scoring. In addition, at each difficulty level, there are three sub-levels: either 3, 5, or 7 objects are placed on the grid, on the assumption that the more objects there are, the longer the gameplay traces are, and the less likely that models achieve a high score with mere luck.
 
 Figure \ref{fig:main_score_VS_levels} plots the main score; clear stratifications of performance across the number of objects are observed in easy and hard levels. When we break down the Main Score into Distance Score and Penalty Score in Figure \ref{fig:sub_scores_VS_levels}, the stratification at the medium level can also be found. 
 
@@ -269,7 +272,7 @@ An interesting observation is that, in the Distance Score subplot, the aborted g
 \textbf{Idea}:  
 We hypothesize that Instruction Following ability and Spatial Estimation abilities serve as the foundational pillars of performance, as illustrated in Figure \ref{fig:capabilities-hierarchy}. With weaker pillars, model reasoning might not add much to the performance. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   box/.style={draw, thick, rounded corners=2pt, minimum width=1cm, minimum height=0.6cm, fill=lightgray!20}

@@ -57,7 +57,7 @@ The closer the identical objects are in both game boards, the more points you ge
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \begin{prompt}
+    \begin{prompt}  
     \small
 The other player started the game by sending this message:\\
 "<START\_MESSAGE>"\\
@@ -137,10 +137,17 @@ The Quality Score is calculated by multiplying \textit{Distance Score} with Pena
 \end{align*}
 
 \textbf{Distance Score} ($\mathbf{DS} \in [0,1]$) is calculated from three components, each representing the sum of Euclidean distances for all identical objects on both grids: the Initial Distance Sum $\mathbf{I}$ at the start of the game, the Final Distance Sum $\mathbf{F}$ at the end of the game, and the Expected Distance Sum $\mathbb{E}$ that approximates the distances for randomly placed objects (see Appendix~\ref{clean_up:scoring} for details). The Expected Distance Score $ES$ and Distance Reduction Score $RS$, quantifying how close the players came to the goal of perfect alignment of all objects, are calculated as follows:
-\begin{align*}
-ES = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}; \
-RS = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
-\end{align*}
+% \begin{align*}
+% ES = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}; \
+% RS = \max \left\{0,1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
+% \end{align*}
+
+\begin{equation*}
+\begin{aligned}
+ES &= \max \left\{ 0, 1 - \frac{\mathbf{F}}{\mathbb{E}} \right\}, \\
+RS &= \max \left\{ 0, 1 - \frac{\mathbf{F}}{\mathbf{I}} \right\}
+\end{aligned}
+\end{equation*}
 
 $\mathbf{DS}$ is then either $0$ if final placement is worse than random, or calculated as the mean of both scores:
 \begin{align*}
@@ -230,14 +237,14 @@ Games with 3 objects achieve the highest scores, regardless of background empty 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{clean_up/Main_Score_VS_level.png}
+\includegraphics[width=0.45\textwidth]{clean_up/Main_Score_VS_level.png}
 \caption{Main Score across levels and sub-levels}
 \label{fig:main_score_VS_levels} 
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{clean_up/Sub_Scores_VS_levels.png}
+\includegraphics[width=0.45\textwidth]{clean_up/Sub_Scores_VS_levels.png}
 \caption{Sub Scores across levels and sub-levels}
 \label{fig:sub_scores_VS_levels} 
 \end{figure}
@@ -254,14 +261,14 @@ An interesting observation is that, in the Distance Score subplot, the aborted g
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{clean_up/Main_Score_VS_C_R.png}
+\includegraphics[width=0.45\textwidth]{clean_up/Main_Score_VS_C_R.png}
 \caption{Main Score over different model properties}
 \label{fig:main_score_VS_C_R} 
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{clean_up/Sub_Scores_VS_C_R.png}
+\includegraphics[width=0.45\textwidth]{clean_up/Sub_Scores_VS_C_R.png}
 \caption{Sub Scores over different model properties}
 \label{fig:sub_scores_VS_C_R} 
 \end{figure}

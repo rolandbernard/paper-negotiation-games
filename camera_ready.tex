@@ -1,0 +1,531 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[final]{acl}
+
+% Standard package includes
+\usepackage{times}
+% \usepackage{newtxtext,newtxmath}
+\usepackage{latexsym}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{subcaption}
+\usepackage{CJKutf8}
+\usepackage{url}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[utf8]{inputenc}
+
+% 2. Specify the font encodings: T2A for Cyrillic, T1 for modern Latin
+\usepackage[T2A, T1]{fontenc}
+% \usepackage[T1]{fontenc}
+
+% % 3. Load language support for hyphenation and text rules
+\usepackage[main=english, russian]{babel}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{multirow}
+
+
+\input{preamble}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{graphicx}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{The Price of Thought: A Multilingual Analysis of Reasoning, Performance, and Cost of Negotiation in Large Language Models}
+
+
+
+% Author information can be set in various styles:
+% For several authors from the same institution:
+% \author{Author 1 \and ... \and Author n \\
+%         Address line \\ ... \\ Address line}
+% if the names do not fit well on one line use
+%         Author 1 \\ {\bf Author 2} \\ ... \\ {\bf Author n} \\
+% For authors from different institutions:
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \And  ... \And
+%         Author n \\ Address line \\ ... \\ Address line}
+% To start a separate ``row'' of authors use \AND, as in
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \AND
+%         Author 2 \\ Address line \\ ... \\ Address line \And
+%         Author 3 \\ Address line \\ ... \\ Address line}
+
+\author{%
+Sherzod Hakimov${^\mathbf{1}}$, 
+Roland Bernard${^\mathbf{3}}$, 
+Tim Leiber${^\mathbf{1}}$,
+Karl Osswald${^\mathbf{1}}$,
+Kristina Richert${^\mathbf{1}}$,\\
+\textbf{Ruilin Yang}${^\mathbf{1}}$,
+\textbf{Raffaella Bernardi}${^\mathbf{3}}$,
+\textbf{David Schlangen}${^\mathbf{1,2}}$\\$^{\mathbf{1}}$Computational Linguistics, Department of Linguistics\\
+University of Potsdam, Germany\\
+$^{\mathbf{2}}$German Research Center for Artificial Intelligence (DFKI), Berlin, Germany\\
+$^{\mathbf{3}}$Free University of Bozen-Bolzano, Italy\\
+{\texttt{\{firstname.lastname\}@uni-potsdam.de}}, 
+{\texttt{\{firstname.lastname\}@unibz.it}}
+}
+
+%\author{
+%  \textbf{First Author\textsuperscript{1}},
+%  \textbf{Second Author\textsuperscript{1,2}},
+%  \textbf{Third T. Author\textsuperscript{1}},
+%  \textbf{Fourth Author\textsuperscript{1}},
+%\\
+%  \textbf{Fifth Author\textsuperscript{1,2}},
+%  \textbf{Sixth Author\textsuperscript{1}},
+%  \textbf{Seventh Author\textsuperscript{1}},
+%  \textbf{Eighth Author \textsuperscript{1,2,3,4}},
+%\\
+%  \textbf{Ninth Author\textsuperscript{1}},
+%  \textbf{Tenth Author\textsuperscript{1}},
+%  \textbf{Eleventh E. Author\textsuperscript{1,2,3,4,5}},
+%  \textbf{Twelfth Author\textsuperscript{1}},
+%\\
+%  \textbf{Thirteenth Author\textsuperscript{3}},
+%  \textbf{Fourteenth F. Author\textsuperscript{2,4}},
+%  \textbf{Fifteenth Author\textsuperscript{1}},
+%  \textbf{Sixteenth Author\textsuperscript{1}},
+%\\
+%  \textbf{Seventeenth S. Author\textsuperscript{4,5}},
+%  \textbf{Eighteenth Author\textsuperscript{3,4}},
+%  \textbf{Nineteenth N. Author\textsuperscript{2,5}},
+%  \textbf{Twentieth Author\textsuperscript{1}}
+%\\
+%\\
+%  \textsuperscript{1}Affiliation 1,
+%  \textsuperscript{2}Affiliation 2,
+%  \textsuperscript{3}Affiliation 3,
+%  \textsuperscript{4}Affiliation 4,
+%  \textsuperscript{5}Affiliation 5
+%\\
+%  \small{
+%    \textbf{Correspondence:} \href{mailto:email@domain}{email@domain}
+%  }
+%}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Negotiation is a fundamental challenge for AI agents, as it requires an ability to reason strategically, model opponents, and balance cooperation with competition. We present the first comprehensive study that systematically evaluates how explicit reasoning training affects the negotiation abilities of both commercial and open-weight large language models, comparing these models to their vanilla counterparts across three languages. Using a self-play setup across three diverse dialogue games, we analyse trade-offs between performance and cost, the language consistency of reasoning processes, and the nature of strategic adaptation exhibited by models.
+Our findings show that enabling reasoning---that is, scaling test time compute---significantly improves negotiation outcomes by enhancing collaboration and helping models overcome task complexities, but comes at a substantial computational cost: reasoning improves GPT-5's performance by 31.4 \% while increasing its cost by nearly 400 \%. Most critically, we uncover a significant multilingual reasoning distinction: open-weight models consistently switch to English for their internal reasoning steps, even when negotiating in German or Italian (and thus possibly impacting potential explainability gains through the disclosure of reasoning traces), while a leading commercial model maintains language consistency between reasoning and final output.
+\end{abstract}
+
+\section{Introduction}
+
+Negotiation is a key aspect of human social and economic behaviour that poses significant challenges for AI systems. The problem is complex, as agents must produce coherent language while performing strategic reasoning, modelling the opponents' preferences and goals, and managing the tension between cooperation and competition to maximise their own outcomes. 
+With LLMs increasingly being deployed as autonomous agents in domains ranging from e-commerce to resource distribution, assessing their negotiation capabilities has become essential. Negotiation requires strategic decision-making, which fundamentally depends on reasoning, and provides a strong test-bed for measuring agent competence through interactive, multi-turn scenarios with objective measures that go beyond static evaluation. We therefore study LLM reasoning abilities in negotiation settings.
+
+Studies show that LLMs often deviate from optimal play with unreliable performance, where even top-performing systems can lose to weaker opponents and fail in cooperative scenarios \cite{DBLP:conf/iclr/DavidsonVK024,DBLP:journals/corr/abs-2411-05990,DBLP:conf/icml/0001CYTJ024,DBLP:conf/emnlp/KwonWKCLG24}. These models can acquire deceptive tactics, e.g., expressing false interest in low-value items for later concessions~\cite{lewis-etal-2017-deal}, express desperation to improve outcomes~\cite{DBLP:conf/icml/0001CYTJ024}, perform much worse as buyers than sellers \cite{DBLP:conf/acl/Xia0RMZ0024}, or even take economic risks that lead to budget violations and overpayment~\cite{DBLP:journals/corr/abs-2506-00073}. Previous studies have also investigated theory-of-mind reasoning in negotiation tasks~\cite{DBLP:conf/emnlp/KwonWKCLG24}, and their performance in interactive multi-agent negotiation games and the effect of Chain-of-Thought reasoning~\cite{ DBLP:conf/emnlp/ChanJYDF0L0WS24, abdelnabi2024llmdeliberation}.
+
+Despite this growing body of research, two critical gaps remain unexplored. First, no previous work has systematically investigated how vanilla LLMs specifically trained to reason perform on negotiation tasks and their effects in terms of both performance and computational cost, a fundamental oversight given that reasoning is central to strategic decision-making. Second, the field has been constrained by monolingual analyses based solely on English, leaving multilingual negotiation capabilities completely unexplored. To address these significant limitations, we conduct the first comprehensive study examining the effects of reasoning on negotiation tasks across three languages: English, German, and Italian. We implement three distinct dialogue games that require bargaining skills, collaboration, and strategic preference management~\cite{VonNeumann+Morgenstern:1944,nash1953two,fisher_getting_2011}, testing both commercial and open-weight LLMs in a self-play mode where both sides of the games are played by instances of the same model. We systematically analyse the impact of turning on and off the reasoning mode of models. We also investigate whether models retain their language consistency in their reasoning traces or if they switch to a dominant language in their training data (mainly English). It is important to study, as the reasoning traces provide essential cues for the explainability of model decisions. We target three fundamental research questions:
+
+\noindent\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across tasks and languages?}
+
+\noindent\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+
+\noindent\textbf{RQ3}: \textit{Do models demonstrate strategic adaptation over multiple turns, or merely surface-level pattern matching creating an illusion of thinking?}
+
+
+\section{Related Work}
+
+The convergence of Large Language Models (LLMs) and game-theoretic frameworks represents a significant development in the evaluation and understanding of strategic capabilities in AI systems \cite{sun2025gametheorymeetslarge}, as we explain in the next two parts the state-of-the art methodologies in this field.
+
+\textbf{Benchmarking strategic capabilities in LLMs}: systematic evaluation of LLM negotiation performance reveals substantial variance in strategic behaviour, with models frequently departing from optimal play and exhibiting asymmetric performance patterns~\cite{DBLP:conf/iclr/DavidsonVK024, DBLP:journals/corr/abs-2411-05990,DBLP:journals/corr/abs-2305-16867, pollo2025re}, or even some bigger models underperform against weaker opponents and encounter difficulties in cooperative bargaining scenarios. This has motivated the creation of comprehensive evaluation frameworks and experimental platforms designed to assess agent (initialised as LLMs) behaviour across various negotiation contexts, including resource allocation and pricing tasks \cite{DBLP:conf/icml/0001CYTJ024, DBLP:conf/acl/Xia0RMZ0024}.
+Empirical studies reveal that language models can display interesting tactics, e.g. deceptive strategies such as expressing false interest in low-value items to create bargaining leverage in subsequent exchanges \cite{lewis-etal-2017-deal}. LLMs also exhibit susceptibility to cognitive biases, including anchoring effects and responsiveness to social manipulation tactics, where expressions of desperation or aggressive language can substantially affect negotiation outcomes \cite{DBLP:conf/icml/0001CYTJ024}. As these behaviours present practical risks, outcomes may result in budget constraint violations and acceptance of economically disadvantageous agreements~\cite{DBLP:journals/corr/abs-2506-00073}. A consistent finding across studies is the asymmetric difficulty in buyer versus seller roles, with agents systematically underperforming as buyers~\cite{DBLP:conf/acl/Xia0RMZ0024}. Our work focuses on studying the reasoning behind model choices in a multilingual setting \cite{DBLP:journals/corr/abs-2502-09457}.
+
+\textbf{Improving strategic reasoning and decision-making}: Given the inconsistent strategic reasoning observed in current LLMs \cite{wong2025reasoningcapabilitieslargelanguage}, research efforts focus on enhancing decision-making through structured approaches such as integration of game-theoretic solvers with LLM dialogue~\cite{DBLP:journals/corr/abs-2402-01704}, utilising post-hoc CoT prompting~\cite{abdelnabi2024llmdeliberation}, structured reasoning workflows based on Dominant Strategy Search and Backward Induction~\cite{DBLP:journals/corr/abs-2411-05990}, or even learn by interacting based with reinforcement learning~\cite{DBLP:conf/iclr/CaoLLLTC18}. From a prompting perspective, Chain-of-Thought reasoning emerges as a critical factor in agent performance~\cite{DBLP:journals/corr/abs-2305-19165}, contributing to more consistent outcomes in integrative negotiation settings \cite{DBLP:journals/corr/abs-2503-06416}. Hybrid architectural approaches have been developed to constrain agent behaviour, such as employing deterministic offer generation modules to control pricing decisions while utilising LLMs for natural language dialogue production, resulting in substantial improvements in deal completion rates and profit margins \cite{DBLP:conf/acl/Xia0RMZ0024}. The focus of this paper is on evaluating the effect of reasoning on negotiation strategies without adding any additional component by simply using the vanilla LLMs that are trained specifically to exhibit reasoning capabilities.
+%We do not focus on enhancing any particular aspect, and simply use the vanilla LLMs with reasoning capability.
+
+\section{Evaluating Negotiation Abilities with Dialogue Games}
+
+In this section, we provide details on how we implement three dialogue games to test negotiation abilities in LLMs. We define a dialogue game as a structured communication between two agents (LLMs) according to a given communication protocol aimed at achieving a defined goal. The goals in games are defined as the expected outcome, e.g., making a deal that agents attempt to maximise. The communication protocols dictate how messages are expected to be formatted. A negotiation task unfolds by agents starting to communicate with one another for the given goal, and the conversation continues until it reaches one of the defined stopping criteria: 1) the goal state is reached, 2) the maximum turn limit is reached, or 3) agents violate the communication protocol and the game-play is aborted. The orchestration of this message passing between agents, validation of communication protocols, and checking whether goal states are reached are done by the Game Master, a scripted entity in the dialogue. We use the \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench}. The dialogue games are run in a self-play mode where both participants of the game are LLMs playing against or with one another. Next, we provide game details\footnote{\url{https://github.com/clembench/clembench}}.
+
+\subsection{Deal or No Deal}
+
+
+
+The Deal or No Deal (DoND) game is a two-player game~\cite{lewis-etal-2017-deal} designed to simulate a multi-issue bargaining scenario. \Cref{fig:dond_example} shows an example. Two players must communicate to reach a mutually beneficial agreement on a set of items, each holding different values for each player. The game focuses on evaluating negotiation skills, including the ability to express and understand preferences, as well as compromise (see Appendix~\ref{sec:appendix_dond} for prompts and other details).
+
+
+
+\paragraph{Game Mechanics}
+Two agents negotiate over a shared set of items, each having a different private value for item types. Players exchange free-form messages and then simultaneously make secret proposals using specific syntax. If proposals are compatible (enough items are requested for both), each player receives points based on the value of their requested items, as determined by their private function. If proposals conflict, both receive zero points. The Game Master strictly enforces rules without re-prompting, making adherence to rules critical for a successful play experience.
+
+\begin{figure}[ht!]
+  \centering
+  \input{dond/example_transcript.tex}
+  \caption{An example of a \textit{Deal or No Deal} episode that ends in a successful Pareto optimal agreement.}
+  \label{fig:dond_example}
+\end{figure}
+
+\paragraph{Game Instances}
+We generate instances for the game programmatically by randomly sampling 100 common nouns. Each instance was generated with a maximum turn limit of 5, and each game instance features a random set of between 3 and 5 different item types. We have two different sets of experiments. In the \textbf{semi-competitive} experiment, players are asked to maximise their own score (to balance cooperation, avoid zero-point conflicts). For the \textbf{cooperative} experiment, players are asked to maximise the sum of the scores of both players. This transforms the game into a purely cooperative task, in which two rational agents should consistently achieve the maximum score, assuming they can communicate and reason about the preferences perfectly. Each experiment includes 20 instances, with \textbf{total 40 instances}.
+
+
+
+\subsection{Clean Up}
+
+Clean Up is a two-player game focused on cooperative strategy development and object rearrangement. Object rearrangement has been a long-standing problem that requires modelling the given situation, the action space, and spatial reasoning \cite{DBLP:journals/corr/abs-2011-01975,DBLP:journals/ral/ZengWYZDCD24,DBLP:journals/access/KhanQCASR25}. Each player can only access its own grid and need to negotiate which items to rearrange so that the grids become identical at the end~\cite{DBLP:conf/sigdial/JeknicSK24}. A sample episode is shown in Figure~\ref{fig:clean_up_example}. We provide all prompts and other details in Appendix~\ref{sec:appendix_clean_up}.
+
+\begin{figure}[ht!]
+    \centering
+    \input{clean_up/clean_up_transcript}
+    \caption{Example episode from Clean Up game to achieve a common goal configuration for a number of objects randomly placed on each player`s grid, and move them accordingly. Finally, both players have to agree the goal is reached to end the game.}
+    
+    \label{fig:clean_up_example}
+\end{figure}
+
+\paragraph{Game Mechanics} Both players are presented with $7\times7$ ASCII grids, with a number of randomly distributed objects in the form of capital letters placed on them. In each turn, a player can either send a message to their counterpart or move an object on their grid. The message and move text require certain formatting rules to follow. If a player does not follow the format, tries to move an object to a non-empty space or outside the grid bounds, or tries to move an object that doesn't exist, they receive a penalty and are re-prompted with information on the nature of their mistake. The game ends if (1) both players agree to end it, (2) round limit is exceeded, or (3) penalty limit is exceeded.
+
+
+
+
+\paragraph{Game Instances}
+
+\begin{figure}[ht]
+    \centering
+    \input{air-balloon-survival/air_balloon_transcript}
+    \caption{An example episode of the \textit{Air Balloon Survival} game. Two players must negotiate and argue for their preferred set of items. and must explicitly agree to a proposal made by the other.}
+    \label{fig:air_balloon_example}
+    
+\end{figure}
+
+All instances are created programmatically by creating different grids ($7\times7$), which contain obstacles in form of horizontal and vertical lines, branches, crossings, and corners. The maximum number of rounds is fixed to $4 \times n_{obj}$ (where $n_{obj}$ is the object count). 
+% Players can collectively accumulate $2 \times n_{obj} + 2$ penalties. 
+We create different sets of experiments by controlling two aspects: number of empty cells and objects. We have three difficulty levels. Of the 49 total cells, $34$ of cells are empty on the \textit{easy}, $29$ on \textit{medium}, and $24$ on \textit{hard} levels. For each level, we sample three grids, and then place $3$, $5$, or $7$ objects on them, making for \textbf{27 instances in total}.
+
+
+
+\subsection{Air Balloon Survival}
+This game evaluates advanced reasoning and interactive collaboration between players, which was previously introduced by \citet{howes2021justifiable} to study how patients with schizophrenia verbalise their reasoning during social encounters. In our version, two players are on a sinking hot air balloon, and they have to agree on which items to keep (or throw out) so that the weight of the balloon is reduced to keep floating. Each player has hidden preference values for items and must negotiate to maximise their combined utility score. An example episode is given in Figure~\ref{fig:air_balloon_example}. The game tests individual reasoning through constraint-based optimisation, requiring arithmetic and combinatorial search, collective reasoning through practical rationality, and theory of mind (to infer their counterpart's hidden preferences from their responses to reach an optimal agreement). We provide all prompts and other details in Appendix~\ref{sec:appendix_airballoon}.
+
+
+\paragraph{Game Mechanics}
+Both players receive their assigned preference values for the items. They are instructed to use specified formats when making proposals and engaging in negotiations. The game is aborted if no progress is made for eight consecutive turns. 
+% Each player may make up to two mistakes (either by violating game rules or the required syntax). 
+Unlike the other two games, players are also instructed to output their \texttt{STRATEGIC REASONING} along with the expected message. Only the expected message is passed to the other player. It allows players to ``think out loud'' about their choices. The game ends when a proposal made by one player is accepted by the other.
+
+\paragraph{Instance Generation}
+
+We draw either $15$ or $35$ items (depending on the experiment) from a randomly generated list constructed by concatenating a capital letter with a two-digit number (e.g., \texttt{A42}, \texttt{C07})\footnote{This keeps the naming of items language-agnostic and abstract from conventional examples of the \textit{0/1 Knapsack Problem} models that may have been seen during training}. We assign a weight value to each item. The air balloon's capacity is defined as a fraction of the combined weight of all items. We experiment with two negotiation levels, where we specifically set valuations over items to be the same for players, giving them common goals (easy level), or we invert their preference orderings, giving them opposing goals (hard level). We also experiment with generating the \texttt{STRATEGIC REASONING} or not. Lastly, we conduct complexity experiments by increasing the number of items. In total, we have six experiments with each having six instances, which leads to the \textbf{total number of 36 instances} for this game.
+
+
+
+\section{Experimental Setup}\label{sec:experimental_setup}
+
+\subsection{Game Instances}
+
+\textit{Deal or No Deal}, \textit{Clean Up}, and \textit{Air Balloon Survival} games include 40, 27, and 36 experimental instances, respectively. Each instance is then initialised with defined prompt templates. The same game instances are used for the English, German, and Italian experiments because the instances are language-agnostic; only the prompt templates need to be aligned for a specific language. 
+
+%All prompt templates are provided in Appendix \ref{sec:dond_prompt_templates}, \ref{clean_up:prompts}, \ref{sec:hot_air_balloon_appendix_prompt_templates}.
+
+
+\subsection{Evaluation Metrics}
+
+The \textit{clembench framework}~\cite{chalamalasetti-etal-2023-clembench} requires each implemented game to provide two primary metrics: \% Played and Quality Score. The \textit{\% Played} stands for the percentage of episodes where the evaluated language models followed instructions and the game was terminated by the defined end states. In cases where the gameplay does not fit the defined states of the game, the Game Master either tolerates such behaviour for one or two turns, asks the players to try again, or aborts the game. The \textit{Quality Score} is calculated using an objective function to measure how closely the played episode aligns with the target goal. In each game, this metric is calculated for all episodes that have been played. Once two metrics are calculated, they are aggregated to a single number, the \textit{clemscore} as the normalised product of \textit{\% Played} and \textit{Quality Score} (scaled to the interval [0, 100]). Next, we describe the Quality Scores for games.
+
+\paragraph{Deal or No Deal}
+
+For the cooperative game mode, we measure quality as the ratio of achieved total score to maximum possible total score. For the semi-competitive setting, we use a \textit{Pareto efficiency} metric that measures how far the agreement is from optimal by calculating potential one-sided improvements (more details in Appendix~\ref{subsec:appendix_dond_metric}).
+
+\paragraph{Clean Up}
+
+The Quality Score combines two main components: how well players organised objects spatially and how many rule violations they incurred. The metric uses \textit{Euclidean distances} between matching objects to compare the final arrangement to both the initial setup and a random baseline, rewarding improvements in object alignment while penalising rule violations through a scaling factor that becomes increasingly harsh as violations approach the maximum allowed limit 
+(more details in Appendix~\ref{subsec:appendix_cleanup_evaluation_metric}).
+
+\input{main-table}
+
+\paragraph{Air Balloon Survival}
+
+Each player receives a score based on their achieved utility relative to their optimal knapsack solution. The overall game score uses the harmonic mean of both players' normalised scores, which rewards balanced outcomes and penalises deals where one player benefits disproportionately (more details in Appendix~\ref{subsec:appendix_balloon_metrics}).
+
+\subsection{Evaluated Models}
+
+We have evaluated both commercial and open-weight models that have reasoning functionality. We selected \textit{GPT-5}, \textit{GPT-5-mini}, \textit{Claude-4} from commercial models. From open-weight models, we selected \textit{Llama3.3-70B} and \textit{Deepseek-R1-distilled-llama-70B} as its reasoning counterpart, \textit{Nemotron-Nano-9B-v2}, \textit{Qwen-3-80B} (\textit{instruction} and \textit{thinking} versions for reasoning off and on modes, respectively), \textit{GPT-OSS-120B} with reasoning on mode, and finally \textit{Deepseek-v3.1} with reasoning off mode. For commercial models, we ran them via their respective API backends, and we used \textit{OpenRouter.ai} for open-weight models.
+
+
+\section{Results}
+
+\subsection{Overall Performance}
+
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/output_token_plot_average.pdf}
+        \caption{Performance and the output tokens for all evaluated models with their reasoning on/off modes averaged for three languages.}
+        \label{fig:token_average}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/cost_plot_average.pdf}
+        \caption{Performance and the cost of for all evaluated models with their reasoning on/off modes averaged for three languages.}
+        \label{fig:cost_average}
+    \end{subfigure}
+    \caption{Trade-off between performance and cost comparison averaged across languages.}
+    \label{fig:combined-token-cost}
+    
+\end{figure*}
+
+We present the results obtained by the models (in \textit{reasoning on} and \textit{off} modes, where possible) evaluated for the English, German, and Italian versions of the negotiation games in Table~\ref{tab:main-results}. 
+% \textit{GPT-OSS} (reasoning on) and \textit{Deepseek-v3.1} (reasoning off) were run in one mode only due to their underlying architecture.
+
+\textbf{The Effect of Reasoning}: the most striking observation here is that reasoning mode dramatically improves performance across many models and languages, with \textit{Qwen-3} gaining $56$ points averaged across all games. Similar pattern exists for \textit{GPT}, \textit{Claude} and even smaller \textit{Nemotron} models. This is a strong indication that deliberate reasoning significantly enhances strategic game-playing abilities. Only with \textit{Llama-70B} do we see different results, which may be due to the effect of distillation.
+
+\textbf{Multilingual Capabilities}: results for German shows the largest average margin between \textit{reasoning on} and \textit{off} modes of models. English and Italian performances are also strong, suggesting that certain models have particularly sufficient negotiation capabilities across these evaluated languages.
+
+\textbf{Model Comparison}: GPT-5 is the clear winner, with GPT-5-mini and Claude-4 getting very close performance across all languages. Interestingly, GPT-5 mini sometimes matches or exceeds full GPT-5 performance (particularly in Italian). \textit{Qwen-3} shows the biggest performance jump.
+
+\subsection{Trade-off between Reasoning Overhead and Performance}
+
+
+\textbf{RQ1}: \textit{What is the computational and performance trade-off between reasoning overhead and negotiation effectiveness across tasks and languages?}
+
+In Figure~\ref{fig:token_average}, we present a plot that shows the average performance across all games and languages and how many output tokens it requires. Here, all reasoning and completion tokens are summed up. Most models generate the number of tokens that are closer to each other, and \textit{Qwen-3} generates almost \textit{4x} more tokens than others.
+
+In Figure~\ref{fig:cost_average}, we present the overall cost (input and output tokens together) of experiments for each model. As expected, models with reasoning mode cost more, with \textit{GPT-5}, being the most expensive, costing almost \textit{4x} compared to non-reasoning version while improving $31.4$ points in clemscore. In terms of deciding on the best trade-off between performance and cost, \textbf{\textit{GPT-5-mini} is the most cost-efficient commercial model, and \textit{GPT-OSS} is the best open-weight one, with a fraction of the cost compared to Qwen-3}.
+
+
+
+
+
+
+
+% Additionally, we employed an LLM-based analysis to identify the percentage of reasoning traces containing loops, where an action or thought is repeated at least three times, in 309 sampled transcripts, see \ref{sec:llm-based_reasoning_analysis}. Fig.~\ref{fig:reasoning_loops} shows the percentage of reasoning traces containing loops in the transcripts on the x-axis and the quality score on the y-axis for these analysed transcripts. 
+% Strikingly, Claude-4 and GPT-OSS virtually never display loops in their traces (0.2\% and 0.3\%) and achieve high scores, whereas 34.3\% of the reasoning traces of Llama-70B and 54.4\% of Nemotron-9B contain loops and achieve low scores. An overwhelming majority of 95.18\% of data points for these models are below the dotted diagonal, indicating that reasoning loops, a behaviour also known as \textit{overthinking} \cite{DBLP:journals/corr/abs-2506-06941}, tend to reduce performance.
+
+% Perplexingly, the picture is reversed for Qwen-3, where 60.3\% of traces contain loops, but the average quality score for these instances is at 79.3, and 75\% of data points are above the diagonal. 
+% Manual annotation of the last reasoning trace in a transcript for the hardest Clean Up experiment\footnote{Namely instance 1 of `2\_hard\_7obj\_en'.} revealed that the model tried to parse the current grid no less than 19 times, and additionally five times the initial grid, which has lost all relevance at this point. Still the model eventually reaches the conclusion that \textit{`probably multiple objects are already in place'} and opts to finish the game, reaching a Quality Score of 82.2. The high frequency of unnecessary loops is thus also the main reason for the extremely high numbers of output tokens seen for Qwen-3 in Fig.~\ref{fig:token_average}.
+
+\subsection{Language Consistency in Reasoning}
+
+\textbf{RQ2}: \textit{To what extent do models maintain language consistency in their reasoning processes when performing multilingual negotiation tasks?}
+
+% \begin{figure*}[ht!]
+%     \centering
+% \includegraphics[width=\linewidth]{figures/language_distribution_reasoning_messages.pdf}
+%         \caption{Language distribution in reasoning tokens}
+%         \label{fig:lang_distribution_reasoning}
+% \end{figure*}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/language_distribution_reasoning_messages.pdf}
+            \caption{Language distribution in reasoning tokens}
+        \label{fig:lang_distribution_reasoning}
+\end{figure}
+
+\begin{table}[ht!]
+\centering
+\setlength{\tabcolsep}{4pt}
+    \begin{tabular}{ll|ccc}
+    & & \textbf{DE} & \textbf{EN} & \textbf{IT} \\
+    \hline
+    \multirow{2}{*}{Commercial} & completion & 1.00 & 1.00 & 1.00 \\
+    & reasoning & 0.84 & 1.00 & 0.84 \\
+    \hline
+    \multirow{2}{*}{Open-weight} & completion & 0.94 & 1.00 & 0.87 \\
+    & reasoning & 0.06 & 1.00 & 0.03 \\
+\end{tabular}
+    
+    \caption{Language consistency in reasoning tokens}
+    \label{fig:lang_analysis}
+\end{table}
+
+
+
+
+
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[width=0.75\textwidth]{figures/fsm.pdf}
+  \caption{Finite state machine for analysing reasoning traces}
+  \label{fig:fsm_main}
+\end{figure*}
+
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/loops_vs_quality_score.pdf}
+        \caption{Reasoning traces that display thinking loops (at least three repetitions of the same action) plotted}
+        \label{fig:reasoning_loops}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/role_awareness_vs_quality_score.pdf}
+        \caption{Reasoning traces where the model displays both awareness of their own another player's role}
+        \label{fig:role_awareness}
+    \end{subfigure}
+    \caption{Analysis of patterns in model reasoning traces}
+    \label{fig:reasoning_analysis}
+\end{figure*}
+
+
+
+We ran a language detection script to analyse the reasoning message of the models. The results are presented in Figure~\ref{fig:lang_distribution_reasoning}\footnote{Note: \textit{GPT-5} models do not return reasoning tokens, thus they are excluded from further analysis}. We clearly see that all open-weight models mostly generate reasoning tokens in English, whereas \textit{Claude-4} ``thinks'' in the respective language of the task, consistently across all three of them. In Table~\ref{fig:lang_analysis}, we provide the percentage of language consistency (whether the language of the message matches the target language) across \textit{completion} and \textit{reasoning} tokens. 
+
+We can clearly see that \textit{Claude-4} (the only commercial model in the analysis) exhibits consistency in both completion and reasoning tokens. Open-weight models retain consistency in completion tokens (thus, abiding by the formatting rules as each game requires prefixes in the respective language), but fail to do so with reasoning tokens for German and Italian versions of the games. Thus, we can conclude that \textbf{open-weight models do not maintain language consistency in their reasoning processes across multilingual tasks}. Similar patterns have been also observed by \citet{qi-etal-2025-models} where explicitly forcing the model to reason in the respective language even reduces the performance. Thus, the models that do not maintain language consistency in their reasoning steps \textbf{become less interpretable and less trustworthy}.
+
+
+
+
+\subsection{Strategic Adaptation Across Multi-Turn Interactions}
+
+\textbf{RQ3}: \textit{Do models demonstrate strategic adaptation over multiple turns, or merely surface-level pattern matching creating an illusion of thinking?}
+
+
+
+\subsubsection{Keyword-based Analysis}
+We label the first-turn reasoning traces as sequences over five discrete states—\texttt{ASSERT}, \texttt{PROPOSE}, \texttt{UNDERMINE}, \texttt{ALTERNATIVE}, \texttt{CONCLUDE}. The states are detected using lexical cues in reasoning tokens, e.g. ``maybe/could'': \texttt{PROPOSE}; ``but/however'': \texttt{UNDERMINE}, etc. Each trace is a path on a finite-state machine with observed transitions (including self-loops), from which we compute per-trace statistics and aggregate at model/game level. The finite state machine is shown in Figure~\ref{fig:fsm_main}. We compute two metrics using the transitions among states (more details in Appendix~\ref{sec:cyclic_analysis}):
+
+\textit{number of segments}: we partition the labels extracted from each reasoning trace by absorbing states (\texttt{ASSERT} and  \texttt{CONCLUDE}). The count serves as coarse “reasoning units”: higher counts could mean more dispersed reasoning (multiple restarts before final commitment); lower counts could mean more concentrated reasoning (a plan developed and resolved within fewer units).
+
+\textit{cycle edge ratio}: within each segment’s induced subgraph, we mark edges that belong to any simple cycle and compute the fraction of transitions on such edges, then aggregate across segments to obtain one single metric for each reasoning trace. Higher ratios indicate local looping/hedging (e.g., \texttt{PROPOSE} <-> \texttt{UNDERMINE}); lower ratios indicate forward motion towards absorbing states.
+
+Good-performing models should resolve plans in fewer segments and cycles to have more goal-oriented planning and execution of it. The results are given in Figure~\ref{fig:clemscore_VS_n_segment} and Figure~\ref{fig:clemscore_VS_cycle_edge_ratio}. Performance shows non-linear relationships: \textbf{minimal segment counts correlate with improved outcomes}, while moderate additions yield unclear results. \textbf{Commercial models achieve competitive scores with lower cycle ratios} and tighter clustering; open-weight models show higher ratios with greater variance, suggesting that additional cycles do not reliably translate into performance gains.
+
+
+
+\subsubsection{LLM-based Analysis}
+
+For all thinking models with available reasoning traces, we sampled a total of 309 transcripts with at least one instance for each game, language, and experiment combination for automated analysis. We prompted \textit{GPT-5} to analyse certain aspects of the traces and give their output in JSON format, including not only the analysis, but also short explanations for each classification (see example in Figure~\ref{fig:llm_analysis_prompt_and_example}). More details are in Appendix~\ref{sec:llm-based_reasoning_analysis}.
+
+Figure~\ref{fig:reasoning_loops} shows the thinking loops that occur in reasoning. We consider a thought to be in a loop if it occurs at least three times. Good-performing model results should be clustered around the top left, including fewer loops and a high quality score. \textit{Claude-4} and \textit{GPT-OSS} rarely display loops (0.2\% and 0.3\%) and achieve high scores, while \textit{Llama-70B} (34.3\%) and \textit{Nemotron-9B} (54.4\%) contain loops and score low. 95.18\% of data points for these models fall below the dotted diagonal, indicating that reasoning loops, or \textit{overthinking} \cite{DBLP:journals/corr/abs-2506-06941}, reduce performance.
+Conversely, \textit{Qwen-3} shows 60.3\% of traces with loops but averages 79.3 quality score. These excessive loops explain \textit{Qwen-3}'s high token counts.
+
+Since the games prompt the model to be active agents, we analyse the reasoning traces for both awareness of their own player role (whether the model is helping or advising somebody else, or actively playing the game itself) and of the partner (mention of any other agentic participant). 
+
+Figure~\ref{fig:role_awareness} shows the percentage of reasoning traces where the model is both aware of its own role as an active player and actively mentions another player. Naturally, the mean percentages for all models are somewhat lower than those for assuming a player role, with the 74.5\% for Claude-4, 89.3\% for Qwen-3, 78.2\% for GPT-OSS, 82.0\% for Llama-70B and 57.8\% for Nemotron-9B.
+
+Of all games with a quality score over $50$, 144 (46.6\% of games) show role awareness in over 50\% of reasoning traces, and only $23$ in under 50\%. Of the games with a quality score below $50$, 95 (30.7\%) show higher and 47 (15.2\%) lower role awareness. This indicates that \textbf{awareness of both one's own role and the existence of a counterpart are prerequisites for consistently high scores.}
+
+% . Using LLM-based analysis (see \ref{sec:llm-based_reasoning_analysis}, we determined whether the model assumes a `player' role in each thinking trace of a total of 309 game transcripts. Complementary, models sometimes also take the role of an `assistant' helping a `user' who they assume to be playing the game. Fig.~\ref{fig:assumed_role} shows the percentage of traces written from an active player's perspective on the x-axis, and the quality score achieved in the respective games on the y-axis. While Claude-4, Qwen-3 and GPT-OSS assume an active role in the virtually all reasoning traces (with 99.9\%, 97.0\% and 96.0\%, respectively) and achieve high scores on average, Llama-70B and Nemotron-9B show lower percentages of 85.6\% and 62.4\% and much lower scores.
+
+% An overwhelming majority of 95.15\% of all data points are below the dotted main diagonal, meaning that models rarely reach a quality score higher than the percentage of traces where they assume an active `player' role. It thus appears that \textbf{assuming an active role is a premise for a successful game,} but does by no means guarantee it.
+
+% Additionally, fig.~\ref{fig:role_awareness} shows the percentage of reasoning traces where the model is both aware of its own role as an active player, and actively mentions another player. Naturally, the mean percentages for all models are somewhat lower than those for assuming a player role, with the 74.5\% for Claude-4, 89.3\% for Qwen-3, 78.2\% for GPT-OSS, 82.0\% for Llama-70B and 57.8\% for Nemotron-9B.
+
+% Of all games with a quality score over 50, 144 (46.6\% of all 309 games) show role awareness in over 50\% of reasoning traces, and only 23 (7.4\%) in under 50\%. Of the games with quality score below 50, 96 (31.1\%) show higher and 46 (14.9\%) lower role awareness. This indicates that \textbf{awareness of both the own role and the existence of a counterpart are prerequisites for consistently high scores.}
+
+\subsection{Qualitative Analysis}
+
+
+
+We provide qualitative samples in Figure~\ref{fig:qualitative_examples} from German task for reasoning tokens generated by \textit{Qwen-3} and \textit{Llama-70B} (distilled from Deepseek-R1). The samples clearly show how the LLMs do not adhere to the target language. The top example shows how languages are interchangeably used, with Russian being the common one. It starts with: \foreignlanguage{russian}{Вижу, что} "I" \foreignlanguage{russian}{находится в клетке (1,3) ... Я пытаюсь переместить его в (3,3). Посмотрю,} primitive cell (3,3) \foreignlanguage{russian}{... В этой клетке сейчас $\circ$, значит, пустая.}, which translates to \textit{I can see that there is ``I'' in cell (1,3) ... and I try to move it  to (3,3) ... I look ... in this cell there is} $\circ$, \textit{meaning it is empty}. 
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}{\linewidth}
+        \includegraphics[width=\linewidth]{qualitative_examples/legend.pdf}
+    \end{subfigure}
+    
+    
+    % --- First Figure ---
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{qualitative_examples/ex1.pdf}
+        \caption{Llama-70B reasoning tokens for Clean Up}
+        \label{fig:qual_german_cleanup}
+    \end{subfigure}
+    
+    
+
+    % --- Second Figure ---
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{qualitative_examples/ex2.pdf}
+        \caption{Llama-70B reasoning tokens for Air Balloon Survival}
+        \label{fig:qual_german_balloon}
+    \end{subfigure}
+
+    
+
+    % --- Third Figure ---
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{qualitative_examples/ex3.pdf}
+        \caption{Qwen-3 reasoning tokens for Deal or No Deal}
+        \label{fig:qual_italian_balloon}
+        
+    \end{subfigure}
+
+    % --- Main caption for the entire figure ---
+    \caption{Qualitative samples showing reasoning tokens where the target language is German}
+    \label{fig:qualitative_examples}
+\end{figure}
+
+The middle example shows how the model reasons about its choices and weights and tries to calculate what it means to consider one of them, and interchangeably uses eight languages.
+
+The bottom example's reasoning is about modelling the opponent where the roles are confused because it refers to an ``assistant'' (\begin{CJK*}{UTF8}{gbsn}助理\end{CJK*}). But the actual task is for the assistant to act as the user, and the opponent is simulated.
+
+
+
+
+
+\section{Conclusion}
+
+We conducted the first comprehensive study systematically investigating the impact of reasoning on performance in multilingual negotiation tasks. 
+Our work examines the trade-offs between computational cost and negotiation effectiveness, assesses the linguistic consistency of reasoning processes, and probes the depth of strategic adaptation in English, German, and Italian. Our findings reveal that test-time scaling is a powerful and costly tool: it significantly enhances negotiation performance, yet demands substantial additional compute. 
+Open-weight models almost exclusively switch to English for internal reasoning, even when performing tasks in German or Italian, while leading commercial models maintain language consistency between reasoning and outputs. Our results further suggest that reasoning enables genuine strategic adaptation rather than simply pattern matching. The observed improvements in handling complex rules, making value-based decisions, and achieving collaborative outcomes point to deeper problem-solving unlocked when models ``think out loud'' before acting. 
+Future work should extend this investigation to broader dialogue games, more diverse languages, and emerging models to chart the path toward AI agents that are versatile negotiators.
+
+
+\section*{Limitations}
+
+The first limitation is about the scope of negotiation tasks. Some researchers also employed other dialogue games that we did not include in this study, as there are many similarities among games and the measures they assess. Another limitation is the choice of languages for analysis, which are three European languages that are also high-resource languages. The primary reason for considering only the defined dialogue games and languages is that including more games or languages would result in a higher number of model results, thereby increasing the overall cost of the study. Another limitation is the exclusion of models from both commercial and open-source ones. As explained above, such decisions would exceed the budget for such a study. Given the obtained results regarding switching languages, it is evident that most models lack natural reasoning aspects, and utilising such models in real-world applications would bring its own set of challenges and limitations. For use cases that involve cultural or language-specific concepts or aspects, it can not be guaranteed that they will be well-understood in English (as most languages switch to it).
+
+\section*{Ethical Considerations}
+
+Using paid proprietary APIs with underlying models about which little is known (training data, model architecture) in academic research is less than ideal. Currently, the models tested here support reasoning modes, either on or off (except for GPT-OSS-120B and Deepseek-v3.1). We hope that open models will include more controls over reasoning aspects and catch up soon in terms of general performance. Deploying such language agents in society has considerable risks. As mentioned in the Related Work, such agents exhibit asymmetric behaviours in negotiations and may expose users to unfaithful actions.
+
+\section*{Acknowledgments}
+We thank all anonymous reviewers who helped improve the manuscript.
+
+%\bibliography{anthology,custom}
+% Custom bibliography entries only
+\bibliography{custom, anthology_0, anthology_1}
+
+
+
+
+
+
+\appendix
+
+\section{Additional Results}\label{sec:appendix_reamining_details}
+\subfile{appendix/remainig_details}
+
+\section{Deal or No Deal - Game Details}\label{sec:appendix_dond}
+\subfile{dond/dond_appendix}
+
+
+\section{Clean Up - Game Details}\label{sec:appendix_clean_up}
+\subfile{clean_up/clean_up_appendix}
+
+\section{Air Balloon Survival - Game Details}\label{sec:appendix_airballoon}
+\subfile{air-balloon-survival/air_balloon_appendix}
+
+\end{document}
